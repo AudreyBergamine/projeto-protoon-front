@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
+//Função de cadastro de municipe
 function RegisterForm() {
+  //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
   const [formData, setFormData] = useState({
-    nome_municipe: "t",
+    nome_municipe: "",
     email: "",
     senha: "",
     num_CPF: "",
-
+    data_nascimento: "",
     endereco: {
         tipo_endereco: "",
         num_cep: "",
@@ -22,6 +24,7 @@ function RegisterForm() {
       }
   });
 
+  //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -29,6 +32,7 @@ function RegisterForm() {
     });
   };
 
+  //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async () => {
     try {
       const response = await axios.post('http://localhost:8080/municipes', formData);
@@ -41,7 +45,7 @@ function RegisterForm() {
   };
 
  
-
+  //Por fim é retornado o html para ser exibido no front end, junto com as funções acima.
   return (
 
 <form onSubmit={handleSubmit}>
@@ -81,6 +85,15 @@ function RegisterForm() {
         onChange={handleChange}
       />
     </div>
+    <div>
+        <label>Data de Nascimento:</label>
+        <input
+          type="date"
+          name="data_nascimento"
+          value={formData.data_nascimento}
+          onChange={handleChange}
+        />
+      </div>
      
     <div>
         <label>Tipo de endereço:</label>

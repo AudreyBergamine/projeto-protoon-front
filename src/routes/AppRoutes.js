@@ -3,6 +3,8 @@ import Home from '../components/home-page/homePage';
 import RegisterForm from '../components/municipe/register';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, redirect } from 'react-router-dom';
+
+//Esta função, adiciona todos os components (que contém o html junto com funções), para serem exibidos conforme a url inserida
 function AppRoutes() {
     return (
         <Router>
