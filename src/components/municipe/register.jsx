@@ -7,7 +7,7 @@ function RegisterForm() {
     email: "",
     senha: "",
     num_CPF: "",
-
+    data_nascimento: "",
     endereco: {
         tipo_endereco: "",
         num_cep: "",
@@ -81,6 +81,15 @@ function RegisterForm() {
         onChange={handleChange}
       />
     </div>
+    <div>
+        <label>Data de Nascimento:</label>
+        <input
+          type="date"
+          name="data_nascimento"
+          value={formData.data_nascimento}
+          onChange={handleChange}
+        />
+      </div>
      
     <div>
         <label>Tipo de endereço:</label>
