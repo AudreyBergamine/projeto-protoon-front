@@ -10,7 +10,7 @@ function RegisterForm() {
     email: "",
     senha: "",
     num_CPF: "",
-    data_nascimento: "",
+    data_nascimento: "2020-04-04",
     endereco: {
         tipo_endereco: "",
         num_cep: "",
@@ -25,6 +25,7 @@ function RegisterForm() {
       }
   });
 
+
   //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
   const handleChange = (e) => {
     setFormData({
@@ -38,8 +39,10 @@ function RegisterForm() {
     e.preventDefault();
     const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
     try {
-      const response = await axios.post('https://proton-1710414195673.azurewebsites.net/municipes', {formData,
-    data_nascimento: formattedDate});
+      const response = await axios.post('https://proton-1710414195673.azurewebsites.net/municipes', {
+        ...formData, // Inclua todos os dados do formData
+        data_nascimento: formattedDate // Substitua o campo data_nascimento formatado
+      });
       
       console.log(response.data); 
       alert('Dados enviados com sucesso!');
