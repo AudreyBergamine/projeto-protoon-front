@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
+import moment from "moment";
 //Função de cadastro de municipe
 function RegisterForm() {
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
@@ -33,11 +34,14 @@ function RegisterForm() {
   };
 
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
     try {
-      const response = await axios.post('http://localhost:8080/municipes', formData);
+      const response = await axios.post('https://proton-1710414195673.azurewebsites.net/municipes', {formData,
+    data_nascimento: formattedDate});
       
-      console.log(response.data);
+      console.log(response.data); 
       alert('Dados enviados com sucesso!');
     } catch (error) {
       console.error('Erro ao enviar os dados:', error);
