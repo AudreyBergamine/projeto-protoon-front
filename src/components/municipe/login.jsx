@@ -26,19 +26,42 @@ function LoginForm() {
   //É retornado o formulário html abaixo
   return (
     <div>
-      <div>
+      <header class="header">
+        <div class="title-proton">PROTO-ON</div>
+          <nav>
+            <ul class="nav-links">
+              <li><a href="/home">Home</a></li>
+              <li>
+                <a href="#">Serviços</a>
+                <ul class="submenu">
+                  <li><a href="#">Abrir reclamação</a></li>
+                  <li><a href="#">Consultar protocolos</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">Mais</a>
+                <ul class="submenu">
+                  <li><a href="#">Contato</a></li>
+                  <li><a href="#">Sobre nós</a></li>
+                </ul>
+              </li>
+                </ul>
+          </nav>
+      </header>
+      <div class="container">
         <label>Login:</label>
         <input type="text" />
+        <label class="lbl-password">Senha:</label>
+        <input type="password"/>
+      <div class="container-button">
+        <button type="submit" class="shadow__btn" onClick={handleSubmit}>Login</button>
+        <button type="button"  class="shadow__btn" onClick={() => (window.location.href = '/home')}>Voltar</button>
       </div>
-      <div>
-        <label>Senha:</label>
-        <input type="password" />
       </div>
-      <button type="submit" onClick={handleSubmit} >Login</button>
-      <button type="button" onClick={handleCadastroClick}>
-        Cadastrar-se
-      </button>
-      </div>
+      <footer class="footer">
+        © 2024 Proto-on. Todos os direitos reservados.
+      </footer>
+    </div>
   );
 }
 

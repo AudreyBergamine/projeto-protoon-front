@@ -9,7 +9,7 @@ function AppRoutes() {
     return (
         <Router>
             <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<LoginForm />} />
                 <Route path="/cadastro" element={<RegisterForm />} />
                 {/* Adicione outras rotas aqui, se necessário */}
