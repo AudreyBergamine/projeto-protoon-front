@@ -74,9 +74,9 @@ nav {
 }
 
 ul {
-    list-style-type: none; /* Remove as bolinhas */
-    padding: 0; /* Remove o padding padrão dos navegadores para <ul> */
-    margin: 0; /* Remove a margem padrão dos navegadores para <ul> */
+    list-style-type: none; 
+    padding: 0; 
+    margin: 0;
 }
 
 .submenu {

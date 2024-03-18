@@ -73,10 +73,33 @@ function RegisterForm() {
 
 <form onSubmit={handleSubmit}>
     <div>
+    <header class="header">
+        <div class="title-proton">PROTO-ON</div>
+          <nav>
+            <ul class="nav-links">
+              <li><a href="/home">Home</a></li>
+              <li>
+                <a href="#">Serviços</a>
+                <ul class="submenu">
+                  <li><a href="#">Abrir reclamação</a></li>
+                  <li><a href="#">Consultar protocolos</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">Mais</a>
+                <ul class="submenu">
+                  <li><a href="#">Contato</a></li>
+                  <li><a href="#">Sobre nós</a></li>
+                </ul>
+              </li>
+                </ul>
+          </nav>
+      </header>
       <label>Nome:</label>
       <input
         type="text"
         name="nome_municipe"
+        placeholder="Ex.: Cláudio Silva"
         value={formData.nome_municipe}
         onChange={handleChange}
       />
@@ -86,6 +109,7 @@ function RegisterForm() {
       <input
         type="email"
         name="email"
+        placeholder="Ex.: claudio.silva@gmail.com"
         value={formData.email}
         onChange={handleChange}
       />
@@ -104,6 +128,7 @@ function RegisterForm() {
       <input
         type="number"
         name="num_CPF"
+        placeholder="Ex.: 33333333333"
         value={formData.num_CPF}
         onChange={handleChange}
       />
@@ -120,68 +145,107 @@ function RegisterForm() {
      
     <div>
         <label>Tipo de endereço:</label>
-        <input type="text" name="tipo_endereco" value={formData.tipo_endereco}
+        <input 
+          type="text" 
+          name="tipo_endereco" 
+          value={formData.tipo_endereco}
           onChange={handleChange}
         />
       </div>
       <div>
         <label>Número do cep:</label>
-        <input type="number" name="num_cep" value={formData.num_cep}
+        <input 
+          type="number" 
+          name="num_cep" 
+          placeholder="Ex.: 77777777"
+          value={formData.num_cep}
           onChange={handleChange}
         />
       </div>
       <div>
         <label>Logradouro:</label>
-        <input type="text" name="logradouro" value={formData.logradouro}
+        <input 
+          type="text" 
+          name="logradouro" 
+          value={formData.logradouro}
           onChange={handleChange}
         />
       </div>
       <div>
         <label>Nome Endereço:</label>
-        <input type="text" name="nome_endereco" value={formData.nome_endereco}
+        <input 
+          type="text" 
+          name="nome_endereco" 
+          placeholder="Ex.: Casa"
+          value={formData.nome_endereco}
           onChange={handleChange}
         />
       </div>
       <div>
         <label>Número do endereço:</label>
-        <input type="number" name="num_endereco" value={formData.num_endereco}
+        <input 
+          type="number" 
+          name="num_endereco" 
+          placeholder="Ex.: 1025"
+          value={formData.num_endereco}
           onChange={handleChange}
         />
       </div>
       <div>
         <label>Complemento:</label>
-        <input type="text" name="complemento" value={formData.complemento}
+        <input 
+          type="text" 
+          name="complemento" 
+          placeholder="Bloco, apartamento, casa, fundos..."
+          value={formData.complemento}
           onChange={handleChange}
         />
       </div>
       <div>
         <label>Bairro:</label>
-        <input type="text" name="bairro" value={formData.bairro}
+        <input 
+          type="text" 
+          name="bairro"
+          placeholder="Ex.: Bairro das Flores" 
+          value={formData.bairro}
           onChange={handleChange}
         />
       </div>
       <div>
         <label>Cidade:</label>
-        <input type="text" name="cidade" value={formData.cidade}
+        <input 
+          type="text" 
+          name="cidade" 
+          placeholder="Ex.: Ferraz de Vasconcelos" 
+          value={formData.cidade}
           onChange={handleChange}
         />
       </div>
       <div>
         <label>Estado:</label>
-        <input type="text" name="estado" value={formData.estado}
+        <input 
+          type="text" 
+          name="estado" 
+          placeholder="Ex.: São Paulo" 
+          value={formData.estado}
           onChange={handleChange}
         />
       </div>
       <div>
         <label>País:</label>
-        <input type="text" name="pais" value={formData.pais}
+        <input 
+          type="text" 
+          name="pais" 
+          placeholder="Ex.: Brasil"
+          value={formData.pais}
           onChange={handleChange}
         />
       </div>
+      <button type="submit" class="button-cad">Cadastrar-se</button>
       
-
-  
-      <button type="submit">Cadastrar-se</button>
+      <footer class="footer">
+        © 2024 Proto-on. Todos os direitos reservados.
+      </footer>
     </form>
   );
 }
