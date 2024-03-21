@@ -9,8 +9,6 @@ import TelaUser from '../components/user/welcomeUser';
 import TelaAdmin from '../components/user/welcomeAdmin';
 import RegisterFormUser from '../components/user/registerUser';
 import UpdateFormUser from '../components/user/updateUser';
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, redirect } from 'react-router-dom';
 
 //Esta função, adiciona todos os components (que contém o html junto com funções), para serem exibidos conforme a url inserida
 function AppRoutes() {
