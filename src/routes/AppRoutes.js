@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, redirect } from 'react-router-dom';
 
-import LoginForm from '../components/municipe/login';
 import Home from '../components/home-page/homePage';
+import LoginForm from '../components/municipe/login';
 import RegisterForm from '../components/municipe/register';
 import LoginFormAuth from '../components/user/authenticate';
 import TelaUser from '../components/user/welcomeUser';

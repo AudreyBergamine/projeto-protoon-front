@@ -1,21 +1,21 @@
 function Home() {
     return (
         <div>
-            <body>
-                <header class="header">
-                    <div class="title-proton">PROTO-ON</div>
+            
+                <header className="header">
+                    <div className="title-proton">PROTO-ON</div>
                     <nav>
-                        <ul class="nav-links">
+                        <ul className="nav-links">
                             <li>
                                 <a href="#">Serviços</a>
-                                <ul class="submenu">
+                                <ul className="submenu">
                                     <li><a href="#">Abrir reclamação</a></li>
                                     <li><a href="#">Consultar protocolos</a></li>
                                 </ul>
                             </li>
                             <li>
                                 <a href="#">Mais</a>
-                                <ul class="submenu">
+                                <ul className="submenu">
                                     <li><a href="#">Contato</a></li>
                                     <li><a href="#">Sobre nós</a></li>
                                 </ul>
@@ -25,17 +25,17 @@ function Home() {
                 </header>
 
                 <main>
-                    <h1 class="main-title">BEM VINDO AO PROTO-ON</h1>
-                    <div class="btn-container">
-                        <button class="btn-log" onClick={() => (window.location.href = '/login')}>Login</button>
-                        <button class="btn-cad" onClick={() => (window.location.href = '/cadastro')}>Cadastro</button>
+                    <h1 className="main-title">BEM VINDO AO PROTO-ON</h1>
+                    <div className="btn-container">
+                        <button className="btn-log" onClick={() => (window.location.href = '/login')}>Login</button>
+                        <button className="btn-cad" onClick={() => (window.location.href = '/cadastro')}>Cadastro</button>
                     </div>
                 </main>
 
-                <footer class="footer">
+                <footer className="footer">
                     © 2024 Proto-on. Todos os direitos reservados.
                 </footer>
-            </body>
+            
         </div>
     )
 

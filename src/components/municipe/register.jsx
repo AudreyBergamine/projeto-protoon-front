@@ -55,7 +55,8 @@ function RegisterForm() {
     e.preventDefault();
     const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
     try {
-      const response = await axios.post('https://proton-1710414195673.azurewebsites.net/municipes', {
+      const response = await axios.post('http://localhost:8080/municipes', {
+      // const response = await axios.post('https://proton-1710414195673.azurewebsites.net/municipes', {
         ...formData, // Inclua todos os dados do formData
         data_nascimento: formattedDate // Substitua o campo data_nascimento formatado
       });
@@ -73,21 +74,21 @@ function RegisterForm() {
 
 <form onSubmit={handleSubmit}>
     <div>
-    <header class="header">
-        <div class="title-proton">PROTO-ON</div>
+    <header className="header">
+        <div className="title-proton">PROTO-ON</div>
           <nav>
-            <ul class="nav-links">
+            <ul className="nav-links">
               <li><a href="/home">Home</a></li>
               <li>
                 <a href="#">Serviços</a>
-                <ul class="submenu">
+                <ul className="submenu">
                   <li><a href="#">Abrir reclamação</a></li>
                   <li><a href="#">Consultar protocolos</a></li>
                 </ul>
               </li>
               <li>
                 <a href="#">Mais</a>
-                <ul class="submenu">
+                <ul className="submenu">
                   <li><a href="#">Contato</a></li>
                   <li><a href="#">Sobre nós</a></li>
                 </ul>
@@ -241,9 +242,9 @@ function RegisterForm() {
           onChange={handleChange}
         />
       </div>
-      <button type="submit" class="button-cad">Cadastrar-se</button>
+      <button type="submit" className="button-cad">Cadastrar-se</button>
       
-      <footer class="footer">
+      <footer className="footer">
         © 2024 Proto-on. Todos os direitos reservados.
       </footer>
     </form>
