@@ -9,7 +9,8 @@ function LoginForm() {
     const handleSubmit = async () => { 
       //TODO: É necessário configurar essa função corretamente após a construção da autenticação no back
         try {
-          const response = await axios.get('https://proton-1710414195673.azurewebsites.net/municipes');
+          const response = await axios.get('http://localhost:8080/municipes');
+          // const response = await axios.get('https://proton-1710414195673.azurewebsites.net/municipes');
           
           console.log(response.data); 
           alert('Dados enviados com sucesso!');
@@ -26,21 +27,21 @@ function LoginForm() {
   //É retornado o formulário html abaixo
   return (
     <div>
-      <header class="header">
-        <div class="title-proton">PROTO-ON</div>
+      <header className="header">
+        <div className="title-proton">PROTO-ON</div>
           <nav>
-            <ul class="nav-links">
+            <ul className="nav-links">
               <li><a href="/home">Home</a></li>
               <li>
                 <a href="#">Serviços</a>
-                <ul class="submenu">
+                <ul className="submenu">
                   <li><a href="#">Abrir reclamação</a></li>
                   <li><a href="#">Consultar protocolos</a></li>
                 </ul>
               </li>
               <li>
                 <a href="#">Mais</a>
-                <ul class="submenu">
+                <ul className="submenu">
                   <li><a href="#">Contato</a></li>
                   <li><a href="#">Sobre nós</a></li>
                 </ul>
@@ -48,17 +49,17 @@ function LoginForm() {
                 </ul>
           </nav>
       </header>
-      <div class="container">
+      <div className="container">
         <label>Login:</label>
         <input type="text" />
-        <label class="lbl-password">Senha:</label>
+        <label className="lbl-password">Senha:</label>
         <input type="password"/>
-      <div class="container-button">
-        <button type="submit" class="shadow__btn" onClick={handleSubmit}>Login</button>
-        <button type="button"  class="shadow__btn" onClick={() => (window.location.href = '/home')}>Voltar</button>
+      <div className="container-button">
+        <button type="submit" className="shadow__btn" onClick={handleSubmit}>Login</button>
+        <button type="button"  className="shadow__btn" onClick={() => (window.location.href = '/home')}>Voltar</button>
       </div>
       </div>
-      <footer class="footer">
+      <footer className="footer">
         © 2024 Proto-on. Todos os direitos reservados.
       </footer>
     </div>
