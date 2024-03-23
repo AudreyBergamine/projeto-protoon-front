@@ -24,8 +24,8 @@ function LoginFormAuth() {
     try {
       const response = await axios.get('http://localhost:8080/users', {
         auth: {
-          username: "admin",//Permissão para fazer a busca
-          password: "admin"
+          username: "teste",//Permissão para fazer a busca
+          password: "teste"
         }
       });
       const users = response.data;

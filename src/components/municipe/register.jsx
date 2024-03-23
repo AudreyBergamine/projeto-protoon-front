@@ -74,28 +74,6 @@ function RegisterForm() {
 
 <form onSubmit={handleSubmit}>
     <div>
-    <header className="header">
-        <div className="title-proton">PROTO-ON</div>
-          <nav>
-            <ul className="nav-links">
-              <li><a href="/home">Home</a></li>
-              <li>
-                <a href="#">Serviços</a>
-                <ul className="submenu">
-                  <li><a href="#">Abrir reclamação</a></li>
-                  <li><a href="#">Consultar protocolos</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">Mais</a>
-                <ul className="submenu">
-                  <li><a href="#">Contato</a></li>
-                  <li><a href="#">Sobre nós</a></li>
-                </ul>
-              </li>
-                </ul>
-          </nav>
-      </header>
       <label>Nome:</label>
       <input
         type="text"
@@ -244,9 +222,6 @@ function RegisterForm() {
       </div>
       <button type="submit" className="button-cad">Cadastrar-se</button>
       
-      <footer className="footer">
-        © 2024 Proto-on. Todos os direitos reservados.
-      </footer>
     </form>
   );
 }

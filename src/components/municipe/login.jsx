@@ -27,28 +27,6 @@ function LoginForm() {
   //É retornado o formulário html abaixo
   return (
     <div>
-      <header className="header">
-        <div className="title-proton">PROTO-ON</div>
-          <nav>
-            <ul className="nav-links">
-              <li><a href="/home">Home</a></li>
-              <li>
-                <a href="#">Serviços</a>
-                <ul className="submenu">
-                  <li><a href="#">Abrir reclamação</a></li>
-                  <li><a href="#">Consultar protocolos</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">Mais</a>
-                <ul className="submenu">
-                  <li><a href="#">Contato</a></li>
-                  <li><a href="#">Sobre nós</a></li>
-                </ul>
-              </li>
-                </ul>
-          </nav>
-      </header>
       <div className="container">
         <label>Login:</label>
         <input type="text" />
@@ -56,12 +34,9 @@ function LoginForm() {
         <input type="password"/>
       <div className="container-button">
         <button type="submit" className="shadow__btn" onClick={handleSubmit}>Login</button>
-        <button type="button"  className="shadow__btn" onClick={() => (window.location.href = '/home')}>Voltar</button>
+        <button type="button"  className="shadow__btn" onClick={() => (window.location.href = '/')}>Voltar</button>
       </div>
       </div>
-      <footer className="footer">
-        © 2024 Proto-on. Todos os direitos reservados.
-      </footer>
     </div>
   );
 }
