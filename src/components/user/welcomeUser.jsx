@@ -13,10 +13,14 @@ function TelaUser() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const storedAuth = localStorage.getItem('token');
+
+            const authObject = JSON.parse(storedAuth);
         const response = await axios.get('http://localhost:8080/welcomeUser', {
+
           auth: {
-            username: username,
-            password: password
+            username: authObject.username,
+            password: authObject.password
           }
         });
         console.log(response.data);

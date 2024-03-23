@@ -18,11 +18,12 @@ body {
     align-items: center;
 }
 
-.title-proton {
+.title-proton a {
     margin-left: 25px;
     font-size: 40px;
     color: white;
     font-weight: 600;
+    text-decoration: none; /* Remove o sublinhado do link */
 }
 
 nav {

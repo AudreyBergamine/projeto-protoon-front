@@ -3,7 +3,7 @@ function Header(){
         <div>
             
                 <header className="header">
-                    <div className="title-proton">PROTO-ON</div>
+                    <div className="title-proton"><a href="/" >PROTO-ON</a></div>
                     <nav>
                         <ul className="nav-links">
                             <li>

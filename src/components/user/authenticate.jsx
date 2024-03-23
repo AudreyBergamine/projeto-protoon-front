@@ -46,12 +46,23 @@ function LoginFormAuth() {
               navigate('/welcomeAdmin', { state: { username, password, role } });              
             }
           } else {
+            const auth = { 
+              username: username,
+              password: password
+            }
+            localStorage.setItem('token', JSON.stringify(auth));
+
+            const storedAuth = localStorage.getItem('token');
+
+            const authObject = JSON.parse(storedAuth);
             const response = await axios.get('http://localhost:8080/welcomeUser', {
               auth: { 
-                username: username,
-                password: password
+                username: authObject.username,
+                password: authObject.password
               }
+             
             });
+           
             if (response) {
               navigate('/welcomeUser', { state: { username, password, role } }); 
             }
