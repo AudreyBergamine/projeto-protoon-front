@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import bcrypt from 'bcryptjs';
 
 function RegisterFormUser() {
   const [role, setRole] = useState("MUNICIPE"); //Seta o radio Button paa Municipe
