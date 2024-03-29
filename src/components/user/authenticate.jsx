@@ -9,11 +9,11 @@ import axiosInstance from '../../services/axiosInstance';
 function LoginFormAuth() {
 
   const navigate = useNavigate();
-  const { tempoRestante, setTempoRestante } = useState(null);
+  const [ tempoRestante, setTempoRestante ] = useState(null);
   const [usernameFromStorage, setUsernameFromStorage] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // const [role, setRole] = useState("");
+  const [role, setRole] = useState("");
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
     username: "",
@@ -37,9 +37,9 @@ function LoginFormAuth() {
           console.log('Login bem-sucedido!');
           alert('Login bem-sucedido!');
 
-          const loginResponse = await axiosInstance.get('/authenticate', {//Obtendo Token
+          const loginResponse = await axios.get('http://localhost:8080/authenticate', { // Obtendo Token
             auth: {
-              username: username,
+              username: user.username,
               password: password
             }
           });
@@ -51,8 +51,6 @@ function LoginFormAuth() {
           setTempoRestante(expirationTime);
 
           const role = jwtDecode(token).scope.split('_').pop().toUpperCase();//Pegando a role do token
-          console.log("Tempo: ", expirationTime);
-          console.log("Role: ", role);
 
           localStorage.setItem('role', role);
           localStorage.setItem('username', username);
@@ -63,7 +61,7 @@ function LoginFormAuth() {
             navigate('/welcomeAdmin');
 
           } else if (role === "MUNICIPE") {
-            navigate('/teste', { state: { username, password, role, token } });
+            navigate('/teste');
           }
         } else {
           alert('Senha Inválida!');
@@ -77,18 +75,21 @@ function LoginFormAuth() {
     };
 
   }
-  useEffect(() => { //Aqui é para listar os usuários na tela de Login para teste
-    const fetchUsers = async () => {
+  useEffect(() => {
+    setUsername(null);
+    setPassword(null);
+    setRole(null);
+    const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:8080/users");
         setUsers(response.data);
         const usernameFromStorage = localStorage.getItem('username');
         const role = localStorage.getItem('role');
-
+  
         if (usernameFromStorage) {
           setUsername(usernameFromStorage);
         }
-
+  
         if (role !== "ADMIN") {
           console.log("Role: ", role)
           setErrorMessage('Você não tem autorização para ver esta página.');
@@ -97,18 +98,20 @@ function LoginFormAuth() {
         console.error("Erro ao buscar os usuários:", error);
       }
     };
-    fetchUsers();
-
+  
+    fetchData();
+  
     const expirationTimeInSeconds = localStorage.getItem('tempo');
     if (expirationTimeInSeconds > 0) {
       setTempoRestante(expirationTimeInSeconds);
       const interval = setInterval(() => {
         setTempoRestante((prevTempoRestante) => prevTempoRestante - 1);
       }, 1000);
-
+  
       return () => clearInterval(interval);
     }
   }, []);
+  
 
 
   const handleDelete = async (username) => {
@@ -130,7 +133,7 @@ function LoginFormAuth() {
       <h1>Login</h1>
         <div className="input-container">
           <div className="input-container">
-            <label>Username </label>
+            <label>Username </label><br />
             <input
               type="text"
               value={username}
@@ -139,7 +142,7 @@ function LoginFormAuth() {
             />
           </div>
           <div>
-            <label>Password </label>
+            <label>Password </label><br />
             <input
               type="password"
               value={password}
@@ -177,10 +180,10 @@ function LoginFormAuth() {
                   </div>
                 </div>
               ))}
+              <Link to="/home" style={{ marginBottom: 100 }}>Voltar</Link><br></br><br></br>
             </ul>
           </div>
         </div>}
-      <Link to="/home">Voltar</Link><br></br><br></br>
     </div>
   );
 }

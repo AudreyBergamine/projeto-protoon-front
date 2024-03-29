@@ -22,22 +22,29 @@ function TelaAdmin() {
     };
     fetchData();
 
-    const token = localStorage.getItem('token');
-    const roleStorage = localStorage.getItem('role');
-    const roleToken = jwtDecode(token).scope.split('_').pop().toUpperCase();
+  const token = localStorage.getItem('token');
+  if (typeof token === 'string') {
     const now = Math.floor(Date.now() / 1000);
     const expirationTimeInSeconds = jwtDecode(token).exp - now;
-    console.log('Storage', roleStorage)
-    console.log('token', roleToken)
-      if (expirationTimeInSeconds > 0) {
-        setTempoRestante(expirationTimeInSeconds);
-        const interval = setInterval(() => {
-          setTempoRestante((prevTempoRestante) => prevTempoRestante - 1);
-        }, 1000);
 
-        return () => clearInterval(interval);
-      }
-  }, []);
+    if (expirationTimeInSeconds > 0) {
+      setTempoRestante(expirationTimeInSeconds);
+      const interval = setInterval(() => {
+        setTempoRestante((prevTempoRestante) => prevTempoRestante - 1);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    } else {
+      localStorage.removeItem('token'); // Remover o token do localStorage
+      setTempoRestante(null); // Atualizar o estado do tempo restante para null
+    }
+  } else {
+    localStorage.removeItem('token'); // Remover o token do localStorage
+    setTempoRestante(null); // Atualizar o estado do tempo restante para null
+    alert('Tempo de login expirou')
+    navigate('/authenticate');
+  }
+}, []);
 
   return (
     <div>
