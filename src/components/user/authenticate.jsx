@@ -9,7 +9,7 @@ import axiosInstance from '../../services/axiosInstance';
 function LoginFormAuth() {
 
   const navigate = useNavigate();
-  const [ tempoRestante, setTempoRestante ] = useState(null);
+  const [tempoRestante, setTempoRestante] = useState(null);
   const [usernameFromStorage, setUsernameFromStorage] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -27,91 +27,93 @@ function LoginFormAuth() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
 
-      const response = await axiosInstance.get('/users');//Buscando usuarios
-      const users = response.data;
-      const user = users.find(u => u.username === username);
-      if (user) {
-        if (checkPassword(password, user.password)) {
-          console.log('Login bem-sucedido!');
-          alert('Login bem-sucedido!');
+    const response = await axios.get('http://localhost:8080/users')//Buscando usuarios
+    .then((response) => {
 
-          const loginResponse = await axios.get('http://localhost:8080/authenticate', { // Obtendo Token
-            auth: {
-              username: user.username,
-              password: password
-            }
-          });
+    const users = response.data;
+    const user = users.find(u => u.username === username);
+    if (user) {
+      if (checkPassword(password, user.password)) {
+        console.log('Login bem-sucedido!');
+        alert('Login bem-sucedido!');
 
-          const token = loginResponse.data;
-          // console.log("Token: " + token);
-
-          const expirationTime = jwtDecode(token).expirationTimeInSeconds; // Tempo de expiração em segundos
-          setTempoRestante(expirationTime);
-
-          const role = jwtDecode(token).scope.split('_').pop().toUpperCase();//Pegando a role do token
-
-          localStorage.setItem('role', role);
-          localStorage.setItem('username', username);
-          localStorage.setItem('tempo', expirationTime);
-          localStorage.setItem('token', token);
-
-          if (role === "ADMIN") {
-            navigate('/welcomeAdmin');
-
-          } else if (role === "MUNICIPE") {
-            navigate('/teste');
+        const loginResponse = axios.get('http://localhost:8080/authenticate', { // Obtendo Token
+          auth: {
+            username: username,
+            password: password
           }
-        } else {
-          alert('Senha Inválida!');
-        }
-      } else {
-        alert('Usuário não encontrado');
-      }
-    } catch (error) {
-      console.error('Erro ao enviar os dados:', error);
-      alert('Erro ao fazer login. Verifique suas credenciais.');
-    };
+        })
+          .then((loginResponse) => {
+            const token = loginResponse.data;
+            // console.log("Token: " + token);
 
+            const expirationTime = jwtDecode(token).exp; // Tempo de expiração em segundos
+            const now = Math.floor(Date.now() / 1000);
+            const tempo = expirationTime - now;
+            setTempoRestante(tempo);
+            console.log(tempoRestante)
+
+            const role = jwtDecode(token).scope.split('_').pop().toUpperCase();//Pegando a role do token
+
+            localStorage.setItem('role', role);
+            localStorage.setItem('username', username);
+            localStorage.setItem('tempo', tempo);
+            localStorage.setItem('token', token);
+
+            if (role === "ADMIN") {
+              navigate('/welcomeAdmin');
+
+            } else if (role === "MUNICIPE") {
+              navigate('/teste');
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+
+      } else {
+        alert('Senha Inválida!');
+      }
+    } else {
+      alert('Usuário não encontrado');
+    }
+  })
+  .catch((error => {
+    console.log(error)
+  }))
   }
   useEffect(() => {
-    setUsername(null);
-    setPassword(null);
-    setRole(null);
+    setUsername("");
+    setPassword("");
+    setRole("");
+    console.log('Role: ', role)
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:8080/users");
         setUsers(response.data);
-        const usernameFromStorage = localStorage.getItem('username');
-        const role = localStorage.getItem('role');
-  
-        if (usernameFromStorage) {
-          setUsername(usernameFromStorage);
-        }
-  
+
         if (role !== "ADMIN") {
-          console.log("Role: ", role)
           setErrorMessage('Você não tem autorização para ver esta página.');
         }
       } catch (error) {
         console.error("Erro ao buscar os usuários:", error);
       }
     };
-  
+
     fetchData();
-  
+
     const expirationTimeInSeconds = localStorage.getItem('tempo');
     if (expirationTimeInSeconds > 0) {
       setTempoRestante(expirationTimeInSeconds);
       const interval = setInterval(() => {
         setTempoRestante((prevTempoRestante) => prevTempoRestante - 1);
       }, 1000);
-  
+
       return () => clearInterval(interval);
     }
   }, []);
-  
+
 
 
   const handleDelete = async (username) => {
@@ -130,7 +132,7 @@ function LoginFormAuth() {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-      <h1>Login</h1>
+        <h1>Login</h1>
         <div className="input-container">
           <div className="input-container">
             <label>Username </label><br />

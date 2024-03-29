@@ -38,7 +38,7 @@ function UpdateFormUser() {
       <h1>Atualizar Usuário</h1>
       <div className="input-container">
         <div className="input-container">
-          <label>Username </label>
+          <label>Username </label><br />
           <input
             type="text"
             name="username"
@@ -48,7 +48,7 @@ function UpdateFormUser() {
           />
         </div>
         <div>
-          <label>Password </label>
+          <label>Password </label><br />
           <input
             type="password"
             name="password"
@@ -57,8 +57,8 @@ function UpdateFormUser() {
           />
         </div>
       </div>
-      <button type="submit">Atualizar</button><br></br><br></br>
-      <Link to="/authenticate" style={{ textDecoration: 'none' }}>Voltar</Link>
+      <button type="submit">Atualizar</button>
+      <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/welcomeAdmin')}>Voltar</button>
     </form>
   );
 }
