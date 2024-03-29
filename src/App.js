@@ -6,19 +6,22 @@ import './style/cadastro.css';
 import AppRoutes from './routes/AppRoutes';
 import Header from './components/layouts/Header';
 import Footer from './components/layouts/Footer';
+import { TokenProvider } from './context/TokenContext';
 //Esta função retorna todos os components/routes para serem inseridos no html (index.html na pasta public)
 function App() {
   return (
     <div className="App">
       <div>
-      <Header />
+        <Header />
       </div>
-        <div>
-            <AppRoutes />
-        </div>
-        <div>
-          <Footer />
-        </div>
+      <div>
+        {/* <TokenProvider> */}
+          <AppRoutes />
+        {/* </TokenProvider> */}
+      </div>
+      <div>
+        <Footer />
+      </div>
     </div>
   );
 }

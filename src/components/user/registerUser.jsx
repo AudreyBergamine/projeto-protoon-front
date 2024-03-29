@@ -15,7 +15,6 @@ function RegisterFormUser() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "role") { //Escuta radio button
-      console.log(role); 
       setRole(value);
       setFormData({
         ...formData,
@@ -29,62 +28,70 @@ function RegisterFormUser() {
     }
   };
 
-  const handleSubmit = async  (e) => {
+  const handleSubmit = async (e) => {
+    
     e.preventDefault();
-        axios.post("http://localhost:8080/users", {
-          username: formData.username,
-          password: formData.password,
-          role: formData.role ? formData.role : "MUNICIPE"
-        }).then(response => {
-          console.log(response.data);
-          alert("Dados enviados com sucesso!");
-        }).catch(error => {
-          console.error("Erro ao enviar os dados:", error);
-        });
-      
+    const hashedPassword = bcrypt.hashSync(formData.password, 10);
+    axios.post("http://localhost:8080/users", {
+      username: formData.username,
+      password: hashedPassword,
+      role: formData.role ? formData.role : "MUNICIPE"
+    }).then(response => {
+      console.log(response.data);
+      alert("Dados enviados com sucesso!");
+    }).catch(error => {
+      console.error("Erro ao enviar os dados:", error);
+    });
+
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <h1>Cadastro</h1>
-      <div><br></br><br></br>
-        <label>Username </label><br></br>
-        <input
-          type="text"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-        />
+      <div className="input-container">
+        <div className="input-container">
+          <label style={{ marginBottom: -10 }}>Username </label>
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+          />
+        </div>
       </div>
-      <div><br></br><br></br>
-        <label>Password </label><br></br>
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-        />        
-      </div><br></br><br></br>
-      <div>
-        <label>Role:</label><br />
-        <label>
+      <div className="input-container">
+        <div className="input-container">
+          <label style={{ marginBottom: -10 }}>Password </label>
           <input
-            type="radio"
-            name="role"
-            value="MUNICIPE"
-            checked={role === "MUNICIPE"}
+            type="password"
+            name="password"
+            value={formData.password}
             onChange={handleChange}
-          /> Municipe
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="role"
-            value="ADMIN"
-            checked={role === "ADMIN"}
-            onChange={handleChange}
-          /> Admin
-        </label><br /><br /><br />
+          />
+        </div>
+      </div>
+      <div className="register-form">
+        <div className="input-container">
+          <label style={{ marginBottom: -10 }}>Role:</label>
+          <label style={{ marginRight: 80 }}>
+            <input style={{ marginRight: -80 }}
+              type="radio"
+              name="role"
+              value="MUNICIPE"
+              checked={role === "MUNICIPE"}
+              onChange={handleChange}
+            /> Municipe
+          </label>
+          <label style={{ marginRight: 100 }}>
+            <input style={{ marginRight: -80 }}
+              type="radio"
+              name="role"
+              value="ADMIN"
+              checked={role === "ADMIN"}
+              onChange={handleChange}
+            />Admin
+          </label>
+        </div>
       </div>
       <button type="submit">Cadastrar-se</button><br></br><br></br>
       <Link to="/authenticate">Voltar</Link>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import updateUser from "./api";
+import updateUser from "../user/api";
 
-function UpdateFormUser() {
+function RecuperarForm() {
   const { username } = useParams();
   const [formData, setFormData] = useState({
     username: "",
@@ -38,7 +38,7 @@ function UpdateFormUser() {
       <h1>Atualizar Usuário</h1>
       <div className="input-container">
         <div className="input-container">
-          <label>Username </label>
+          <label style={{ marginBottom: 5 }}>Email</label>
           <input
             type="text"
             name="username"
@@ -47,20 +47,22 @@ function UpdateFormUser() {
             readOnly
           />
         </div>
-        <div>
-          <label>Password </label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
+        <div className="input-container">
+          <div className="input-container">
+            <label style={{ marginBottom: 5 }}>Senha</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+          </div>
         </div>
       </div>
-      <button type="submit">Atualizar</button><br></br><br></br>
-      <Link to="/authenticate" style={{ textDecoration: 'none' }}>Voltar</Link>
+      <button type="submit">Atualizar</button>
+      <button type="button" className="shadow__btn" onClick={() => (window.location.href = '/recuperarSenha')}>Voltar</button>
     </form>
   );
 }
 
-export default UpdateFormUser;
+export default RecuperarForm;

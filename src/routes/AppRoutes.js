@@ -4,7 +4,15 @@ import { BrowserRouter as Router, Routes, Route, redirect } from 'react-router-d
 import Home from '../components/home-page/homePage';
 import LoginForm from '../components/municipe/login';
 import RegisterForm from '../components/municipe/register';
+import EmailForm from '../components/municipe/recuperarSenha';
+import RecuperarForm from '../components/municipe/atualizarSenha';
+import PaginaInical from '../components/municipe/paginaInical';
+import Reclamar from '../components/municipe/reclamar';
+import Consultar from '../components/municipe/consultar';
+import SobreNos from '../components/municipe/sobreNos';
+import Contato from '../components/municipe/contato';
 import LoginFormAuth from '../components/user/authenticate';
+import Teste from '../components/user/teste';
 import TelaUser from '../components/user/welcomeUser';
 import TelaAdmin from '../components/user/welcomeAdmin';
 import RegisterFormUser from '../components/user/registerUser';
@@ -15,9 +23,17 @@ function AppRoutes() {
     return (
         <Router>
             <Routes>
-            <Route path="/" element={<Home />} />
+                <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<LoginForm />} />
                 <Route path="/cadastro" element={<RegisterForm />} />
+                <Route path="/recuperarSenha" element={<EmailForm />} />
+                <Route path="/atualizarSenha/:username" element={<RecuperarForm />} />
+                <Route path="/paginaInicial" element={<PaginaInical />} />
+                <Route path="/reclamar" element={<Reclamar />} />
+                <Route path="/consultar" element={<Consultar />} />
+                <Route path="/sobreNos" element={<SobreNos />} />
+                <Route path="/contato" element={<Contato />} />
+                <Route path="/teste" element={<Teste />} />
                 <Route path="/authenticate" element={<LoginFormAuth />} />
                 <Route path="/welcomeUser" element={<TelaUser />} />
                 <Route path="/welcomeAdmin" element={<TelaAdmin />} />

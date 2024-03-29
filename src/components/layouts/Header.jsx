@@ -9,15 +9,15 @@ function Header(){
                             <li>
                                 <a href="#">Serviços</a>
                                 <ul className="submenu">
-                                    <li><a href="#">Abrir reclamação</a></li>
-                                    <li><a href="#">Consultar protocolos</a></li>
+                                    <li><a href="./reclamar">Abrir reclamação</a></li>
+                                    <li><a href="/consultar">Consultar protocolos</a></li>
                                 </ul>
                             </li>
                             <li>
                                 <a href="#">Mais</a>
                                 <ul className="submenu">
-                                    <li><a href="#">Contato</a></li>
-                                    <li><a href="#">Sobre nós</a></li>
+                                    <li><a href="./contato">Contato</a></li>
+                                    <li><a href="./sobreNos">Sobre nós</a></li>
                                 </ul>
                             </li>
                         </ul>

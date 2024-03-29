@@ -5,7 +5,7 @@ import moment from "moment";
 import bcrypt from 'bcryptjs';
 
 //Função de cadastro de municipe
-function RegisterForm() {
+function Reclamar() {
   const navigate = useNavigate();
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
   const [formData, setFormData] = useState({
@@ -59,7 +59,7 @@ function RegisterForm() {
     const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
     const hashedPassword = await bcrypt.hash(formData.senha, 10);
     try {
-      const response = await axios.post('http://localhost:8080/municipes', {
+      const response = await axios.post('http://localhost:8080/reclamacoes', {
         // const response = await axios.post('https://proton-1710414195673.azurewebsites.net/municipes', {
         ...formData, // Inclua todos os dados do formData
         senha: hashedPassword,
@@ -81,59 +81,17 @@ function RegisterForm() {
     <form onSubmit={handleSubmit}>
       <div>
 
-        <h3>Dados Pessoais</h3>
+        <h3>Reclame Aqui</h3>
         <div className="register-form">
           <div className="input-container">
 
             <div>
-              <label>Nome:</label><br></br>
+              <label>Problema:</label><br></br>
               <input
                 type="text"
                 name="nome_municipe"
                 placeholder="Ex.: Cláudio Silva"
                 value={formData.nome_municipe}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label>Email:</label><br></br>
-              <input
-                type="email"
-                name="email"
-                placeholder="Ex.: claudio.silva@gmail.com"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label>Senha:</label><br></br>
-              <input
-                type="password"
-                name="senha"
-                value={formData.senha}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label>Número do CPF:</label><br></br>
-              <input
-                type="number"
-                name="num_CPF"
-                placeholder="Ex.: 33333333333"
-                value={formData.num_CPF}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label>Data de Nascimento:</label><br></br>
-              <input
-                type="date"
-                name="data_nascimento"
-                value={formData.data_nascimento}
                 onChange={handleChange}
               />
             </div>
@@ -223,45 +181,12 @@ function RegisterForm() {
                 onChange={handleChange}
               />
             </div>
-
-            <div>
-              <label>Cidade:</label><br></br>
-              <input
-                type="text"
-                name="cidade"
-                placeholder="Ex.: Ferraz de Vasconcelos"
-                value={formData.cidade}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label>Estado:</label><br></br>
-              <input
-                type="text"
-                name="estado"
-                placeholder="Ex.: São Paulo"
-                value={formData.estado}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label>País:</label><br></br>
-              <input
-                type="text"
-                name="pais"
-                placeholder="Ex.: Brasil"
-                value={formData.pais}
-                onChange={handleChange}
-              />
-            </div>
           </div>
         </div>
       </div>
       <div style={{ marginTop: -30 }}>
-        <button type="submit" className="button-cad">Cadastrar-se</button>
-        <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/login')}>Voltar</button>
+        <button type="submit" className="button-cad">Confirmar</button>
+        <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/paginaInicial')}>Voltar</button>
       </div>
       <footer className="footer">
         © 2024 Proto-on. Todos os direitos reservados.
@@ -270,4 +195,4 @@ function RegisterForm() {
   );
 }
 
-export default RegisterForm;
+export default Reclamar;
