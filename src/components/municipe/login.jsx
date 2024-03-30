@@ -32,37 +32,7 @@ function LoginForm() {
           alert('Login bem-sucedido!');
           const username = email;
           const password = senha;
-          const loginResponse = await axios.get('http://localhost:8080/authenticate', {//Obtendo Token
-            auth: {
-              username: email,
-              password: senha
-            }
-          });
-
-          let token = loginResponse.data;
-          console.log("Token: " + token);
-          const role = jwtDecode(token).scope.split('_').pop().toUpperCase();//Pegando a role do token
-
-          // console.log(role);
-
-          localStorage.setItem('role', role);
-          localStorage.setItem('token', token);
-
-          token = localStorage.getItem('token');
-
-  const instance = axios.create({
-    baseURL: 'http://localhost:8080',
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  });
-
-          if (role === "ADMIN") {
-            navigate('/paginaInicial');
-
-          } else if (role === "MUNICIPE") {
-            navigate('/', { state: { email, senha, role, token } });
-          }
+          navigate('/paginaInicial')
         } else {
           alert('Senha Inválida!');
         }
