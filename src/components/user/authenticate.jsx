@@ -28,9 +28,7 @@ function LoginFormAuth() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await axios.get('http://localhost:8080/users')//Buscando usuarios
-    .then((response) => {
-
+    try {
       const response = await axiosInstance.get('/users');//Buscando usuarios
       const users = response.data;
       const user = users.find(u => u.username === username);
@@ -39,34 +37,39 @@ function LoginFormAuth() {
           console.log('Login bem-sucedido!');
           alert('Login bem-sucedido!');
         
-          const loginResponse = await axios.get('http://localhost:8080/authenticate', { // Obtendo Token
-            auth: {
-              username: user.username,
-              password: password
-            }
-          });
-
-          const token = loginResponse.data;
-          console.log("Token: " + token);
-
+          try {
+            const loginResponse = await axios.get('http://localhost:8080/authenticate', { // Obtendo Token
+              auth: {
+                username: user.username,
+                password: password
+              }
+            });
+    
+            const token = loginResponse.data;
+            console.log("Token: " + token);
+    
             const expirationTime = jwtDecode(token).exp; // Tempo de expiração em segundos
             const now = Math.floor(Date.now() / 1000);
             const tempo = expirationTime - now;
             setTempoRestante(tempo);
             console.log(tempoRestante)
-
+    
             const role = jwtDecode(token).scope.split('_').pop().toUpperCase();//Pegando a role do token
-
+    
             localStorage.setItem('role', role);
             localStorage.setItem('username', username);
             localStorage.setItem('tempo', tempo);
             localStorage.setItem('token', token);
-
+    
             if (role === "ADMIN") {
               navigate('/welcomeAdmin');
-
-          } else if (role === "MUNICIPE") {
-            navigate('/teste');
+  
+            } else if (role === "MUNICIPE") {
+              navigate('/teste');
+            }
+          } catch (error) {
+            console.error('Erro ao enviar os dados:', error);
+            alert('Erro ao fazer login. Verifique suas credenciais.');
           }
         } else {
           alert('Senha Inválida!');
@@ -75,8 +78,8 @@ function LoginFormAuth() {
         alert('Usuário não encontrado');
       }
     } catch (error) {
-      console.error('Erro ao enviar os dados:', error);
-      alert('Erro ao fazer login. Verifique suas credenciais.');
+      console.error('Erro ao buscar os usuários:', error);
+      alert('Erro ao buscar os usuários. Verifique sua conexão com a internet.');
     }
 
   }
