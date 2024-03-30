@@ -22,11 +22,7 @@ function Teste() {
       }
     };
     fetchData();
-
-  const token = localStorage.getItem('token');
-  if (typeof token === 'string') {
-    const now = Math.floor(Date.now() / 1000);
-    const expirationTimeInSeconds = jwtDecode(token).exp - now;
+    const expirationTimeInSeconds = 100 ;
 
     if (expirationTimeInSeconds > 0) {
       setTempoRestante(expirationTimeInSeconds);
@@ -39,13 +35,7 @@ function Teste() {
       localStorage.removeItem('token'); // Remover o token do localStorage
       setTempoRestante(null); // Atualizar o estado do tempo restante para null
     }
-  } else {
-    localStorage.removeItem('token'); // Remover o token do localStorage
-    setTempoRestante(null); // Atualizar o estado do tempo restante para null
-    alert('Tempo de login expirou')
-    navigate('/authenticate');
-  }
-}, []);
+  }, []);
 
   return (
     <div>

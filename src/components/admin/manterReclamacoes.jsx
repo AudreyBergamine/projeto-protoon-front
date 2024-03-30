@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
 
-function TelaAdmin() {
+function ManterReclamacoes() {
 
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -17,48 +17,29 @@ function TelaAdmin() {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:8080/users");
-        setUsers(response.data);
-
-        const role = localStorage.getItem('role');
-        if (role !== "ADMIN") {
-          setErrorMessage('Você não tem autorização para ver esta página.');
-        }
       } catch (error) {
         console.error("Erro ao buscar os usuários:", error);
       }
     };
     fetchData();
-
-    const token = localStorage.getItem('token');
-    const expirationTime = jwtDecode(token).exp;
-    const now = Math.floor(Date.now() / 1000);
-    const tempo = expirationTime - now;
-    const tempoRestante = tempo;
-
-    if (typeof token === 'string') {
-      console.log('Role: ', role)
-      console.log('tempoRestante: ', tempoRestante)
-      if (tempoRestante > 0) {
-        setTempoRestante(tempoRestante);
-        const interval = setInterval(() => {
-          setTempoRestante((prevTempoRestante) => {
-            if (prevTempoRestante === 0) {
-              clearInterval(interval);
-              localStorage.removeItem('token');
-              setTempoRestante(null);
-              alert('Tempo de login expirou');
-              navigate('/authenticate');
-              return prevTempoRestante;
-            }
-            return prevTempoRestante - 1;
-          });
-        }, 1000);
-
-        return () => clearInterval(interval);
-      }
-    } else {
-      alert('Você não tem acesso a esta Página')
-      navigate('/authenticate')
+    const tempoRestante = 100;
+    console.log('tempoRestante: ', tempoRestante)
+    if (tempoRestante > 0) {
+      setTempoRestante(tempoRestante);
+      const interval = setInterval(() => {
+        setTempoRestante((prevTempoRestante) => {
+          if (prevTempoRestante === 0) {
+            clearInterval(interval);
+            localStorage.removeItem('token');
+            setTempoRestante(null);
+            alert('Tempo de login expirou');
+            navigate('/loginAdmin');
+            return prevTempoRestante;
+          }
+          return prevTempoRestante - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
     }
 
   }, []);
@@ -82,11 +63,11 @@ function TelaAdmin() {
         <p>{errorMessage}</p>
       ) : (
         <div>
-          <h1>Bem-Vindo</h1>
+          <h1>Reclamações</h1>
 
-          
+
           <div>
-            <h3>Lista de Usuários</h3>
+            <h3>Lista de Reclamações</h3>
             <ul style={{ listStyleType: 'none', padding: 0, marginBottom: 100 }}>
               {users.map((user, index) => (
                 <div><hr />
@@ -115,9 +96,8 @@ function TelaAdmin() {
                 ) : (
                   <p>O tempo expirou, faça login novamente por favor!</p>
                 )}
-              <button type="button" style={{ backgroundColor: 'green' }} className="shadow__btn" onClick={() => (window.location.href = '/authenticate')}>Voltar</button>
-              <button type="button" style={{ backgroundColor: 'purple' }} className="shadow__btn" onClick={() => (window.location.href = '/manterReclamacoes')}>Ir Para Reclamações</button>
-              <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/registerUser')}>Cadastrar um Novo Usuário</button>
+                <button type="button" style={{ backgroundColor: 'green' }} className="shadow__btn" onClick={() => (window.location.href = '/welcomeAdmin')}>Voltar</button>
+                <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/registrarReclamacao')}>Cadastrar uma nova Reclamação</button>
               </div>
             </div>
           </div>
@@ -127,4 +107,4 @@ function TelaAdmin() {
   );
 }
 
-export default TelaAdmin;
+export default ManterReclamacoes;

@@ -2,11 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import bcrypt from 'bcryptjs';
-import { jwtDecode } from 'jwt-decode';
-// import { useToken } from '../../context/TokenContext';
-import axiosInstance from '../../services/axiosInstance';
 
-function LoginFormAuth() {
+function LoginAdmin() {
 
   const navigate = useNavigate();
   const [tempoRestante, setTempoRestante] = useState(null);
@@ -22,7 +19,7 @@ function LoginFormAuth() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const checkPassword = async (plainPassword, hashedPassword) => {//Método Hash
-    return await bcrypt.compareSync(plainPassword, hashedPassword);
+    return bcrypt.compareSync(plainPassword, hashedPassword);
   };
 
   const handleSubmit = async (e) => {
@@ -36,44 +33,16 @@ function LoginFormAuth() {
         if (user) {
           if (checkPassword(password, user.password)) {
 
-            axios.get('http://localhost:8080/authenticate', { // Obtendo Token
-              auth: {
-                username: username,
-                password: password
-              }
-            })
-              .then(async (loginResponse) => {
+            console.log('Login bem-sucedido!');
+            alert('Login bem-sucedido!');
+            setTempoRestante(100);
+            console.log(tempoRestante)
 
-                console.log('Login bem-sucedido!');
-                alert('Login bem-sucedido!');
+            localStorage.setItem('role', role);
+            localStorage.setItem('username', username);
+            localStorage.setItem('tempo', tempoRestante);
+            navigate('/welcomeAdmin');
 
-                const token = loginResponse.data;
-                console.log("Token: " + token);
-
-                const expirationTime = jwtDecode(token).exp; // Tempo de expiração em segundos
-                const now = Math.floor(Date.now() / 1000);
-                const tempo = expirationTime - now;
-                setTempoRestante(tempo);
-                console.log(tempoRestante)
-
-                const role = jwtDecode(token).scope.split('_').pop().toUpperCase();//Pegando a role do token
-
-                localStorage.setItem('role', role);
-                localStorage.setItem('username', username);
-                localStorage.setItem('tempo', tempo);
-                localStorage.setItem('token', token);
-
-                if (role === "ADMIN") {
-                  navigate('/welcomeAdmin');
-
-                } else if (role === "MUNICIPE") {
-                  navigate('/teste');
-                }
-              })
-              .catch((error) => {
-                console.error('Erro ao enviar os dados:');
-                alert('Erro ao fazer login. Verifique suas credenciais.');
-              })
           } else {
             alert('Senha Inválida!');
           }
@@ -120,4 +89,4 @@ function LoginFormAuth() {
   );
 }
 
-export default LoginFormAuth;
+export default LoginAdmin;

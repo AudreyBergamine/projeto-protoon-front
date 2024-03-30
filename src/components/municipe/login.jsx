@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import bcrypt from 'bcryptjs';
-import { jwtDecode } from 'jwt-decode';
 
 //Função que excecuta o login, contendo configurações do login e o formulário HTML
 function LoginForm() {
