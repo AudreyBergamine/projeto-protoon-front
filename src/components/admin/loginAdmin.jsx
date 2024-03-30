@@ -18,10 +18,6 @@ function LoginAdmin() {
   });
   const [errorMessage, setErrorMessage] = useState('');
 
-  const checkPassword = async (plainPassword, hashedPassword) => {//Método Hash
-    return bcrypt.compareSync(plainPassword, hashedPassword);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -31,8 +27,9 @@ function LoginAdmin() {
         const user = users.find(u => u.username === username);
         console.log(response.data);
         if (user) {
-          if (checkPassword(password, user.password)) {
-
+          if (!bcrypt.compareSync(password, user.password)) {
+            alert('Senha Inválida!');            
+          } else {
             console.log('Login bem-sucedido!');
             alert('Login bem-sucedido!');
             setTempoRestante(100);
@@ -41,10 +38,7 @@ function LoginAdmin() {
             localStorage.setItem('role', role);
             localStorage.setItem('username', username);
             localStorage.setItem('tempo', tempoRestante);
-            navigate('/welcomeAdmin');
-
-          } else {
-            alert('Senha Inválida!');
+            navigate('/welcomeAdmin');            
           }
         } else {
           alert('Usuário não encontrado');
@@ -84,7 +78,7 @@ function LoginAdmin() {
         <br />
         <br />
       </form>
-      <button type="button" style={{ backgroundColor: 'blue', marginBottom: 100 }} className="shadow__btn" onClick={() => (window.location.href = '/authenticate')}>Voltar</button>
+      <button type="button" style={{ backgroundColor: 'blue', marginBottom: 100 }} className="shadow__btn" onClick={() => (window.location.href = '/')}>Voltar</button>
     </div>
   );
 }

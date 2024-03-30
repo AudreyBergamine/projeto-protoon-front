@@ -10,11 +10,6 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
-  const checkPassword = async (plainPassword, hashedPassword) => {//Método Hash
-    
-    return await bcrypt.compareSync(plainPassword, hashedPassword);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -25,8 +20,7 @@ function LoginForm() {
       if (municipe) {
         console.log(senha);
         console.log(municipe.senha);
-        console.log(await bcrypt.compare(senha, municipe.senha));
-        if (checkPassword(senha, municipe.senha)) {
+        if (bcrypt.compareSync(senha, municipe.senha)) {
           console.log('Login bem-sucedido!');
           alert('Login bem-sucedido!');
           const username = email;
