@@ -15,6 +15,7 @@ import LoginFormAuth from '../components/user/authenticate';
 import Teste from '../components/user/teste';
 import TelaUser from '../components/user/welcomeUser';
 import TelaAdmin from '../components/user/welcomeAdmin';
+import ManterReclamacoes from '../components/user/manterReclamacoes';
 import RegisterFormUser from '../components/user/registerUser';
 import UpdateFormUser from '../components/user/updateUser';
 
@@ -37,6 +38,7 @@ function AppRoutes() {
                 <Route path="/authenticate" element={<LoginFormAuth />} />
                 <Route path="/welcomeUser" element={<TelaUser />} />
                 <Route path="/welcomeAdmin" element={<TelaAdmin />} />
+                <Route path="/manterReclamacoes" element={<ManterReclamacoes />} />
                 <Route path="/registerUser" element={<RegisterFormUser />} />
                 <Route path="/updateUser/:username" element={<UpdateFormUser />} />
                 {/* Adicione outras rotas aqui, se necessário */}
