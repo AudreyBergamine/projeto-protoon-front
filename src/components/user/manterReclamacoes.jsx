@@ -116,7 +116,7 @@ function ManterReclamacoes() {
                   <p>O tempo expirou, faça login novamente por favor!</p>
                 )}
               <button type="button" style={{ backgroundColor: 'green' }} className="shadow__btn" onClick={() => (window.location.href = '/welcomeAdmin')}>Voltar</button>
-              <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/registerUser')}>Cadastrar uma nova Reclamação</button>
+              <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/registrarReclamacao')}>Cadastrar uma nova Reclamação</button>
               </div>
             </div>
           </div>
