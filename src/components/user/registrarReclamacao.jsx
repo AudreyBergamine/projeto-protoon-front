@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import bcrypt from 'bcryptjs';
 
-function RegisterFormUser() {
+function RegistrarReclamacao() {
   const [role, setRole] = useState("MUNICIPE"); //Seta o radio Button paa Municipe
   const [formData, setFormData] = useState({
     username: "",
@@ -46,10 +46,10 @@ function RegisterFormUser() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1>Cadastro de Usuário</h1>
+      <h1>Cadastro de Reclamação</h1>
       <div className="input-container">
         <div className="input-container">
-          <label style={{ marginBottom: -10 }}>Username </label><br />
+          <label style={{ marginBottom: -10 }}>Problema </label><br />
           <input
             type="text"
             name="username"
@@ -60,43 +60,20 @@ function RegisterFormUser() {
       </div>
       <div className="input-container">
         <div className="input-container">
-          <label style={{ marginBottom: -10 }}>Password </label><br />
+          <label style={{ marginBottom: -10 }}>Bairro </label><br />
           <input
-            type="password"
+            type="text"
             name="password"
             value={formData.password}
             onChange={handleChange}
           />
         </div>
       </div>
-      <div className="register-form">
-        <div className="input-container">
-          <label style={{ marginBottom: -10 }}>Role:</label>
-          <label style={{ marginRight: 80 }}>
-            <input style={{ marginRight: -80 }}
-              type="radio"
-              name="role"
-              value="MUNICIPE"
-              checked={role === "MUNICIPE"}
-              onChange={handleChange}
-            /> Municipe
-          </label>
-          <label style={{ marginRight: 100 }}>
-            <input style={{ marginRight: -80 }}
-              type="radio"
-              name="role"
-              value="ADMIN"
-              checked={role === "ADMIN"}
-              onChange={handleChange}
-            />Admin
-          </label>
-        </div>
-      </div>
-      <button type="submit">Cadastrar-se</button>
-      <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/welcomeAdmin')}>Voltar</button>
+      <button type="submit">Confirmar</button>
+      <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/manterReclamacoes')}>Voltar</button>
     </form>
   );
 }
 
-export default RegisterFormUser;
+export default RegistrarReclamacao;
 

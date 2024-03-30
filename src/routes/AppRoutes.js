@@ -16,6 +16,7 @@ import Teste from '../components/user/teste';
 import TelaUser from '../components/user/welcomeUser';
 import TelaAdmin from '../components/user/welcomeAdmin';
 import ManterReclamacoes from '../components/user/manterReclamacoes';
+import RegistrarReclamacao from '../components/user/registrarReclamacao';
 import RegisterFormUser from '../components/user/registerUser';
 import UpdateFormUser from '../components/user/updateUser';
 
@@ -39,6 +40,7 @@ function AppRoutes() {
                 <Route path="/welcomeUser" element={<TelaUser />} />
                 <Route path="/welcomeAdmin" element={<TelaAdmin />} />
                 <Route path="/manterReclamacoes" element={<ManterReclamacoes />} />
+                <Route path="/registrarReclamacao" element={<RegistrarReclamacao />} />
                 <Route path="/registerUser" element={<RegisterFormUser />} />
                 <Route path="/updateUser/:username" element={<UpdateFormUser />} />
                 {/* Adicione outras rotas aqui, se necessário */}
