@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from "axios";
-import axiosInstance from '../../services/axiosInstance';
+import { jwtDecode } from 'jwt-decode';
 
 function TelaAdmin() {
 
@@ -30,7 +30,10 @@ function TelaAdmin() {
     fetchData();
 
     const token = localStorage.getItem('token');
-    const tempoRestante = localStorage.getItem('tempo');
+    const expirationTime = jwtDecode(token).exp;
+    const now = Math.floor(Date.now() / 1000);
+    const tempo = expirationTime - now;
+    const tempoRestante = tempo;
 
     if (typeof token === 'string') {
       console.log('Role: ', role)
@@ -52,11 +55,6 @@ function TelaAdmin() {
         }, 1000);
 
         return () => clearInterval(interval);
-      // } else {
-      //   localStorage.removeItem('token');
-      //   setTempoRestante(null);
-      //   alert('Tempo de login expirou')
-        // navigate('/authenticate');
       }
     } else {
       alert('Você não tem acesso a esta Página')
@@ -66,8 +64,17 @@ function TelaAdmin() {
   }, []);
 
   const handleDelete = async (username) => {
-    // Lógica para deletar usuário
-  }
+    try {
+      if (window.confirm('Tem certeza que deseja remover este usuário?')) {
+        await axios.delete(`http://localhost:8080/users/${username}`);// Para deletar usuario do banco de dados
+        setUsers(users.filter(user => user.username !== username));
+        alert('Usuário deletado com sucesso!');
+      }
+    } catch (error) {
+      console.error('Erro ao deletar o usuário:', error);
+      alert('Erro ao deletar o usuário. Por favor, tente novamente.');
+    }
+  };
 
   return (
     <div>
@@ -86,25 +93,31 @@ function TelaAdmin() {
           <Link to="/registerUser">Cadastrar um Novo Usuário</Link>
           <div>
             <h3>Lista de Usuários</h3>
-            <ul style={{ listStyleType: 'none', padding: 0 }}>
+            <ul style={{ listStyleType: 'none', padding: 0, marginBottom: 100 }}>
               {users.map((user, index) => (
-                <div key={index} style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px' }}>
-                  <div style={{ width: 300 }}>User: {user.username}</div>
-                  <div>Role: {user.role ? user.role : "MUNICIPE"}</div>
-                  <div>
-                    {user.username !== "admin" && (
-                      <button onClick={() => handleDelete(user.username)}>Excluir</button>
-                    )}
-                  </div>
-                  <div>
-                    {user.username !== "admin" && (
-                      <button onClick={() => navigate(`/updateUser/${user.username}`)}>Editar</button>
-                    )}
+                <div><hr />
+                  <div key={index} style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px' }}>
+                    <div style={{ width: 300, marginTop: 20 }}>User: {user.username}</div>
+                    <div style={{ width: 300, marginTop: 20 }}>Role: {user.role ? user.role : "MUNICIPE"}</div>
+                    <div>
+                      {user.username !== "admin" && (
+                        <button type="button" onClick={() => handleDelete(user.username)} style={{ backgroundColor: 'red', color: 'white' }}>Excluir</button>
+                      )}
+                    </div>
+                    <div>
+                      {user.username !== "admin" && (
+                        <button type="button" onClick={() => navigate(`/updateUser/${user.username}`)} style={{ backgroundColor: 'blue', color: 'white' }} className="shadow__btn">Editar</button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
-              <button type="button" style={{ backgroundColor: 'blue', marginBottom: 100 }} className="shadow__btn" onClick={() => (window.location.href = '/authenticate')}>Voltar</button>
+              <hr />
             </ul>
+            <div style={{ position: 'sticky', height: "80px", bottom: '80px', backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '10px 0', display: 'flex', justifyContent: 'center', gap: '10px', zIndex: 100 }}>
+              <button type="button" style={{ backgroundColor: 'green' }} className="shadow__btn" onClick={() => (window.location.href = '/authenticate')}>Voltar</button>
+              <button type="button" style={{ backgroundColor: 'purple' }} className="shadow__btn" onClick={() => (window.location.href = '/manterReclamacoes')}>Ir Para Reclamações</button>
+            </div>
           </div>
         </div>
       )}

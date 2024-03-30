@@ -114,21 +114,6 @@ function LoginFormAuth() {
     }
   }, []);
 
-
-
-  const handleDelete = async (username) => {
-    try {
-      if (window.confirm('Tem certeza que deseja remover este usuário?')) {
-        await axios.delete(`http://localhost:8080/users/${username}`);// Para deletar usuario do banco de dados
-        setUsers(users.filter(user => user.username !== username));
-        alert('Usuário deletado com sucesso!');
-      }
-    } catch (error) {
-      console.error('Erro ao deletar o usuário:', error);
-      alert('Erro ao deletar o usuário. Por favor, tente novamente.');
-    }
-  };
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -157,35 +142,7 @@ function LoginFormAuth() {
         <br />
         <br />
       </form>
-      {errorMessage ? (
-        <p>{errorMessage}</p>
-      ) :
-        <div>
-          <Link to="/registerUser">cadastrar um Usuário</Link>
-          <div>
-            <h3>Lista de Usuários</h3>
-            <ul style={{ listStyleType: 'none', padding: 0 }}>
-              {users.map((user, index) => (
-                <div key={index} style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px' }}>
-
-                  <div style={{ width: 300 }}>User: {user.username}</div>
-                  <div>Role: {user.role ? user.role : "MUNICIPE"}</div>
-                  <div>
-                    {user.username !== "admin" && (
-                      <button onClick={() => handleDelete(user.username)}>Excluir</button>
-                    )}
-                  </div>
-                  <div>
-                    {user.username !== "admin" && (
-                      <button onClick={() => navigate(`/updateUser/${user.username}`)}>Editar</button>
-                    )}
-                  </div>
-                </div>
-              ))}
-              <Link to="/home" style={{ marginBottom: 100 }}>Voltar</Link><br></br><br></br>
-            </ul>
-          </div>
-        </div>}
+      <button type="button" style={{ backgroundColor: 'blue', marginBottom: 100 }} className="shadow__btn" onClick={() => (window.location.href = '/authenticate')}>Voltar</button>
     </div>
   );
 }
