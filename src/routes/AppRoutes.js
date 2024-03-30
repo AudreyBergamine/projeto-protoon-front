@@ -25,7 +25,7 @@ function AppRoutes() {
     return (
         <Router>
             <Routes>
-                <Route path="/home" element={<Home />} />
+                <Route path="/" element={<Home />} />
                 <Route path="/login" element={<LoginForm />} />
                 <Route path="/cadastro" element={<RegisterForm />} />
                 <Route path="/recuperarSenha" element={<EmailForm />} />

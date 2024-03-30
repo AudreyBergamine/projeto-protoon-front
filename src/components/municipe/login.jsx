@@ -8,45 +8,60 @@ import { jwtDecode } from 'jwt-decode';
 function LoginForm() {
   const navigate = useNavigate();
  
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
 
-  const checkPassword = (plainPassword, hashedPassword) => {//Método Hash
-    return bcrypt.compareSync(plainPassword, hashedPassword);
+  const checkPassword = async (plainPassword, hashedPassword) => {//Método Hash
+    
+    return await bcrypt.compareSync(plainPassword, hashedPassword);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get('http://localhost:8080/users');//Buscando usuarios
-      const users = response.data;
-      const user = users.find(u => u.username === username);
-      if (user) {
-        if (checkPassword(password, user.password)) {
+      const response = await axios.get('http://localhost:8080/municipes');//Buscando usuarios
+      const municipes = response.data;
+      console.log(response.data)
+      const municipe = municipes.find(u => u.email === email);
+      if (municipe) {
+        console.log(senha);
+        console.log(municipe.senha);
+        console.log(await bcrypt.compare(senha, municipe.senha));
+        if (checkPassword(senha, municipe.senha)) {
           console.log('Login bem-sucedido!');
           alert('Login bem-sucedido!');
-
+          const username = email;
+          const password = senha;
           const loginResponse = await axios.get('http://localhost:8080/authenticate', {//Obtendo Token
             auth: {
-              username: username,
-              password: password
+              username: email,
+              password: senha
             }
           });
 
-          const token = loginResponse.data;
-          // console.log('Token JWT:', token);
+          let token = loginResponse.data;
+          console.log("Token: " + token);
           const role = jwtDecode(token).scope.split('_').pop().toUpperCase();//Pegando a role do token
 
           // console.log(role);
 
           localStorage.setItem('role', role);
-          localStorage.setItem('username', username);
+          localStorage.setItem('token', token);
+
+          token = localStorage.getItem('token');
+
+  const instance = axios.create({
+    baseURL: 'http://localhost:8080',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
 
           if (role === "ADMIN") {
             navigate('/paginaInicial');
 
           } else if (role === "MUNICIPE") {
-            navigate('/welcomeUser', { state: { username, password, role, token } });
+            navigate('/', { state: { email, senha, role, token } });
           }
         } else {
           alert('Senha Inválida!');
@@ -67,12 +82,12 @@ function LoginForm() {
           <div className="input-container">
             <div className="input-container">
               <label style={{ marginBottom: 15 }}>Email:</label>
-              <input type="text" value={username}
-                onChange={(e) => setUsername(e.target.value)} required />
+              <input type="text" value={email}
+                onChange={(e) => setEmail(e.target.value)} required />
               <label className="lbl-password" style={{ marginBottom: 15 }}>Senha:</label>
               <input type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
                 required /><br></br>
             </div>
           </div>

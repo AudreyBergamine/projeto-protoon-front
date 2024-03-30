@@ -21,8 +21,8 @@ function LoginFormAuth() {
   });
   const [errorMessage, setErrorMessage] = useState('');
 
-  const checkPassword = (plainPassword, hashedPassword) => {//Método Hash
-    return bcrypt.compareSync(plainPassword, hashedPassword);
+  const checkPassword = async (plainPassword, hashedPassword) => {//Método Hash
+    return await bcrypt.compareSync(plainPassword, hashedPassword);
   };
 
   const handleSubmit = async (e) => {
@@ -31,22 +31,23 @@ function LoginFormAuth() {
     const response = await axios.get('http://localhost:8080/users')//Buscando usuarios
     .then((response) => {
 
-    const users = response.data;
-    const user = users.find(u => u.username === username);
-    if (user) {
-      if (checkPassword(password, user.password)) {
-        console.log('Login bem-sucedido!');
-        alert('Login bem-sucedido!');
+      const response = await axiosInstance.get('/users');//Buscando usuarios
+      const users = response.data;
+      const user = users.find(u => u.username === username);
+      if (user) {
+        if (checkPassword(password, user.password)) {
+          console.log('Login bem-sucedido!');
+          alert('Login bem-sucedido!');
+        
+          const loginResponse = await axios.get('http://localhost:8080/authenticate', { // Obtendo Token
+            auth: {
+              username: user.username,
+              password: password
+            }
+          });
 
-        const loginResponse = axios.get('http://localhost:8080/authenticate', { // Obtendo Token
-          auth: {
-            username: username,
-            password: password
-          }
-        })
-          .then((loginResponse) => {
-            const token = loginResponse.data;
-            // console.log("Token: " + token);
+          const token = loginResponse.data;
+          console.log("Token: " + token);
 
             const expirationTime = jwtDecode(token).exp; // Tempo de expiração em segundos
             const now = Math.floor(Date.now() / 1000);
@@ -64,36 +65,38 @@ function LoginFormAuth() {
             if (role === "ADMIN") {
               navigate('/welcomeAdmin');
 
-            } else if (role === "MUNICIPE") {
-              navigate('/teste');
-            }
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-
+          } else if (role === "MUNICIPE") {
+            navigate('/teste');
+          }
+        } else {
+          alert('Senha Inválida!');
+        }
       } else {
-        alert('Senha Inválida!');
+        alert('Usuário não encontrado');
       }
-    } else {
-      alert('Usuário não encontrado');
+    } catch (error) {
+      console.error('Erro ao enviar os dados:', error);
+      alert('Erro ao fazer login. Verifique suas credenciais.');
     }
-  })
-  .catch((error => {
-    console.log(error)
-  }))
+
   }
   useEffect(() => {
-    setUsername("");
-    setPassword("");
-    setRole("");
-    console.log('Role: ', role)
+    setUsername(null);
+    setPassword(null);
+    setRole(null);
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:8080/users");
         setUsers(response.data);
-
+        const usernameFromStorage = localStorage.getItem('username');
+        const role = localStorage.getItem('role');
+  
+        if (usernameFromStorage) {
+          setUsername(usernameFromStorage);
+        }
+  
         if (role !== "ADMIN") {
+          console.log("Role: ", role)
           setErrorMessage('Você não tem autorização para ver esta página.');
         }
       } catch (error) {
