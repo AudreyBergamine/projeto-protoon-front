@@ -95,7 +95,7 @@ function LoginForm() {
         <div className="container-button">
             <button type="submit" className="shadow__btn">Login</button>
             <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/cadastro')}>Cadastre-se</button>
-            <button type="button" className="shadow__btn" onClick={() => (window.location.href = '/home')}>Voltar</button>
+            <button type="button" className="shadow__btn" onClick={() => (window.location.href = '/')}>Voltar</button>
           {/* Esta div ta buagada */}
           <div className="container"></div>
         </div>
