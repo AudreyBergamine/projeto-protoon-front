@@ -21,8 +21,8 @@ function LoginFormAuth() {
   });
   const [errorMessage, setErrorMessage] = useState('');
 
-  const checkPassword = (plainPassword, hashedPassword) => {//Método Hash
-    return bcrypt.compareSync(plainPassword, hashedPassword);
+  const checkPassword = async (plainPassword, hashedPassword) => {//Método Hash
+    return await bcrypt.compareSync(plainPassword, hashedPassword);
   };
 
   const handleSubmit = async (e) => {
@@ -36,7 +36,7 @@ function LoginFormAuth() {
         if (checkPassword(password, user.password)) {
           console.log('Login bem-sucedido!');
           alert('Login bem-sucedido!');
-
+        
           const loginResponse = await axios.get('http://localhost:8080/authenticate', { // Obtendo Token
             auth: {
               username: user.username,
@@ -45,7 +45,7 @@ function LoginFormAuth() {
           });
 
           const token = loginResponse.data;
-          // console.log("Token: " + token);
+          console.log("Token: " + token);
 
           const expirationTime = jwtDecode(token).expirationTimeInSeconds; // Tempo de expiração em segundos
           setTempoRestante(expirationTime);
@@ -62,6 +62,15 @@ function LoginFormAuth() {
 
           } else if (role === "MUNICIPE") {
             navigate('/teste');
+
+            const token = localStorage.getItem('token');
+
+const instance = axios.create({
+  baseURL: 'http://localhost:8080',
+  headers: {
+    'Authorization': `Bearer ${token}`
+  }
+});
           }
         } else {
           alert('Senha Inválida!');
@@ -76,13 +85,12 @@ function LoginFormAuth() {
 
   }
   useEffect(() => {
-    setUsername(null);
-    setPassword(null);
-    setRole(null);
+    
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:8080/users");
-        setUsers(response.data);
+        setUsers(response.data); // Atualiza o estado users com os dados da API
+        console.log(response.data);
         const usernameFromStorage = localStorage.getItem('username');
         const role = localStorage.getItem('role');
   
@@ -90,10 +98,7 @@ function LoginFormAuth() {
           setUsername(usernameFromStorage);
         }
   
-        if (role !== "ADMIN") {
-          console.log("Role: ", role)
-          setErrorMessage('Você não tem autorização para ver esta página.');
-        }
+        
       } catch (error) {
         console.error("Erro ao buscar os usuários:", error);
       }
