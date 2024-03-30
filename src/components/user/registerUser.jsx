@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import bcrypt from 'bcryptjs';
 
 function RegisterFormUser() {
@@ -50,7 +49,7 @@ function RegisterFormUser() {
       <h1>Cadastro</h1>
       <div className="input-container">
         <div className="input-container">
-          <label style={{ marginBottom: -10 }}>Username </label>
+          <label style={{ marginBottom: -10 }}>Username </label><br />
           <input
             type="text"
             name="username"
@@ -61,7 +60,7 @@ function RegisterFormUser() {
       </div>
       <div className="input-container">
         <div className="input-container">
-          <label style={{ marginBottom: -10 }}>Password </label>
+          <label style={{ marginBottom: -10 }}>Password </label><br />
           <input
             type="password"
             name="password"
@@ -93,8 +92,8 @@ function RegisterFormUser() {
           </label>
         </div>
       </div>
-      <button type="submit">Cadastrar-se</button><br></br><br></br>
-      <Link to="/authenticate">Voltar</Link>
+      <button type="submit">Cadastrar-se</button>
+      <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/welcomeAdmin')}>Voltar</button>
     </form>
   );
 }

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
 
-function TelaAdmin() {
+function ManterReclamacoes() {
 
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -82,11 +82,11 @@ function TelaAdmin() {
         <p>{errorMessage}</p>
       ) : (
         <div>
-          <h1>Bem-Vindo</h1>
+          <h1>Reclamações</h1>
 
           
           <div>
-            <h3>Lista de Usuários</h3>
+            <h3>Lista de Reclamações</h3>
             <ul style={{ listStyleType: 'none', padding: 0, marginBottom: 100 }}>
               {users.map((user, index) => (
                 <div><hr />
@@ -115,9 +115,8 @@ function TelaAdmin() {
                 ) : (
                   <p>O tempo expirou, faça login novamente por favor!</p>
                 )}
-              <button type="button" style={{ backgroundColor: 'green' }} className="shadow__btn" onClick={() => (window.location.href = '/authenticate')}>Voltar</button>
-              <button type="button" style={{ backgroundColor: 'purple' }} className="shadow__btn" onClick={() => (window.location.href = '/manterReclamacoes')}>Ir Para Reclamações</button>
-              <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/registerUser')}>Cadastrar um Novo Usuário</button>
+              <button type="button" style={{ backgroundColor: 'green' }} className="shadow__btn" onClick={() => (window.location.href = '/welcomeAdmin')}>Voltar</button>
+              <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/registerUser')}>Cadastrar uma nova Reclamação</button>
               </div>
             </div>
           </div>
@@ -127,4 +126,4 @@ function TelaAdmin() {
   );
 }
 
-export default TelaAdmin;
+export default ManterReclamacoes;

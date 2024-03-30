@@ -9,7 +9,7 @@ import axiosInstance from '../../services/axiosInstance';
 function LoginFormAuth() {
 
   const navigate = useNavigate();
-  const [ tempoRestante, setTempoRestante ] = useState(null);
+  const [tempoRestante, setTempoRestante] = useState(null);
   const [usernameFromStorage, setUsernameFromStorage] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +27,9 @@ function LoginFormAuth() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
+
+    const response = await axios.get('http://localhost:8080/users')//Buscando usuarios
+    .then((response) => {
 
       const response = await axiosInstance.get('/users');//Buscando usuarios
       const users = response.data;
@@ -47,30 +49,24 @@ function LoginFormAuth() {
           const token = loginResponse.data;
           console.log("Token: " + token);
 
-          const expirationTime = jwtDecode(token).expirationTimeInSeconds; // Tempo de expiração em segundos
-          setTempoRestante(expirationTime);
+            const expirationTime = jwtDecode(token).exp; // Tempo de expiração em segundos
+            const now = Math.floor(Date.now() / 1000);
+            const tempo = expirationTime - now;
+            setTempoRestante(tempo);
+            console.log(tempoRestante)
 
-          const role = jwtDecode(token).scope.split('_').pop().toUpperCase();//Pegando a role do token
+            const role = jwtDecode(token).scope.split('_').pop().toUpperCase();//Pegando a role do token
 
-          localStorage.setItem('role', role);
-          localStorage.setItem('username', username);
-          localStorage.setItem('tempo', expirationTime);
-          localStorage.setItem('token', token);
+            localStorage.setItem('role', role);
+            localStorage.setItem('username', username);
+            localStorage.setItem('tempo', tempo);
+            localStorage.setItem('token', token);
 
-          if (role === "ADMIN") {
-            navigate('/welcomeAdmin');
+            if (role === "ADMIN") {
+              navigate('/welcomeAdmin');
 
           } else if (role === "MUNICIPE") {
             navigate('/teste');
-
-            const token = localStorage.getItem('token');
-
-const instance = axios.create({
-  baseURL: 'http://localhost:8080',
-  headers: {
-    'Authorization': `Bearer ${token}`
-  }
-});
           }
         } else {
           alert('Senha Inválida!');
@@ -81,16 +77,17 @@ const instance = axios.create({
     } catch (error) {
       console.error('Erro ao enviar os dados:', error);
       alert('Erro ao fazer login. Verifique suas credenciais.');
-    };
+    }
 
   }
   useEffect(() => {
-    
+    setUsername(null);
+    setPassword(null);
+    setRole(null);
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:8080/users");
-        setUsers(response.data); // Atualiza o estado users com os dados da API
-        console.log(response.data);
+        setUsers(response.data);
         const usernameFromStorage = localStorage.getItem('username');
         const role = localStorage.getItem('role');
   
@@ -98,44 +95,32 @@ const instance = axios.create({
           setUsername(usernameFromStorage);
         }
   
-        
+        if (role !== "ADMIN") {
+          console.log("Role: ", role)
+          setErrorMessage('Você não tem autorização para ver esta página.');
+        }
       } catch (error) {
         console.error("Erro ao buscar os usuários:", error);
       }
     };
-  
+
     fetchData();
-  
+
     const expirationTimeInSeconds = localStorage.getItem('tempo');
     if (expirationTimeInSeconds > 0) {
       setTempoRestante(expirationTimeInSeconds);
       const interval = setInterval(() => {
         setTempoRestante((prevTempoRestante) => prevTempoRestante - 1);
       }, 1000);
-  
+
       return () => clearInterval(interval);
     }
   }, []);
-  
-
-
-  const handleDelete = async (username) => {
-    try {
-      if (window.confirm('Tem certeza que deseja remover este usuário?')) {
-        await axios.delete(`http://localhost:8080/users/${username}`);// Para deletar usuario do banco de dados
-        setUsers(users.filter(user => user.username !== username));
-        alert('Usuário deletado com sucesso!');
-      }
-    } catch (error) {
-      console.error('Erro ao deletar o usuário:', error);
-      alert('Erro ao deletar o usuário. Por favor, tente novamente.');
-    }
-  };
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-      <h1>Login</h1>
+        <h1>Login</h1>
         <div className="input-container">
           <div className="input-container">
             <label>Username </label><br />
@@ -160,35 +145,7 @@ const instance = axios.create({
         <br />
         <br />
       </form>
-      {errorMessage ? (
-        <p>{errorMessage}</p>
-      ) :
-        <div>
-          <Link to="/registerUser">cadastrar um Usuário</Link>
-          <div>
-            <h3>Lista de Usuários</h3>
-            <ul style={{ listStyleType: 'none', padding: 0 }}>
-              {users.map((user, index) => (
-                <div key={index} style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px' }}>
-
-                  <div style={{ width: 300 }}>User: {user.username}</div>
-                  <div>Role: {user.role ? user.role : "MUNICIPE"}</div>
-                  <div>
-                    {user.username !== "admin" && (
-                      <button onClick={() => handleDelete(user.username)}>Excluir</button>
-                    )}
-                  </div>
-                  <div>
-                    {user.username !== "admin" && (
-                      <button onClick={() => navigate(`/updateUser/${user.username}`)}>Editar</button>
-                    )}
-                  </div>
-                </div>
-              ))}
-              <Link to="/home" style={{ marginBottom: 100 }}>Voltar</Link><br></br><br></br>
-            </ul>
-          </div>
-        </div>}
+      <button type="button" style={{ backgroundColor: 'blue', marginBottom: 100 }} className="shadow__btn" onClick={() => (window.location.href = '/authenticate')}>Voltar</button>
     </div>
   );
 }
