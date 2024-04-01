@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: 'https://siteprotoon.azurewebsites.net/', 
-//   baseURL: 'http://localhost:8080/',
+  // baseURL: 'http://localhost:8080/',
   timeout: 5000, // tempo limite de 5 segundos para todas as solicitações
   headers: {
     'Content-Type': 'application/json',
