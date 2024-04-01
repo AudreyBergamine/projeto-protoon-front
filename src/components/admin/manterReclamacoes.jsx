@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
+import axios from '../services/axiosInstance';
 import { jwtDecode } from 'jwt-decode';
 
 function ManterReclamacoes() {
@@ -16,7 +16,7 @@ function ManterReclamacoes() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/users");
+        const response = await axios.get("/users");
       } catch (error) {
         console.error("Erro ao buscar os usuários:", error);
       }
@@ -47,7 +47,7 @@ function ManterReclamacoes() {
   const handleDelete = async (username) => {
     try {
       if (window.confirm('Tem certeza que deseja remover este usuário?')) {
-        await axios.delete(`http://localhost:8080/users/${username}`);// Para deletar usuario do banco de dados
+        await axios.delete(`/users/${username}`);// Para deletar usuario do banco de dados
         setUsers(users.filter(user => user.username !== username));
         alert('Usuário deletado com sucesso!');
       }

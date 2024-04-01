@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from '../services/axiosInstance';
 import moment from "moment";
 import bcrypt from 'bcryptjs';
 
@@ -60,7 +60,7 @@ function RegisterForm() {
     const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
     const hashedPassword = await bcrypt.hash(formData.senha, 10);
 
-    const response = await axios.post('http://localhost:8080/municipes', {
+    const response = await axios.post('/municipes', {
       // const response = await axios.post('https://proton-1710414195673.azurewebsites.net/municipes', {
       ...formData, // Inclua todos os dados do formData
       senha: hashedPassword,

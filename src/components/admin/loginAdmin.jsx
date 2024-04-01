@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from '../services/axiosInstance';
 import { useNavigate, Link } from "react-router-dom";
 import bcrypt from 'bcryptjs';
 
@@ -21,15 +21,13 @@ function LoginAdmin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await axios.get('http://localhost:8080/users')//Buscando usuarios
+    const response = await axios.get('/users')//Buscando usuarios
       .then(async (response) => {
         const users = response.data;
         const user = users.find(u => u.username === username);
         console.log(response.data);
         if (user) {
-          if (!bcrypt.compareSync(password, user.password)) {
-            alert('Senha Inválida!');            
-          } else {
+          if (bcrypt.compareSync(password, user.password)) {                       
             console.log('Login bem-sucedido!');
             alert('Login bem-sucedido!');
             setTempoRestante(100);
@@ -38,7 +36,9 @@ function LoginAdmin() {
             localStorage.setItem('role', role);
             localStorage.setItem('username', username);
             localStorage.setItem('tempo', tempoRestante);
-            navigate('/welcomeAdmin');            
+            navigate('/welcomeAdmin');  
+          } else {
+            alert('Senha Inválida!');           
           }
         } else {
           alert('Usuário não encontrado');
