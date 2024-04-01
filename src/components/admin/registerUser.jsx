@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from '../services/axiosInstance';
 import bcrypt from 'bcryptjs';
 
 function RegisterFormUser() {
@@ -31,17 +31,17 @@ function RegisterFormUser() {
     
     e.preventDefault();
     const hashedPassword = bcrypt.hashSync(formData.password, 10);
-    axios.post("http://localhost:8080/users", {
+    const response = await axios.post("/users", {
       username: formData.username,
       password: hashedPassword,
       role: formData.role ? formData.role : "MUNICIPE"
-    }).then(response => {
+    }).then( async (response) => {
       console.log(response.data);
       alert("Dados enviados com sucesso!");
-    }).catch(error => {
+    }).catch((error) => {
       console.error("Erro ao enviar os dados:", error);
+      alert("Erro ao enviar os dados:");
     });
-
   };
 
   return (

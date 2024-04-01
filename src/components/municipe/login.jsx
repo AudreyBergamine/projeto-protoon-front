@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from '../services/axiosInstance';
 import { useNavigate, Link } from "react-router-dom";
 import bcrypt from 'bcryptjs';
 
@@ -13,7 +13,7 @@ function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get('http://localhost:8080/municipes');//Buscando usuarios
+      const response = await axios.get('/municipes');//Buscando usuarios
       const municipes = response.data;
       console.log(response.data)
       const municipe = municipes.find(u => u.email === email);

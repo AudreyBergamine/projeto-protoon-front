@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from '../services/axiosInstance';
 import bcrypt from 'bcryptjs';
 
 function RegistrarReclamacao() {
@@ -31,7 +31,7 @@ function RegistrarReclamacao() {
     
     e.preventDefault();
     const hashedPassword = bcrypt.hashSync(formData.password, 10);
-    axios.post("http://localhost:8080/users", {
+    axios.post("/users", {
       username: formData.username,
       password: hashedPassword,
       role: formData.role ? formData.role : "MUNICIPE"
