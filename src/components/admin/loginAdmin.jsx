@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from '../services/axiosInstance';
 import { useNavigate, Link } from "react-router-dom";
-import bcrypt from 'bcryptjs';
-
+/*
 function LoginAdmin() {
 
   const navigate = useNavigate();
@@ -84,3 +83,4 @@ function LoginAdmin() {
 }
 
 export default LoginAdmin;
+*/

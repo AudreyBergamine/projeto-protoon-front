@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from '../services/axiosInstance';
-import bcrypt from 'bcryptjs';
-
+/*
 function RegisterFormUser() {
   const [role, setRole] = useState("MUNICIPE"); //Seta o radio Button paa Municipe
   const [formData, setFormData] = useState({
@@ -100,3 +99,4 @@ function RegisterFormUser() {
 
 export default RegisterFormUser;
 
+*/

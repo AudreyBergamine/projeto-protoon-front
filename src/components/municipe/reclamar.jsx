@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from '../services/axiosInstance';
 import moment from "moment";
-import bcrypt from 'bcryptjs';
 
 //Função de cadastro de municipe
 function Reclamar() {
@@ -57,12 +56,12 @@ function Reclamar() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
-    const hashedPassword = await bcrypt.hash(formData.senha, 10);
+    //const hashedPassword = await bcrypt.hash(formData.senha, 10);
     try {
       const response = await axios.post('/reclamacoes', {
         // const response = await axios.post('https://proton-1710414195673.azurewebsites.net/municipes', {
         ...formData, // Inclua todos os dados do formData
-        senha: hashedPassword,
+       // senha: hashedPassword,
         data_nascimento: formattedDate // Substitua o campo data_nascimento formatado
       });
 

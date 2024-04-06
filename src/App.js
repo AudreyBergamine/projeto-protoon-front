@@ -24,6 +24,7 @@ function App() {
       try {
         const response = await axiosInstance('esta-logado');
         setIsAuthenticated(response.data);
+        console.log(isAuthenticated)
         setIsLoading(false); // Update loading state depois da checagem de  autenticação
       } catch (error) {
         console.error('Error checking authentication:', error);
@@ -44,7 +45,7 @@ function App() {
     <Router>
       <div className="App">
         <Header />
-        {isAuthenticated && <AppRoutes isAuthenticated={isAuthenticated} />}
+        {<AppRoutes isAuthenticated={isAuthenticated} />}
         <Footer />
       </div>
     </Router>

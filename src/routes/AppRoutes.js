@@ -38,7 +38,7 @@ function AppRoutes({ isAuthenticated }) {
 
         // Redireciona para a página inicial se o usuário estiver autenticado e tentar acessar outras rotas públicas
         if (!isPrivateRoute && isAuthenticated) {
-            navigate('/paginaInicial', { replace: true });
+            navigate('/', { replace: true });
         }
 
         // Redireciona para a página de login se a rota for privada e o usuário não estiver autenticado
@@ -62,13 +62,9 @@ function AppRoutes({ isAuthenticated }) {
             <Route path="/contato" element={<Contato />} />
 
             {/* ADMIN */}
-            <Route path="/loginAdmin" element={<LoginAdmin />} />
             <Route path="/welcomeAdmin" element={<TelaAdmin />} />
             <Route path="/teste" element={<Teste />} />
             <Route path="/welcomeUser" element={<TelaUser />} />
-            <Route path="/manterReclamacoes" element={<ManterReclamacoes />} />
-            <Route path="/registrarReclamacao" element={<RegistrarReclamacao />} />
-            <Route path="/registerUser" element={<RegisterFormUser />} />
             <Route path="/updateUser/:username" element={<UpdateFormUser />} />
 
             {/* Rota de redirecionamento padrão */}
