@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from '../services/axiosInstance';
 
 function EmailForm() {
 
@@ -28,7 +28,7 @@ function EmailForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(`http://localhost:8080/users`);
+      const response = await axios.get(`/users`);
       const users = response.data;
       const user = users.find(u => u.username === formData.username);
       if (user) {

@@ -15,9 +15,7 @@ function App() {
         <Header />
       </div>
       <div>
-        {/* <TokenProvider> */}
           <AppRoutes />
-        {/* </TokenProvider> */}
       </div>
       <div>
         <Footer />

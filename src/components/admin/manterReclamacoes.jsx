@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
+import axios from '../services/axiosInstance';
 import { jwtDecode } from 'jwt-decode';
 
 function ManterReclamacoes() {
@@ -16,49 +16,30 @@ function ManterReclamacoes() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/users");
-        setUsers(response.data);
-
-        const role = localStorage.getItem('role');
-        if (role !== "ADMIN") {
-          setErrorMessage('Você não tem autorização para ver esta página.');
-        }
+        const response = await axios.get("/users");
       } catch (error) {
         console.error("Erro ao buscar os usuários:", error);
       }
     };
     fetchData();
-
-    const token = localStorage.getItem('token');
-    const expirationTime = jwtDecode(token).exp;
-    const now = Math.floor(Date.now() / 1000);
-    const tempo = expirationTime - now;
-    const tempoRestante = tempo;
-
-    if (typeof token === 'string') {
-      console.log('Role: ', role)
-      console.log('tempoRestante: ', tempoRestante)
-      if (tempoRestante > 0) {
-        setTempoRestante(tempoRestante);
-        const interval = setInterval(() => {
-          setTempoRestante((prevTempoRestante) => {
-            if (prevTempoRestante === 0) {
-              clearInterval(interval);
-              localStorage.removeItem('token');
-              setTempoRestante(null);
-              alert('Tempo de login expirou');
-              navigate('/authenticate');
-              return prevTempoRestante;
-            }
-            return prevTempoRestante - 1;
-          });
-        }, 1000);
-
-        return () => clearInterval(interval);
-      }
-    } else {
-      alert('Você não tem acesso a esta Página')
-      navigate('/authenticate')
+    const tempoRestante = 100;
+    console.log('tempoRestante: ', tempoRestante)
+    if (tempoRestante > 0) {
+      setTempoRestante(tempoRestante);
+      const interval = setInterval(() => {
+        setTempoRestante((prevTempoRestante) => {
+          if (prevTempoRestante === 0) {
+            clearInterval(interval);
+            localStorage.removeItem('token');
+            setTempoRestante(null);
+            alert('Tempo de login expirou');
+            navigate('/loginAdmin');
+            return prevTempoRestante;
+          }
+          return prevTempoRestante - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
     }
 
   }, []);
@@ -66,7 +47,7 @@ function ManterReclamacoes() {
   const handleDelete = async (username) => {
     try {
       if (window.confirm('Tem certeza que deseja remover este usuário?')) {
-        await axios.delete(`http://localhost:8080/users/${username}`);// Para deletar usuario do banco de dados
+        await axios.delete(`/users/${username}`);// Para deletar usuario do banco de dados
         setUsers(users.filter(user => user.username !== username));
         alert('Usuário deletado com sucesso!');
       }
@@ -84,7 +65,7 @@ function ManterReclamacoes() {
         <div>
           <h1>Reclamações</h1>
 
-          
+
           <div>
             <h3>Lista de Reclamações</h3>
             <ul style={{ listStyleType: 'none', padding: 0, marginBottom: 100 }}>
@@ -115,8 +96,8 @@ function ManterReclamacoes() {
                 ) : (
                   <p>O tempo expirou, faça login novamente por favor!</p>
                 )}
-              <button type="button" style={{ backgroundColor: 'green' }} className="shadow__btn" onClick={() => (window.location.href = '/welcomeAdmin')}>Voltar</button>
-              <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/registrarReclamacao')}>Cadastrar uma nova Reclamação</button>
+                <button type="button" style={{ backgroundColor: 'green' }} className="shadow__btn" onClick={() => (window.location.href = '/welcomeAdmin')}>Voltar</button>
+                <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/registrarReclamacao')}>Cadastrar uma nova Reclamação</button>
               </div>
             </div>
           </div>

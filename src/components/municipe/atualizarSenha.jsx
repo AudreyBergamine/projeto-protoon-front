@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import updateUser from "../user/api";
+import updateUser from "../admin/api";
 
 function RecuperarForm() {
   const { username } = useParams();
