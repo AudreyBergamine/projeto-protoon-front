@@ -9,7 +9,7 @@ function RegisterForm() {
   const navigate = useNavigate();
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
   const [formData, setFormData] = useState({
-    nome_municipe: "",
+    nome: "",
     email: "",
     senha: "",
     num_CPF: "",
@@ -59,7 +59,7 @@ function RegisterForm() {
     const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
     const hashedPassword = await bcrypt.hash(formData.senha, 10);
     try {
-      const response = await axios.post('http://localhost:8080/municipes', {
+      const response = await axios.post('http://localhost:8080/protoon/auth/register/municipe', {
         // const response = await axios.post('https://proton-1710414195673.azurewebsites.net/municipes', {
         ...formData, // Inclua todos os dados do formData
         senha: hashedPassword,
@@ -89,9 +89,9 @@ function RegisterForm() {
               <label>Nome:</label><br></br>
               <input
                 type="text"
-                name="nome_municipe"
+                name="nome"
                 placeholder="Ex.: Cláudio Silva"
-                value={formData.nome_municipe}
+                value={formData.nome}
                 onChange={handleChange}
               />
             </div>
