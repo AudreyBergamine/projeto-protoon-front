@@ -9,6 +9,7 @@ const LoginForm = () => {
     baseURL: 'http://localhost:8080/protoon/auth/', // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
+  console.log(sessionStorage.getItem("idMunicipe"));
 
   const axiosInstance2 = axios.create({
     baseURL: 'http://localhost:8080/protoon/', // Adjust the base URL as needed

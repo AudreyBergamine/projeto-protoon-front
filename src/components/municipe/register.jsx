@@ -62,13 +62,13 @@ function RegisterForm() {
     const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
     try {
       const response = await axiosInstance.post('register/municipe', {
-        // const response = await axios.post('https://proton-1710414195673.azurewebsites.net/municipes', {
         ...formData, // Inclua todos os dados do formData
         data_nascimento: formattedDate, // Substitua o campo data_nascimento formatado
        
       });
 
       console.log(response.data);
+      sessionStorage.setItem("idMunicipe",response.data.id);
       alert('Dados enviados com sucesso!');
       navigate('/login');
     } catch (error) {
