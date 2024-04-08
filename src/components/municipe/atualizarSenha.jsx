@@ -59,8 +59,8 @@ function RecuperarForm() {
           </div>
         </div>
       </div>
-      <button type="submit">Atualizar</button>
-      <button type="button" className="shadow__btn" onClick={() => (window.location.href = '/recuperarSenha')}>Voltar</button>
+      <button type="submit" className="btn-log">Enviar</button>
+      <button className="btn-log" onClick={() => (window.location.href = '/recuperarSenha')}>Voltar</button>
     </form>
   );
 }

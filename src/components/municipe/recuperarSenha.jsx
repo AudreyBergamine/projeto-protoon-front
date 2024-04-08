@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from '../services/axiosInstance';
+import Loading from '../layouts/Loading';
 
 function EmailForm() {
-
+  const [removeLoading, setRemoveLoading] = useState(true)
   const navigate = useNavigate();
+
   const { username } = useParams();
   const [formData, setFormData] = useState({
     username: "",
@@ -32,7 +34,12 @@ function EmailForm() {
       const users = response.data;
       const user = users.find(u => u.username === formData.username);
       if (user) {
-        navigate(`/atualizarSenha/${formData.username}`);
+        setRemoveLoading(false)
+
+        setTimeout(() => {
+          setRemoveLoading(true)       
+          navigate(`/atualizarSenha/${formData.username}`);
+        }, 3000)
       } else {
         alert("Email não encontrado. Verifique o email digitado.");
       }
@@ -56,8 +63,9 @@ function EmailForm() {
         </div>
       </div>
 
-      <button type="submit">Enviar</button>
-      <button type="button" className="shadow__btn" onClick={() => (window.location.href = '/login')}>Voltar</button>
+      <button type="submit" className="btn-log">Enviar</button>
+      <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
+      {!removeLoading && <Loading />}
     </form>
   );
 }

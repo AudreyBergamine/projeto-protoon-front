@@ -61,7 +61,7 @@ function Reclamar() {
       const response = await axios.post('/reclamacoes', {
         // const response = await axios.post('https://proton-1710414195673.azurewebsites.net/municipes', {
         ...formData, // Inclua todos os dados do formData
-       // senha: hashedPassword,
+        // senha: hashedPassword,
         data_nascimento: formattedDate // Substitua o campo data_nascimento formatado
       });
 
@@ -76,121 +76,124 @@ function Reclamar() {
 
   //Por fim é retornado o html para ser exibido no front end, junto com as funções acima.
   return (
+    <>
+      <div style={{ paddingBottom: '100px' }}>
+        <form onSubmit={handleSubmit}>
+          <div>
 
-    <form onSubmit={handleSubmit}>
-      <div>
+            <h3>Reclame Aqui</h3>
+            <div className="register-form">
+              <div className="input-container">
 
-        <h3>Reclame Aqui</h3>
-        <div className="register-form">
-          <div className="input-container">
+                <div>
+                  <label>Problema:</label><br></br>
+                  <input
+                    type="text"
+                    name="nome_municipe"
+                    placeholder="Ex.: Cláudio Silva"
+                    value={formData.nome_municipe}
+                    onChange={handleChange}
+                  />
+                </div>
 
-            <div>
-              <label>Problema:</label><br></br>
-              <input
-                type="text"
-                name="nome_municipe"
-                placeholder="Ex.: Cláudio Silva"
-                value={formData.nome_municipe}
-                onChange={handleChange}
-              />
+              </div>
+            </div>
+            <hr></hr>
+            <h3>Endereço</h3>
+            <div className="register-form">
+              <div className="input-container">
+
+                <div>
+                  <label>Número do cep:</label><br></br>
+                  <input
+                    type="number"
+                    name="num_cep"
+                    placeholder="Ex.: 77777777"
+                    value={formData.num_cep}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <label>Logradouro:</label><br></br>
+                  <input
+                    type="text"
+                    name="logradouro"
+                    placeholder="Ex.: Rua das Flores"
+                    value={formData.logradouro}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <label>Nome Endereço:</label><br></br>
+                  <input
+                    type="text"
+                    name="nome_endereco"
+                    placeholder="Ex.: Casa"
+                    value={formData.nome_endereco}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <label>Número do endereço:</label><br></br>
+                  <input
+                    type="number"
+                    name="num_endereco"
+                    placeholder="Ex.: 1025"
+                    value={formData.num_endereco}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <label>Complemento:</label><br></br>
+                  <input
+                    type="text"
+                    name="complemento"
+                    placeholder="Bloco, apartamento, casa, fundos..."
+                    value={formData.complemento}
+                    onChange={handleChange}
+                  />
+                </div>
+
+              </div>
             </div>
 
+            <div className="register-form">
+              <div className="input-container">
+
+                <div>
+                  <label>Tipo de endereço:</label><br></br>
+                  <input
+                    type="text"
+                    name="tipo_endereco"
+                    placeholder="Ex.: casa, apartamento"
+                    value={formData.tipo_endereco}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div>
+                  <label>Bairro:</label><br></br>
+                  <input
+                    type="text"
+                    name="bairro"
+                    placeholder="Ex.: Bairro das Flores"
+                    value={formData.bairro}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <hr></hr>
-        <h3>Endereço</h3>
-        <div className="register-form">
-          <div className="input-container">
-
-            <div>
-              <label>Número do cep:</label><br></br>
-              <input
-                type="number"
-                name="num_cep"
-                placeholder="Ex.: 77777777"
-                value={formData.num_cep}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label>Logradouro:</label><br></br>
-              <input
-                type="text"
-                name="logradouro"
-                placeholder="Ex.: Rua das Flores"
-                value={formData.logradouro}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label>Nome Endereço:</label><br></br>
-              <input
-                type="text"
-                name="nome_endereco"
-                placeholder="Ex.: Casa"
-                value={formData.nome_endereco}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label>Número do endereço:</label><br></br>
-              <input
-                type="number"
-                name="num_endereco"
-                placeholder="Ex.: 1025"
-                value={formData.num_endereco}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label>Complemento:</label><br></br>
-              <input
-                type="text"
-                name="complemento"
-                placeholder="Bloco, apartamento, casa, fundos..."
-                value={formData.complemento}
-                onChange={handleChange}
-              />
-            </div>
-
+          <div style={{ marginTop: -30 }}>
+            <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Confirmar</button>
+            <button className="btn-log" onClick={() => (window.location.href = '/paginaInicial')}>Voltar</button>
           </div>
-        </div>
-
-        <div className="register-form">
-          <div className="input-container">
-
-            <div>
-              <label>Tipo de endereço:</label><br></br>
-              <input
-                type="text"
-                name="tipo_endereco"
-                placeholder="Ex.: casa, apartamento"
-                value={formData.tipo_endereco}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label>Bairro:</label><br></br>
-              <input
-                type="text"
-                name="bairro"
-                placeholder="Ex.: Bairro das Flores"
-                value={formData.bairro}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-        </div>
+          <footer className="footer">
+            © 2024 Proto-on. Todos os direitos reservados.
+          </footer>
+        </form>
       </div>
-      <div style={{ marginTop: -30 }}>
-        <button type="submit" className="button-cad">Confirmar</button>
-        <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/paginaInicial')}>Voltar</button>
-      </div>
-      <footer className="footer">
-        © 2024 Proto-on. Todos os direitos reservados.
-      </footer>
-    </form>
+    </>
   );
 }
 

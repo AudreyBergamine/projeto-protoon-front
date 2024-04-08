@@ -6,10 +6,13 @@ import { setEndereco } from "../services/formsComplete";
 import SetCelular from "../services/setCelular";
 import SetCPF from "../services/setCPF";
 import SetCEP from "../services/setCEP";
+import Loading from '../layouts/Loading';
 
 //Função de cadastro de municipe
 function RegisterForm() {
   const navigate = useNavigate();
+  const [removeLoading, setRemoveLoading] = useState(true)
+
   const axiosInstance = axios.create({
     baseURL: 'http://localhost:8080/protoon/auth/', // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
@@ -87,10 +90,15 @@ function RegisterForm() {
 
       });
 
-      console.log(response.data);
-      sessionStorage.setItem("idMunicipe", response.data.id);
-      alert('Dados enviados com sucesso!');
-      navigate('/login');
+      setRemoveLoading(false)
+
+      setTimeout(() => {
+        console.log(response.data);
+        sessionStorage.setItem("idMunicipe", response.data.id);
+        setRemoveLoading(true)
+        alert('Dados enviados com sucesso!');
+        navigate('/login');
+      }, 3000)
     } catch (error) {
       console.error('Erro ao enviar os dados:', error);
     }
@@ -279,6 +287,7 @@ function RegisterForm() {
       <div style={{ marginTop: -30 }}>
         <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
         <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
+        {!removeLoading && <Loading />}
       </div>
       </div>
       <footer className="footer">

@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate, Link } from "react-router-dom";
+import Loading from '../layouts/Loading';
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+  const [removeLoading, setRemoveLoading] = useState(true)
+
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -17,14 +22,20 @@ const LoginForm = () => {
   });
 
   const handleLogin = async () => {
-    try {
+    try {      
       const response = await axiosInstance.post('authenticate', {
         email: email,
         senha: senha
       });
 
-      // If authentication is successful, you can handle the response as needed
-      console.log('Authentication successful:', response.data);
+      setRemoveLoading(false)
+
+      setTimeout(() => {
+        // If authentication is successful, you can handle the response as needed
+        console.log('Authentication successful:', response.data);
+        setRemoveLoading(true)
+        navigate('/paginaInicial')        
+      }, 3000)
 
       // Optionally, you can redirect the user to another page upon successful authentication
       // history.push('/dashboard');
@@ -67,11 +78,13 @@ const LoginForm = () => {
           onChange={(e) => setSenha(e.target.value)}
         />
       </div>
+      <Link to='/recuperarSenha' style={{ textDecoration: 'none' }}>Esqueceu a Senha?</Link>
       <div>
         <button onClick={handleLogin} className="btn-cad" style={{ marginRight: '100px' }}>Logar</button>
         <button className="btn-log" onClick={() => (window.location.href = '/cadastro')}>Criar Conta</button>
       </div>
       {errorMessage && <p>{errorMessage}</p>}
+      {!removeLoading && <Loading />}
     </div>
   );
 };
