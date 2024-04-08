@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from "react-router-dom";
 import Loading from '../layouts/Loading';
+import Message from '../layouts/Message'
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const [message, setMessage] = useState()
+  const [type, setType] = useState()
   const [removeLoading, setRemoveLoading] = useState(true)
 
   const [email, setEmail] = useState('');
@@ -22,6 +25,7 @@ const LoginForm = () => {
   });
 
   const handleLogin = async () => {
+    setMessage('')
     try {      
       const response = await axiosInstance.post('authenticate', {
         email: email,
@@ -43,6 +47,8 @@ const LoginForm = () => {
       // Handle authentication errors
       console.error('Authentication error:', error.response.data);
       setErrorMessage(error.response.data.message); // Set error message to display to the user
+      setMessage('Erro ao fazer Login!')
+            setType('error')
     }
   };
 
@@ -79,10 +85,11 @@ const LoginForm = () => {
         />
       </div>
       <Link to='/recuperarSenha' style={{ textDecoration: 'none' }}>Esqueceu a Senha?</Link>
-      <div>
+      <div style={{ marginBottom: 30 }}>
         <button onClick={handleLogin} className="btn-cad" style={{ marginRight: '100px' }}>Logar</button>
         <button className="btn-log" onClick={() => (window.location.href = '/cadastro')}>Criar Conta</button>
       </div>
+      {message && <Message type={type} msg={message} />}
       {errorMessage && <p>{errorMessage}</p>}
       {!removeLoading && <Loading />}
     </div>
