@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
+import { setEndereco } from "../services/formsComplete";
+import SetCelular from "../services/setCelular";
+import SetCPF from "../services/setCPF";
+import SetCEP from "../services/setCEP";
 
 //Função de cadastro de municipe
 function RegisterForm() {
@@ -31,6 +35,9 @@ function RegisterForm() {
     }
   });
 
+  useEffect(() => {
+    setEndereco('num_cep')
+  }, []);
 
   //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
   const handleChange = (e) => {
@@ -56,6 +63,19 @@ function RegisterForm() {
     }
   };
 
+  const handleEnderecoChange = (logradouro, bairro, cidade, estado) => {
+    setFormData({
+        ...formData,
+        endereco: {
+            ...formData.endereco,
+            logradouro,
+            bairro,
+            cidade,
+            estado
+        }
+    });
+};
+
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,11 +84,11 @@ function RegisterForm() {
       const response = await axiosInstance.post('register/municipe', {
         ...formData, // Inclua todos os dados do formData
         data_nascimento: formattedDate, // Substitua o campo data_nascimento formatado
-       
+
       });
 
       console.log(response.data);
-      sessionStorage.setItem("idMunicipe",response.data.id);
+      sessionStorage.setItem("idMunicipe", response.data.id);
       alert('Dados enviados com sucesso!');
       navigate('/login');
     } catch (error) {
@@ -81,7 +101,7 @@ function RegisterForm() {
   return (
 
     <form onSubmit={handleSubmit}>
-      <div>
+      <div style={{ paddingBottom: '100px' }}>
 
         <h3>Dados Pessoais</h3>
         <div className="register-form">
@@ -118,16 +138,17 @@ function RegisterForm() {
                 onChange={handleChange}
               />
             </div>
+          </div>
 
+          <div className="input-container">
             <div>
               <label>Número do CPF:</label><br></br>
-              <input
-                type="number"
-                name="num_CPF"
-                placeholder="Ex.: 33333333333"
-                value={formData.num_CPF}
-                onChange={handleChange}
-              />
+              <SetCPF />
+            </div>
+
+            <div>
+              <label>Celular:</label><br></br>
+              <SetCelular />
             </div>
 
             <div>
@@ -149,21 +170,16 @@ function RegisterForm() {
 
             <div>
               <label>Número do cep:</label><br></br>
-              <input
-                type="number"
-                name="num_cep"
-                placeholder="Ex.: 77777777"
-                value={formData.num_cep}
-                onChange={handleChange}
-              />
+              <SetCEP onEnderecoChange={handleEnderecoChange} />
             </div>
+
             <div>
               <label>Logradouro:</label><br></br>
               <input
                 type="text"
                 name="logradouro"
                 placeholder="Ex.: Rua das Flores"
-                value={formData.logradouro}
+                value={formData.endereco.logradouro}
                 onChange={handleChange}
               />
             </div>
@@ -173,7 +189,7 @@ function RegisterForm() {
                 type="text"
                 name="nome_endereco"
                 placeholder="Ex.: Casa"
-                value={formData.nome_endereco}
+                value={formData.endereco.nome_endereco}
                 onChange={handleChange}
               />
             </div>
@@ -183,7 +199,7 @@ function RegisterForm() {
                 type="number"
                 name="num_endereco"
                 placeholder="Ex.: 1025"
-                value={formData.num_endereco}
+                value={formData.endereco.num_endereco}
                 onChange={handleChange}
               />
             </div>
@@ -193,7 +209,7 @@ function RegisterForm() {
                 type="text"
                 name="complemento"
                 placeholder="Bloco, apartamento, casa, fundos..."
-                value={formData.complemento}
+                value={formData.endereco.complemento}
                 onChange={handleChange}
               />
             </div>
@@ -210,7 +226,7 @@ function RegisterForm() {
                 type="text"
                 name="tipo_endereco"
                 placeholder="Ex.: casa, apartamento"
-                value={formData.tipo_endereco}
+                value={formData.endereco.tipo_endereco}
                 onChange={handleChange}
               />
             </div>
@@ -221,7 +237,7 @@ function RegisterForm() {
                 type="text"
                 name="bairro"
                 placeholder="Ex.: Bairro das Flores"
-                value={formData.bairro}
+                value={formData.endereco.bairro}
                 onChange={handleChange}
               />
             </div>
@@ -232,7 +248,7 @@ function RegisterForm() {
                 type="text"
                 name="cidade"
                 placeholder="Ex.: Ferraz de Vasconcelos"
-                value={formData.cidade}
+                value={formData.endereco.cidade}
                 onChange={handleChange}
               />
             </div>
@@ -243,7 +259,7 @@ function RegisterForm() {
                 type="text"
                 name="estado"
                 placeholder="Ex.: São Paulo"
-                value={formData.estado}
+                value={formData.endereco.estado}
                 onChange={handleChange}
               />
             </div>
@@ -254,16 +270,16 @@ function RegisterForm() {
                 type="text"
                 name="pais"
                 placeholder="Ex.: Brasil"
-                value={formData.pais}
+                value={formData.endereco.pais}
                 onChange={handleChange}
               />
             </div>
           </div>
         </div>
-      </div>
       <div style={{ marginTop: -30 }}>
-        <button type="submit" className="button-cad">Cadastrar-se</button>
-        <button type="button" style={{ backgroundColor: 'blue' }} className="shadow__btn" onClick={() => (window.location.href = '/login')}>Voltar</button>
+        <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
+        <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
+      </div>
       </div>
       <footer className="footer">
         © 2024 Proto-on. Todos os direitos reservados.
