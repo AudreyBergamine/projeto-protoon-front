@@ -15,12 +15,12 @@ const LoginForm = () => {
     baseURL: 'http://localhost:8080/protoon/', // Adjust the base URL as needed
     withCredentials: true, // Ensure Axios sends cookies with requests
   });
-  
+
   const handleLogin = async () => {
     try {
       const response = await axiosInstance.post('authenticate', {
         email: email,
-        senha: senha 
+        senha: senha
       });
 
       // If authentication is successful, you can handle the response as needed
@@ -67,7 +67,10 @@ const LoginForm = () => {
           onChange={(e) => setSenha(e.target.value)}
         />
       </div>
-      <button onClick={handleLogin}>Login</button>
+      <div>
+        <button onClick={handleLogin} className="btn-cad" style={{ marginRight: '100px' }}>Logar</button>
+        <button className="btn-log" onClick={() => (window.location.href = '/cadastro')}>Criar Conta</button>
+      </div>
       {errorMessage && <p>{errorMessage}</p>}
     </div>
   );
