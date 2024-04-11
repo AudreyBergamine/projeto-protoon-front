@@ -1,4 +1,15 @@
-function Home() {
+import PaginaInicial from "../municipe/paginaInical";
+
+function Home({isAuthenticated, role}) {
+    //TODO: Criar página inicial de funcionário e implementar a lógica abaixo, igual fiz com a de municipe
+
+    if(isAuthenticated && role ==="MUNICIPE"){
+        return (<div>
+            <PaginaInicial/>
+        </div>)
+    }
+
+
     return (
         <div>
             

@@ -17,7 +17,7 @@ const LoginForm = () => {
     baseURL: 'http://localhost:8080/protoon/auth/', // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
-  console.log('IdMunicipe: ', sessionStorage.getItem("idMunicipe"));
+  console.log('IdMunicipe: ', localStorage.getItem("idMunicipe"));
 
   const axiosInstance2 = axios.create({
     baseURL: 'http://localhost:8080/protoon/', // Adjust the base URL as needed
@@ -50,12 +50,13 @@ const LoginForm = () => {
       });
 
       setRemoveLoading(false)
-
+      localStorage.setItem("idMunicipe", response.data.id);
+      localStorage.setItem("role", response.data.role);
       setTimeout(() => {
         console.log('Authentication successful:', response.data);
         // If authentication is successful, you can handle the response as needed
         setRemoveLoading(true)
-        navigate('/paginaInicial')        
+        navigate('/')        
       }, 3000)
 
       // Optionally, you can redirect the user to another page upon successful authentication

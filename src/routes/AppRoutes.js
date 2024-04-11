@@ -24,25 +24,19 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // Defina um conjunto de rotas privadas
 const privateRoutes = ['/reclamar', '/outra-rota-privada'];
 
-function AppRoutes({ isAuthenticated }) {
+function AppRoutes({ isAuthenticated, role }) {
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
         const isPrivateRoute = privateRoutes.includes(location.pathname);
 
-        // Redireciona para a página de login se o usuário estiver autenticado e tentar acessar as rotas de login ou cadastro
+        // Redirecionamentos com base no estado de autenticação e nas rotas privadas
         if ((location.pathname === '/login' || location.pathname === '/cadastro') && isAuthenticated) {
             navigate('/paginaInicial', { replace: true });
-        }
-
-        // Redireciona para a página inicial se o usuário estiver autenticado e tentar acessar outras rotas públicas
-        if (!isPrivateRoute && isAuthenticated) {
+        } else if (!isPrivateRoute && isAuthenticated && location.pathname !== '/') {
             navigate('/', { replace: true });
-        }
-
-        // Redireciona para a página de login se a rota for privada e o usuário não estiver autenticado
-        if (isPrivateRoute && !isAuthenticated) {
+        } else if (isPrivateRoute && !isAuthenticated) {
             navigate('/login', { replace: true });
         }
     }, [isAuthenticated, location, navigate]);
@@ -50,7 +44,7 @@ function AppRoutes({ isAuthenticated }) {
     return (
         <Routes>
             {/* MUNICIPE */}
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home isAuthenticated={isAuthenticated} role={role} />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/cadastro" element={<RegisterForm />} />
             <Route path="/recuperarSenha" element={<EmailForm />} />
