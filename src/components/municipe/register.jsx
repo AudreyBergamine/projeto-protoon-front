@@ -66,17 +66,24 @@ function RegisterForm() {
         ...formData,
         endereco: {
           ...formData.endereco,
-          [name]: value
+          [name]: formattedValue
         }
       });
 
     } else {//Caso não, será atualizado o campo municipe (todos os outros campos).
-      setFormData({
-        ...formData,
-        [name]: formattedValue
-      });
-    }
-  };
+      if (name === 'email') {
+        setFormData({
+          ...formData,
+          [name]: value.toLowerCase() // Formata o email para minúsculas
+        })
+      } else {
+        setFormData({
+          ...formData,
+          [name]: formattedValue
+        });
+      }
+    };
+  }
 
   const handleEnderecoChange = (logradouro, bairro, cidade, estado) => {
     setFormData({
@@ -304,7 +311,7 @@ function RegisterForm() {
           </div>
         </div>
         {message && <Message type={type} msg={message} />}
-          {!removeLoading && <Loading />}
+        {!removeLoading && <Loading />}
         <div style={{ marginTop: -30 }}>
           <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
           <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
