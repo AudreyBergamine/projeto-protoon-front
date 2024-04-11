@@ -17,7 +17,7 @@ const LoginForm = () => {
     baseURL: 'http://localhost:8080/protoon/auth/', // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
-  console.log(sessionStorage.getItem("idMunicipe"));
+  console.log('IdMunicipe: ', sessionStorage.getItem("idMunicipe"));
 
   const axiosInstance2 = axios.create({
     baseURL: 'http://localhost:8080/protoon/', // Adjust the base URL as needed
@@ -35,8 +35,8 @@ const LoginForm = () => {
       setRemoveLoading(false)
 
       setTimeout(() => {
-        // If authentication is successful, you can handle the response as needed
         console.log('Authentication successful:', response.data);
+        // If authentication is successful, you can handle the response as needed
         setRemoveLoading(true)
         navigate('/paginaInicial')        
       }, 3000)
@@ -48,7 +48,7 @@ const LoginForm = () => {
       console.error('Authentication error:', error.response.data);
       setErrorMessage(error.response.data.message); // Set error message to display to the user
       setMessage('Erro ao fazer Login!')
-            setType('error')
+      setType('error')
     }
   };
 

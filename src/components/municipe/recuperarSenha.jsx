@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from '../services/axiosInstance';
 import Loading from '../layouts/Loading';
+import Message from '../layouts/Message'
 
 function EmailForm() {
+  const [message, setMessage] = useState()
+  const [type, setType] = useState()
   const [removeLoading, setRemoveLoading] = useState(true)
   const navigate = useNavigate();
 
@@ -29,8 +32,9 @@ function EmailForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage('')
     try {
-      const response = await axios.get(`/users`);
+      const response = await axios.get(`/protoon/municipe/municipes`);
       const users = response.data;
       const user = users.find(u => u.username === formData.username);
       if (user) {
@@ -41,10 +45,13 @@ function EmailForm() {
           navigate(`/atualizarSenha/${formData.username}`);
         }, 3000)
       } else {
-        alert("Email não encontrado. Verifique o email digitado.");
+        setMessage('Email não encontrado.')
+        setType('error')
       }
     } catch (error) {
       console.error("Erro ao buscar os usuários:", error);
+      setMessage('Erro ao Buscar email!')
+      setType('error')
     }
   };
 
@@ -66,6 +73,7 @@ function EmailForm() {
       <button type="submit" className="btn-log">Enviar</button>
       <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
       {!removeLoading && <Loading />}
+      {message && <Message type={type} msg={message} />}
     </form>
   );
 }

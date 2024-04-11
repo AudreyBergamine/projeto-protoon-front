@@ -7,9 +7,12 @@ import SetCelular from "../services/setCelular";
 import SetCPF from "../services/setCPF";
 import SetCEP from "../services/setCEP";
 import Loading from '../layouts/Loading';
+import Message from '../layouts/Message'
 
 //Função de cadastro de municipe
 function RegisterForm() {
+  const [message, setMessage] = useState()
+  const [type, setType] = useState()
   const navigate = useNavigate();
   const [removeLoading, setRemoveLoading] = useState(true)
 
@@ -42,6 +45,13 @@ function RegisterForm() {
     setEndereco('num_cep')
   }, []);
 
+  const formatValue = (value) => {
+    // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem no início ou no final da palavra
+    return value.toLowerCase().replace(/( de | da | do | das | dos )/g, (match) => match.toLowerCase())
+                               .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase());
+  };
+  
+
   //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
   const handleChange = (e) => {
     //A lista abaixo contém o nome de todos os campos que há em endereço
@@ -49,9 +59,11 @@ function RegisterForm() {
 
     const { name, value } = e.target;
 
+    let formattedValue = formatValue(value);    
+
     if (enderecoFields.includes(name)) {//Caso em um formulário contenha algum nome da lista, então será alterado o valor do objeto endereco
       setFormData({
-        ...formData,
+        ...formData,        
         endereco: {
           ...formData.endereco,
           [name]: value
@@ -61,27 +73,28 @@ function RegisterForm() {
     } else {//Caso não, será atualizado o campo municipe (todos os outros campos).
       setFormData({
         ...formData,
-        [e.target.name]: e.target.value
+        [name]: formattedValue
       });
     }
   };
 
   const handleEnderecoChange = (logradouro, bairro, cidade, estado) => {
     setFormData({
-        ...formData,
-        endereco: {
-            ...formData.endereco,
-            logradouro,
-            bairro,
-            cidade,
-            estado
-        }
+      ...formData,
+      endereco: {
+        ...formData.endereco,
+        logradouro,
+        bairro,
+        cidade,
+        estado
+      }
     });
-};
+  };
 
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage('')
     const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
     try {
       const response = await axiosInstance.post('register/municipe', {
@@ -100,7 +113,13 @@ function RegisterForm() {
         navigate('/login');
       }, 3000)
     } catch (error) {
-      console.error('Erro ao enviar os dados:', error);
+      setRemoveLoading(false)
+      setTimeout(() => {
+        setRemoveLoading(true)
+        console.error('Erro ao enviar os dados:', error);
+        setMessage('Erro ao fazer Cadastro!')
+        setType('error')
+      }, 3000)
     }
   };
 
@@ -284,11 +303,12 @@ function RegisterForm() {
             </div>
           </div>
         </div>
-      <div style={{ marginTop: -30 }}>
-        <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
-        <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
-        {!removeLoading && <Loading />}
-      </div>
+        <div style={{ marginTop: -30 }}>
+          <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
+          <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
+          {message && <Message type={type} msg={message} />}
+          {!removeLoading && <Loading />}
+        </div>
       </div>
       <footer className="footer">
         © 2024 Proto-on. Todos os direitos reservados.

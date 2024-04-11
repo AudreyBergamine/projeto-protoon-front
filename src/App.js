@@ -24,7 +24,7 @@ function App() {
       try {
         const response = await axiosInstance('esta-logado');
         setIsAuthenticated(response.data);
-        console.log(isAuthenticated)
+        console.log('Autenticado: ', isAuthenticated)
         setIsLoading(false); // Update loading state depois da checagem de  autenticação
       } catch (error) {
         console.error('Error checking authentication:', error);
