@@ -100,14 +100,13 @@ function RegisterForm() {
       const response = await axiosInstance.post('register/municipe', {
         ...formData, // Inclua todos os dados do formData
         data_nascimento: formattedDate, // Substitua o campo data_nascimento formatado
-
+        
       });
 
       setRemoveLoading(false)
 
       setTimeout(() => {
         console.log(response.data);
-        sessionStorage.setItem("idMunicipe", response.data.id);
         setRemoveLoading(true)
         alert('Dados enviados com sucesso!');
         navigate('/login');

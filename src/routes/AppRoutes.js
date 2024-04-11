@@ -24,7 +24,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // Defina um conjunto de rotas privadas
 const privateRoutes = ['/reclamar', '/outra-rota-privada'];
 
-function AppRoutes({ isAuthenticated }) {
+function AppRoutes({ isAuthenticated, role }) {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -41,7 +41,7 @@ function AppRoutes({ isAuthenticated }) {
             navigate('/', { replace: true });
         }
 
-        // Redireciona para a página de login se a rota for privada e o usuário não estiver autenticado
+        // Redireciona para a página de login se a rota for privada se o usuário não estiver autenticado
         if (isPrivateRoute && !isAuthenticated) {
             navigate('/login', { replace: true });
         }
@@ -50,7 +50,7 @@ function AppRoutes({ isAuthenticated }) {
     return (
         <Routes>
             {/* MUNICIPE */}
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home isAuthenticated={isAuthenticated} role={role} />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/cadastro" element={<RegisterForm />} />
             <Route path="/recuperarSenha" element={<EmailForm />} />

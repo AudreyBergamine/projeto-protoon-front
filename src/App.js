@@ -11,41 +11,44 @@ import axios from "axios";
 import { BrowserRouter as Router, useNavigate } from 'react-router-dom';
 
 function App() {
-  const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080/protoon/auth/', // Adjust the base URL as needed
-    withCredentials: true, // Set withCredentials to true
-  });
+ 
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [role, setRole] = useState('')
   const [isLoading, setIsLoading] = useState(true); // Estado de loading, para impedir que AppRoutes carregue primeiro que isAuthenticated
 
   useEffect(() => {
-    const checkAuthentication = async () => {
-      try {
-        const response = await axiosInstance('esta-logado');
-        setIsAuthenticated(response.data);
-        console.log('Autenticado: ', isAuthenticated)
+    const checkAuthentication = () => {
+      const id= localStorage.getItem("idMunicipe")
+      const roleUser = localStorage.getItem("role")
+      if (id && roleUser){
+        if(!isAuthenticated && role === ''){
+          setIsAuthenticated(true);
+          setRole(roleUser)
+        }
+       
         setIsLoading(false); // Update loading state depois da checagem de  autenticação
-      } catch (error) {
-        console.error('Error checking authentication:', error);
+        return true;
+      }else{
         setIsLoading(false); // Atualiza loading state mesmo após um error
+        return false;
       }
     };
 
     checkAuthentication();
-  }, []);
+  }, [setIsAuthenticated, setRole, setIsLoading]);
 
   // Renderiza loading state enquanto checa a autenticação
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   // Renderiza rotas only when authentication check is complete
   return (
     <Router>
       <div className="App">
-        <Header />
-        {<AppRoutes isAuthenticated={isAuthenticated} />}
+        <Header isAuthenticated={isAuthenticated} role={role} />
+        {<AppRoutes isAuthenticated={isAuthenticated} role={role} />}
         <Footer />
       </div>
     </Router>
