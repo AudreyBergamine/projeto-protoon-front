@@ -18,15 +18,13 @@ function App() {
   const [isLoading, setIsLoading] = useState(true); // Estado de loading, para impedir que AppRoutes carregue primeiro que isAuthenticated
 
   useEffect(() => {
-    const checkAuthentication = () => {
+    const checkAuthentication = async () => {
       const id= localStorage.getItem("idMunicipe")
       const roleUser = localStorage.getItem("role")
       if (id && roleUser){
-        if(!isAuthenticated && role === ''){
-          setIsAuthenticated(true);
-          setRole(roleUser)
-        }
-       
+        
+        setIsAuthenticated(true);
+        setRole(roleUser)
         setIsLoading(false); // Update loading state depois da checagem de  autenticação
         return true;
       }else{

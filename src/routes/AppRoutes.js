@@ -31,18 +31,12 @@ function AppRoutes({ isAuthenticated, role }) {
     useEffect(() => {
         const isPrivateRoute = privateRoutes.includes(location.pathname);
 
-        // Redireciona para a página de login se o usuário estiver autenticado e tentar acessar as rotas de login ou cadastro
+        // Redirecionamentos com base no estado de autenticação e nas rotas privadas
         if ((location.pathname === '/login' || location.pathname === '/cadastro') && isAuthenticated) {
             navigate('/paginaInicial', { replace: true });
-        }
-
-        // Redireciona para a página inicial se o usuário estiver autenticado e tentar acessar outras rotas públicas
-        if (!isPrivateRoute && isAuthenticated) {
+        } else if (!isPrivateRoute && isAuthenticated && location.pathname !== '/') {
             navigate('/', { replace: true });
-        }
-
-        // Redireciona para a página de login se a rota for privada se o usuário não estiver autenticado
-        if (isPrivateRoute && !isAuthenticated) {
+        } else if (isPrivateRoute && !isAuthenticated) {
             navigate('/login', { replace: true });
         }
     }, [isAuthenticated, location, navigate]);
