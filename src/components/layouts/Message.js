@@ -12,7 +12,7 @@ function Message({ type, msg }) {
         }
 
         setVisible(true)
-
+        
         const timer = setTimeout(() => {
             setVisible(false)
         }, 3000)

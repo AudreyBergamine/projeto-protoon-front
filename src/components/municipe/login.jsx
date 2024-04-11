@@ -6,7 +6,7 @@ import Message from '../layouts/Message'
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const [message, setMessage] = useState()
+  const [message, setMessage] = useState('')
   const [type, setType] = useState()
   const [removeLoading, setRemoveLoading] = useState(true)
 
@@ -25,7 +25,24 @@ const LoginForm = () => {
   });
 
   const handleLogin = async () => {
-    setMessage('')
+
+    setMessage('');
+    
+    switch (true) {
+      case !email:
+        setMessage('Por favor, preencha o email!')
+        setType('error')
+        return;
+      case !isValidEmail(email):
+        setMessage('Por favor, insira um email válido!')
+        setType('error')
+        return;
+      case !senha:
+        setMessage('Por favor, preencha a senha!')
+        setType('error')
+        return
+    }
+
     try {      
       const response = await axiosInstance.post('authenticate', {
         email: email,
@@ -47,9 +64,15 @@ const LoginForm = () => {
       // Handle authentication errors
       console.error('Authentication error:', error.response.data);
       setErrorMessage(error.response.data.message); // Set error message to display to the user
-      setMessage('Erro ao fazer Login!')
+      setMessage('Credenciais Inválidas!')
       setType('error')
     }
+  };
+
+  const isValidEmail = (email) => {
+    // Expressão regular para verificar se o email é válido
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
   };
 
   const testLogin = async () => {

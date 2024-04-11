@@ -48,9 +48,9 @@ function RegisterForm() {
   const formatValue = (value) => {
     // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem no início ou no final da palavra
     return value.toLowerCase().replace(/( de | da | do | das | dos )/g, (match) => match.toLowerCase())
-                               .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase());
+      .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase());
   };
-  
+
 
   //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
   const handleChange = (e) => {
@@ -59,11 +59,11 @@ function RegisterForm() {
 
     const { name, value } = e.target;
 
-    let formattedValue = formatValue(value);    
+    let formattedValue = formatValue(value);
 
     if (enderecoFields.includes(name)) {//Caso em um formulário contenha algum nome da lista, então será alterado o valor do objeto endereco
       setFormData({
-        ...formData,        
+        ...formData,
         endereco: {
           ...formData.endereco,
           [name]: value
@@ -303,11 +303,11 @@ function RegisterForm() {
             </div>
           </div>
         </div>
+        {message && <Message type={type} msg={message} />}
+          {!removeLoading && <Loading />}
         <div style={{ marginTop: -30 }}>
           <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
           <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
-          {message && <Message type={type} msg={message} />}
-          {!removeLoading && <Loading />}
         </div>
       </div>
       <footer className="footer">
