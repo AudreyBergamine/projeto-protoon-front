@@ -41,6 +41,8 @@ const SetCPF = () => {
             placeholder="Ex.: 333.333.333-33"
             value={cpf}
             onChange={formatCpf}
+            required
+            minLength={14}
         />
     );
 };

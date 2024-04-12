@@ -1,5 +1,5 @@
-.message{
-    width: 95%;
+.message {
+    width: 50%;
     padding: 1em;
     border: 1px solid #000;
     margin: 0 auto;
@@ -19,4 +19,10 @@
     color: #721c24;
     background-color: #f8d7da;
     border-color: #f5c6cb;
+}
+
+.none {
+    color: none;
+    background-color: none;
+    border-color: none;
 }

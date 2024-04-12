@@ -24,7 +24,7 @@ function Message({ type, msg }) {
         <>
         {visible && (
             <div className={`${styles.message} ${styles[type]}`}>{msg}</div>
-            )}
+            )} 
         </>
     )
 }

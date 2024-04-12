@@ -41,6 +41,8 @@ const SetCelular = ({ celularId }) => {
             placeholder="Ex.: (11)99999-9999"
             value={celular}
             onChange={formatCelular}
+            required
+            minLength={15}
         />
     );
 };

@@ -82,6 +82,8 @@ const SetCEP = ({ onEnderecoChange }) => {
                 placeholder="Ex.: 08500-000"
                 value={cep}
                 onChange={formatCep}
+                required
+                minLength={9}
             />
         </>
     );

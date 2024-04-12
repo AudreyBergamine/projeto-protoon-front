@@ -10,10 +10,9 @@ function EmailForm() {
   const [removeLoading, setRemoveLoading] = useState(true)
   const navigate = useNavigate();
 
-  const { username } = useParams();
+  const [username, setUsername] = useState('');
   const [formData, setFormData] = useState({
-    username: "",
-    password: ""
+    username: ""
   });
 
   useEffect(() => {
@@ -23,36 +22,58 @@ function EmailForm() {
     });
   }, [username]);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const close = () => {
+    setTimeout(() => {
+      window.location.reload()
+    }, 3000)
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setMessage('')
+
+    if (!username) {
+      setMessage('Por favor, preencha o email!')
+      setType('error')
+      return
+    }
+
+    if (!isValidEmail(username)) {
+      setMessage('Por favor, insira um email válido!')
+      setType('error')
+      return
+    }
+
     try {
       const response = await axios.get(`/protoon/municipe/municipes`);
       const users = response.data;
       const user = users.find(u => u.username === formData.username);
+      setRemoveLoading(false)
       if (user) {
-        setRemoveLoading(false)
 
         setTimeout(() => {
-          setRemoveLoading(true)       
+          setRemoveLoading(true)
           navigate(`/atualizarSenha/${formData.username}`);
         }, 3000)
       } else {
-        setMessage('Email não encontrado.')
-        setType('error')
+        setTimeout(() => {
+          setRemoveLoading(true)
+          setMessage('Email não encontrado.')
+          setType('error')
+        }, 3000)
       }
     } catch (error) {
       console.error("Erro ao buscar os usuários:", error);
       setMessage('Erro ao Buscar email!')
       setType('error')
     }
+  };
+
+  const isValidEmail = (username) => {
+    // Expressão regular para verificar se o email é válido
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(username);
   };
 
   return (
@@ -64,8 +85,9 @@ function EmailForm() {
           <input
             type="text"
             name="username"
-            value={formData.username}
-            onChange={handleChange}
+            placeholder="Insira o email cadastrado"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
       </div>
@@ -73,7 +95,7 @@ function EmailForm() {
       <button type="submit" className="btn-log">Enviar</button>
       <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
       {!removeLoading && <Loading />}
-      {message && <Message type={type} msg={message} />}
+      {message && <Message type={type} msg={message} onClose={close()} />}
     </form>
   );
 }

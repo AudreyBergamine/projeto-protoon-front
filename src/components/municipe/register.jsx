@@ -101,34 +101,58 @@ function RegisterForm() {
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setMessage('')
-    const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
+
     try {
-      const response = await axiosInstance.post('register/municipe', {
-        ...formData, // Inclua todos os dados do formData
-        data_nascimento: formattedDate, // Substitua o campo data_nascimento formatado
-        
-      });
-
+      const response = await axios.get(`http://localhost:8080/protoon/municipe/municipes`);
+      const users = response.data;
+      const user = users.find(u => u.username === formData.username);
       setRemoveLoading(false)
+      if (user) {
+        setTimeout(() => {
+          setMessage('Email Indisponível...')
+          setType('error')
+          setRemoveLoading(true)
+          return
+        }, 3000)
+      } else {
 
-      setTimeout(() => {
-        console.log(response.data);
-        setRemoveLoading(true)
-        alert('Dados enviados com sucesso!');
-        navigate('/login');
-      }, 3000)
+        console.log('email available')
+
+        const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
+        try {
+          const response = await axiosInstance.post('register/municipe', {
+            ...formData, // Inclua todos os dados do formData
+            data_nascimento: formattedDate, // Substitua o campo data_nascimento formatado
+
+          });
+
+          setRemoveLoading(false)
+
+          setTimeout(() => {
+            console.log(response.data);
+            setRemoveLoading(true)
+            setMessage('Cadastro feito com Sucesso! Redirecionando...')
+            setType('success')
+            setTimeout(() => {
+              navigate('/login');
+            }, 3000)
+          }, 3000)
+        } catch (error) {
+          setRemoveLoading(false)
+          setTimeout(() => {
+            setRemoveLoading(true)
+            console.error('Erro ao enviar os dados:', error);
+            setMessage('Falha ao tentar fazer o Cadastro!')
+            setType('error')
+          }, 3000)
+        }
+      }
     } catch (error) {
-      setRemoveLoading(false)
-      setTimeout(() => {
-        setRemoveLoading(true)
-        console.error('Erro ao enviar os dados:', error);
-        setMessage('Erro ao fazer Cadastro!')
-        setType('error')
-      }, 3000)
+      console.log(error)
     }
   };
-
 
   //Por fim é retornado o html para ser exibido no front end, junto com as funções acima.
   return (
@@ -148,6 +172,8 @@ function RegisterForm() {
                 placeholder="Ex.: Cláudio Silva"
                 value={formData.nome}
                 onChange={handleChange}
+                required
+                minLength={3}
               />
             </div>
 
@@ -159,6 +185,8 @@ function RegisterForm() {
                 placeholder="Ex.: claudio.silva@gmail.com"
                 value={formData.email}
                 onChange={handleChange}
+                required
+                minLength={7}
               />
             </div>
 
@@ -169,6 +197,8 @@ function RegisterForm() {
                 name="senha"
                 value={formData.senha}
                 onChange={handleChange}
+                required
+                minLength={6}
               />
             </div>
           </div>
@@ -191,6 +221,7 @@ function RegisterForm() {
                 name="data_nascimento"
                 value={formData.data_nascimento}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -214,6 +245,7 @@ function RegisterForm() {
                 placeholder="Ex.: Rua das Flores"
                 value={formData.endereco.logradouro}
                 onChange={handleChange}
+                readOnly
               />
             </div>
             <div>
@@ -224,6 +256,8 @@ function RegisterForm() {
                 placeholder="Ex.: Casa"
                 value={formData.endereco.nome_endereco}
                 onChange={handleChange}
+                required
+                minLength={3}
               />
             </div>
             <div>
@@ -234,6 +268,7 @@ function RegisterForm() {
                 placeholder="Ex.: 1025"
                 value={formData.endereco.num_endereco}
                 onChange={handleChange}
+                required
               />
             </div>
             <div>
@@ -261,6 +296,8 @@ function RegisterForm() {
                 placeholder="Ex.: casa, apartamento"
                 value={formData.endereco.tipo_endereco}
                 onChange={handleChange}
+                minLength={3}
+                required
               />
             </div>
 
@@ -272,6 +309,9 @@ function RegisterForm() {
                 placeholder="Ex.: Bairro das Flores"
                 value={formData.endereco.bairro}
                 onChange={handleChange}
+                required
+                minLength={2}
+                readOnly
               />
             </div>
 
@@ -283,6 +323,9 @@ function RegisterForm() {
                 placeholder="Ex.: Ferraz de Vasconcelos"
                 value={formData.endereco.cidade}
                 onChange={handleChange}
+                required
+                minLength={2}
+                readOnly
               />
             </div>
 
@@ -294,6 +337,9 @@ function RegisterForm() {
                 placeholder="Ex.: São Paulo"
                 value={formData.endereco.estado}
                 onChange={handleChange}
+                required
+                minLength={2}
+                readOnly
               />
             </div>
 
@@ -305,6 +351,8 @@ function RegisterForm() {
                 placeholder="Ex.: Brasil"
                 value={formData.endereco.pais}
                 onChange={handleChange}
+                required
+                minLength={3}
               />
             </div>
           </div>

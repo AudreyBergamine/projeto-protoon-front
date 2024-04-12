@@ -24,10 +24,16 @@ const LoginForm = () => {
     withCredentials: true, // Ensure Axios sends cookies with requests
   });
 
+  const close = () => {
+    setTimeout(() => {
+      window.location.reload()
+    }, 3000)
+  }
+
   const handleLogin = async () => {
 
     setMessage('');
-    
+
     switch (true) {
       case !email:
         setMessage('Por favor, preencha o email!')
@@ -43,7 +49,7 @@ const LoginForm = () => {
         return
     }
 
-    try {      
+    try {
       const response = await axiosInstance.post('authenticate', {
         email: email,
         senha: senha
@@ -56,7 +62,7 @@ const LoginForm = () => {
         console.log('Authentication successful:', response.data);
         // If authentication is successful, you can handle the response as needed
         setRemoveLoading(true)
-        navigate('/')        
+        navigate('/')
       }, 3000)
 
       // Optionally, you can redirect the user to another page upon successful authentication
@@ -65,8 +71,12 @@ const LoginForm = () => {
       // Handle authentication errors
       console.error('Authentication error:', error.response.data);
       setErrorMessage(error.response.data.message); // Set error message to display to the user
-      setMessage('Credenciais Inválidas!')
-      setType('error')
+      setRemoveLoading(false)
+      setTimeout(() => {
+        setRemoveLoading(true)
+        setMessage('Credenciais Inválidas!')
+        setType('error')
+      }, 3000)
     }
   };
 
@@ -110,12 +120,12 @@ const LoginForm = () => {
       </div>
       <Link to='/recuperarSenha' style={{ textDecoration: 'none' }}>Esqueceu a Senha?</Link>
       <div style={{ marginBottom: 30 }}>
+        {!removeLoading && <Loading />}
+        {message && <Message type={type} msg={message} onClose={close()}/>}
         <button onClick={handleLogin} className="btn-cad" style={{ marginRight: '100px' }}>Logar</button>
         <button className="btn-log" onClick={() => (window.location.href = '/cadastro')}>Criar Conta</button>
       </div>
-      {message && <Message type={type} msg={message} />}
       {errorMessage && <p>{errorMessage}</p>}
-      {!removeLoading && <Loading />}
     </div>
   );
 };
