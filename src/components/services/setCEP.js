@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const SetCEP = ({ onEnderecoChange }) => {
+const SetCEP = ({ onEnderecoChange, onCEPChange }) => {
     const [cep, setCep] = useState('');
     const [endereco, setEndereco] = useState({
         logradouro: '',
@@ -9,19 +9,6 @@ const SetCEP = ({ onEnderecoChange }) => {
         cidade: '',
         estado: '',
     });
-
-    useEffect(() => {
-        const cepInput = document.getElementsByName('cep');
-        cepInput.forEach(cepInput => {
-            cepInput.addEventListener('input', formatCep);
-        });
-
-        return () => {
-            cepInput.forEach(cepInput => {
-                cepInput.removeEventListener('input', cepInput);
-            });
-        };
-    }, []);
 
     const formatCep = (event) => {
         let value = event.target.value;
@@ -32,7 +19,8 @@ const SetCEP = ({ onEnderecoChange }) => {
         if (value.length > 9) {
             return
         }
-        setCep(value);
+        setCep(value);        
+        onCEPChange(value);
     };
 
     useEffect(() => {

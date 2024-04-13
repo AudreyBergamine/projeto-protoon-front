@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const SetCelular = ({ celularId }) => {
+const SetCelular = ({ celularId, onCelularChange }) => {
 
     const [celular, setCelular] = useState('');
 
@@ -32,6 +32,7 @@ const SetCelular = ({ celularId }) => {
             return
         }
         setCelular(value);
+        onCelularChange(value);
     };
 
     return (

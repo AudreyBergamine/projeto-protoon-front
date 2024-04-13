@@ -1,20 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-const SetCPF = () => {
+const SetCPF = ({ onCPFChange }) => {
     const [cpf, setCpf] = useState('');
-
-    useEffect(() => {
-        const cpfInputs = document.getElementsByName('cpf');
-        cpfInputs.forEach(cpfInput => {
-            cpfInput.addEventListener('input', formatCpf);
-        });
-
-        return () => {
-            cpfInputs.forEach(cpfInput => {
-                cpfInput.removeEventListener('input', formatCpf);
-            });
-        };
-    }, []);
 
     const formatCpf = (event) => {
         let value = event.target.value;
@@ -32,6 +19,7 @@ const SetCPF = () => {
             return
         }
         setCpf(value);
+        onCPFChange(value); // Chama a função de callback com o valor formatado do CPF
     };
 
     return (

@@ -26,6 +26,7 @@ function RegisterForm() {
     email: "",
     senha: "",
     num_CPF: "",
+    celular: "",
     data_nascimento: "",
     endereco: {
       tipo_endereco: "",
@@ -46,7 +47,7 @@ function RegisterForm() {
   }, []);
 
   const formatValue = (value) => {
-    // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem no início ou no final da palavra
+    // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem no sepaados da palavra
     return value.toLowerCase().replace(/( de | da | do | das | dos )/g, (match) => match.toLowerCase())
       .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase());
   };
@@ -98,6 +99,19 @@ function RegisterForm() {
     });
   };
 
+  const handleChangePais = (pais) => {
+    if (/^[a-zA-Z\s]*$/.test(pais)) {
+      const formattedPais = formatValue(pais);
+      setFormData({
+        ...formData,
+        endereco: {
+          ...formData.endereco,
+          pais: formattedPais
+        }
+      });
+    }
+  };
+
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -106,19 +120,32 @@ function RegisterForm() {
 
     try {
       const response = await axios.get(`http://localhost:8080/protoon/municipe/municipes`);
-      const users = response.data;
-      const user = users.find(u => u.username === formData.username);
+      const minicipes = response.data;
+      const muicipeEmail = minicipes.find(muicipe => {
+        return muicipe.email === formData.email;
+      });
+      const muicipeCPF = minicipes.find(muicipe => {
+        return muicipe.num_CPF === formData.num_CPF;
+      });
       setRemoveLoading(false)
-      if (user) {
+      if (muicipeEmail) {
         setTimeout(() => {
-          setMessage('Email Indisponível...')
+          setMessage('Email Indisponível')
+          setType('error')
+          setRemoveLoading(true)
+          return
+        }, 3000)
+      } else if (muicipeCPF) {
+        setTimeout(() => {
+          console.log('email available')
+          setMessage('CPF Indisponível')
           setType('error')
           setRemoveLoading(true)
           return
         }, 3000)
       } else {
 
-        console.log('email available')
+        console.log('email and CEP available')
 
         const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
         try {
@@ -206,12 +233,18 @@ function RegisterForm() {
           <div className="input-container">
             <div>
               <label>Número do CPF:</label><br></br>
-              <SetCPF />
+              <SetCPF onCPFChange={(formattedCPF) => {
+                setFormData({ ...formData, num_CPF: formattedCPF })
+              }}
+              />
             </div>
 
             <div>
               <label>Celular:</label><br></br>
-              <SetCelular />
+              <SetCelular onCelularChange={(formattedCelular) => {
+                setFormData({ ...formData, celular: formattedCelular })
+              }}
+              />
             </div>
 
             <div>
@@ -234,7 +267,18 @@ function RegisterForm() {
 
             <div>
               <label>Número do cep:</label><br></br>
-              <SetCEP onEnderecoChange={handleEnderecoChange} />
+              <SetCEP
+                onEnderecoChange={handleEnderecoChange}
+                onCEPChange={(formattedCEP) => {
+                  setFormData({
+                    ...formData,
+                    endereco: {
+                      ...formData.endereco,
+                      num_cep: formattedCEP
+                    }
+                  })
+                }}
+              />
             </div>
 
             <div>
@@ -350,7 +394,7 @@ function RegisterForm() {
                 name="pais"
                 placeholder="Ex.: Brasil"
                 value={formData.endereco.pais}
-                onChange={handleChange}
+                onChange={(e) => handleChangePais(e.target.value)}
                 required
                 minLength={3}
               />
