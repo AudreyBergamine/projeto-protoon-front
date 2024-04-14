@@ -58,7 +58,7 @@ function RegisterForm() {
     //A lista abaixo contém o nome de todos os campos que há em endereço
     const enderecoFields = ['tipo_endereco', 'num_cep', 'logradouro', 'nome_endereco', 'num_endereco', 'complemento', 'bairro', 'cidade', 'estado', 'pais'];
 
-    const { name, value } = e.target;
+    const { name, value } = e.target;    
 
     let formattedValue = formatValue(value);
 
@@ -112,11 +112,32 @@ function RegisterForm() {
     }
   };
 
+  const handleChangeNome = (nome) => {
+    if (/^[a-zA-Z\s]*$/.test(nome)) {
+      const formattedNome = formatValue(nome);
+      setFormData({
+          ...formData,
+          nome: formattedNome        
+      });
+    }
+  };
+
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setMessage('')
+
+    // Verifica se a data de nascimento é menos de 5 anos da data atual
+    const birthDate = moment(formData.data_nascimento);
+    const currentDate = moment();
+    const diffYears = currentDate.diff(birthDate, 'years');
+    if (diffYears < 5) {
+      setMessage('Você não tem idade suficiente');
+      setType('error');
+      return;
+    }
+
 
     try {
       const response = await axios.get(`http://localhost:8080/protoon/municipe/municipes`);
@@ -198,7 +219,7 @@ function RegisterForm() {
                 name="nome"
                 placeholder="Ex.: Cláudio Silva"
                 value={formData.nome}
-                onChange={handleChange}
+                onChange={(e) => handleChangeNome(e.target.value)}
                 required
                 minLength={3}
               />
@@ -313,6 +334,7 @@ function RegisterForm() {
                 value={formData.endereco.num_endereco}
                 onChange={handleChange}
                 required
+                min={1}
               />
             </div>
             <div>
@@ -393,7 +415,15 @@ function RegisterForm() {
                 type="text"
                 name="pais"
                 placeholder="Ex.: Brasil"
-                value={formData.endereco.pais}
+                value={formData.endereco.pais ? formData.endereco.pais : 
+                  setFormData({
+                    ...formData,
+                    endereco: {
+                      ...formData.endereco,
+                      pais: "Brasil"
+                    }
+                  })}
+                
                 onChange={(e) => handleChangePais(e.target.value)}
                 required
                 minLength={3}

@@ -1,20 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 const SetCelular = ({ celularId, onCelularChange }) => {
 
-    const [celular, setCelular] = useState('');
-
-    useEffect(() => {
-        const celularInputs = document.getElementsByName('celular');
-        celularInputs.forEach(celularInputs => {
-            celularInputs.addEventListener('input', formatCelular);
-        });
-        return () => {
-            celularInputs.forEach(celularInputs => {
-                celularInputs.removeEventListener('input', formatCelular);
-            });
-        };
-    }, []);
+    const [celular, setCelular] = useState('');    
 
     const formatCelular = (event) => {
         let value = event.target.value;
