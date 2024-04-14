@@ -12,6 +12,8 @@ import Message from '../layouts/Message'
 //Função de cadastro de municipe
 function RegisterForm() {
   const [message, setMessage] = useState()
+  const [cpfValid, setCpfValid] = useState(false);
+  const [alert, setAlert] = useState('');
   const [type, setType] = useState()
   const navigate = useNavigate();
   const [removeLoading, setRemoveLoading] = useState(true)
@@ -42,6 +44,14 @@ function RegisterForm() {
     }
   });
 
+  const handleAlertChange = (newAlert) => {
+    setAlert(newAlert);
+  };
+
+  const handleCpfValidChange = (isCpfValid) => {
+    setCpfValid(isCpfValid);
+  };
+
   useEffect(() => {
     setEndereco('num_cep')
   }, []);
@@ -58,7 +68,7 @@ function RegisterForm() {
     //A lista abaixo contém o nome de todos os campos que há em endereço
     const enderecoFields = ['tipo_endereco', 'num_cep', 'logradouro', 'nome_endereco', 'num_endereco', 'complemento', 'bairro', 'cidade', 'estado', 'pais'];
 
-    const { name, value } = e.target;    
+    const { name, value } = e.target;
 
     let formattedValue = formatValue(value);
 
@@ -86,7 +96,7 @@ function RegisterForm() {
     };
   }
 
-  const handleEnderecoChange = (logradouro, bairro, cidade, estado) => {
+  const handleEnderecoChange = (logradouro, bairro, cidade, estado, pais) => {
     setFormData({
       ...formData,
       endereco: {
@@ -94,7 +104,8 @@ function RegisterForm() {
         logradouro,
         bairro,
         cidade,
-        estado
+        estado,
+        pais: "Brasil"
       }
     });
   };
@@ -116,8 +127,8 @@ function RegisterForm() {
     if (/^[a-zA-Z\s]*$/.test(nome)) {
       const formattedNome = formatValue(nome);
       setFormData({
-          ...formData,
-          nome: formattedNome        
+        ...formData,
+        nome: formattedNome
       });
     }
   };
@@ -125,6 +136,10 @@ function RegisterForm() {
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(!cpfValid) {
+      setMessage('Cpf Inválido')
+      return
+    }
 
     setMessage('')
 
@@ -137,7 +152,6 @@ function RegisterForm() {
       setType('error');
       return;
     }
-
 
     try {
       const response = await axios.get(`http://localhost:8080/protoon/municipe/municipes`);
@@ -254,9 +268,11 @@ function RegisterForm() {
           <div className="input-container">
             <div>
               <label>Número do CPF:</label><br></br>
-              <SetCPF onCPFChange={(formattedCPF) => {
-                setFormData({ ...formData, num_CPF: formattedCPF })
-              }}
+              <SetCPF
+                cpfValido={handleCpfValidChange }
+                onCPFChange={(formattedCPF) => {
+                  setFormData({ ...formData, num_CPF: formattedCPF })
+                }}
               />
             </div>
 
@@ -289,6 +305,7 @@ function RegisterForm() {
             <div>
               <label>Número do cep:</label><br></br>
               <SetCEP
+                onAlertChange={handleAlertChange}
                 onEnderecoChange={handleEnderecoChange}
                 onCEPChange={(formattedCEP) => {
                   setFormData({
@@ -310,7 +327,8 @@ function RegisterForm() {
                 placeholder="Ex.: Rua das Flores"
                 value={formData.endereco.logradouro}
                 onChange={handleChange}
-                readOnly
+                required
+                readOnly={alert === '' ? true : false}
               />
             </div>
             <div>
@@ -377,7 +395,7 @@ function RegisterForm() {
                 onChange={handleChange}
                 required
                 minLength={2}
-                readOnly
+                readOnly={alert === '' ? true : false}
               />
             </div>
 
@@ -391,7 +409,7 @@ function RegisterForm() {
                 onChange={handleChange}
                 required
                 minLength={2}
-                readOnly
+                readOnly={alert === '' ? true : false}
               />
             </div>
 
@@ -405,7 +423,7 @@ function RegisterForm() {
                 onChange={handleChange}
                 required
                 minLength={2}
-                readOnly
+                readOnly={alert === '' ? true : false}
               />
             </div>
 
@@ -415,15 +433,8 @@ function RegisterForm() {
                 type="text"
                 name="pais"
                 placeholder="Ex.: Brasil"
-                value={formData.endereco.pais ? formData.endereco.pais : 
-                  setFormData({
-                    ...formData,
-                    endereco: {
-                      ...formData.endereco,
-                      pais: "Brasil"
-                    }
-                  })}
-                
+                value={formData.endereco.pais ? formData.endereco.pais : ""}
+                readOnly={alert === '' ? true : false}
                 onChange={(e) => handleChangePais(e.target.value)}
                 required
                 minLength={3}

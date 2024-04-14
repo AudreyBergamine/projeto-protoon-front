@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const SetCEP = ({ onEnderecoChange, onCEPChange }) => {
+const SetCEP = ({ onEnderecoChange, onCEPChange, onAlertChange }) => {
     const [cep, setCep] = useState('');
     const [alert, setAlert] = useState('')
     const [endereco, setEndereco] = useState({
@@ -9,6 +9,7 @@ const SetCEP = ({ onEnderecoChange, onCEPChange }) => {
         bairro: '',
         cidade: '',
         estado: '',
+        pais: '',
     });
 
     const formatCep = (event) => {
@@ -27,6 +28,8 @@ const SetCEP = ({ onEnderecoChange, onCEPChange }) => {
     useEffect(() => {
         if (cep.length === 9) {
             buscarEndereco();
+        } else {
+            onAlertChange(" ")
         }
     }, [cep]);
 
@@ -41,17 +44,21 @@ const SetCEP = ({ onEnderecoChange, onCEPChange }) => {
                     bairro: data.bairro,
                     cidade: data.localidade,
                     estado: data.uf,
+                    pais: 'Brasil',
                 });
-                onEnderecoChange(data.logradouro, data.bairro, data.localidade, data.uf);
+                onEnderecoChange(data.logradouro, data.bairro, data.localidade, data.uf, data.pais);
                 setAlert('');
+                onAlertChange('')
             } else {
                 setEndereco({
                     logradouro: '',
                     bairro: '',
                     cidade: '',
                     estado: '',
+                    pais: '',
                 });
                 setAlert('CEP não encontrado.');
+                onAlertChange('CEP não encontrado.')
             }
         } catch (error) {
             setEndereco({
@@ -59,8 +66,10 @@ const SetCEP = ({ onEnderecoChange, onCEPChange }) => {
                 bairro: '',
                 cidade: '',
                 estado: '',
+                pais: '',
             });
             setAlert('Erro ao buscar CEP.');
+            onAlertChange('Erro ao buscar CEP.')
             setTimeout(() => {
                 setAlert('');
             }, 3000)
@@ -75,7 +84,6 @@ const SetCEP = ({ onEnderecoChange, onCEPChange }) => {
                 placeholder="Ex.: 08500-000"
                 value={cep}
                 onChange={formatCep}
-                required
                 minLength={9}
             />
             <span style={{ color: 'red' }}>{alert}<br></br></span>

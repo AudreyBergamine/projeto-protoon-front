@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const SetCPF = ({ onCPFChange }) => {
+const SetCPF = ({ onCPFChange, cpfValido }) => {
     const [cpf, setCpf] = useState('');
 
     const isCpfValido = (strCPF) => {
@@ -46,8 +46,14 @@ const SetCPF = ({ onCPFChange }) => {
             return
         }
         setCpf(value);
-        onCPFChange(value); // Chama a função de callback com o valor formatado do CPF
+        onCPFChange(value); // Chama a função de callback com o valor formatado do CPF        
     };
+
+    useEffect(() => {
+        if (cpf.length === 14) {
+            cpfValido(isCpfValido(cpf));
+        }
+    }, [cpf]);
 
     return (
         <>
