@@ -133,7 +133,7 @@ function RegisterForm() {
     const currentDate = moment();
     const diffYears = currentDate.diff(birthDate, 'years');
     if (diffYears < 5) {
-      setMessage('Você não tem idade suficiente');
+      setMessage('Idade minima requirida é de 5 anos');
       setType('error');
       return;
     }

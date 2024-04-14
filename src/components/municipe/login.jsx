@@ -7,36 +7,57 @@ import Message from '../layouts/Message'
 const LoginForm = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState('')
+  const [alert, setAlert] = useState('')
   const [type, setType] = useState()
   const [removeLoading, setRemoveLoading] = useState(true)
 
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [senhaFocused, setSenhaFocused] = useState(false);
+  const [senhaNull, setSenhaNull] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const axiosInstance = axios.create({
     baseURL: 'http://localhost:8080/protoon/auth/', // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
-  console.log('IdMunicipe: ', localStorage.getItem("idMunicipe"));
+  // console.log('IdMunicipe: ', localStorage.getItem("idMunicipe"));
 
   const axiosInstance2 = axios.create({
     baseURL: 'http://localhost:8080/protoon/', // Adjust the base URL as needed
     withCredentials: true, // Ensure Axios sends cookies with requests
   });
 
-  const close = () => {
-    setTimeout(() => {
-      window.location.reload()
-    }, 3000)
-  }
-
   const handleLogin = async () => {
 
-    setMessage('');
-    if (!senha) {
-      setMessage('Por favor, preencha a senha!')
-      setType('error')
+    if (email.trim() === '') {
+      setSenhaFocused(true)
+      setTimeout(() => {
+        setSenhaFocused(false)
+        setMessage('');
+      }, 3000)
+      return
+    } else if (!isValidEmail(email)) {
+      setSenhaFocused(true)
+      setTimeout(() => {
+        setSenhaFocused(false)
+        setMessage('');
+      }, 3000)
+      return
+    }
+
+    if (senha.trim() === '') {
+      setSenhaNull(true)
+      setAlert("Preencha a Senha")
+      setTimeout(() => {
+        setSenhaNull(false)
+      }, 3000)
+      return
+    } else if (senha.length < 6) {
+      setSenhaNull(true)
+      setAlert("Senha deve conter no minimo 6 digitos")
+      setTimeout(() => {
+        setSenhaNull(false)
+      }, 3000)
       return
     }
 
@@ -66,6 +87,9 @@ const LoginForm = () => {
       setTimeout(() => {
         setRemoveLoading(true)
         setMessage('Credenciais Inválidas!')
+        setTimeout(() => {
+          setMessage('')
+        }, 3000)
         setType('error')
       }, 3000)
     }
@@ -96,6 +120,7 @@ const LoginForm = () => {
       <div>
         {senhaFocused && email.trim() === '' ? <span style={{ color: 'red' }}>Preencha o email<br></br></span> :
           senhaFocused && !isValidEmail(email) && <span style={{ color: 'red' }}>Email inválido<br></br></span>}
+
         <input
           type="email"
           placeholder="Email"
@@ -104,6 +129,8 @@ const LoginForm = () => {
         />
       </div>
       <div>
+        {senhaNull &&
+          <span style={{ color: 'red' }}>{alert}<br></br></span>}
         <input
           type="password"
           placeholder="Senha"
@@ -116,7 +143,7 @@ const LoginForm = () => {
       <Link to='/recuperarSenha' style={{ textDecoration: 'none' }}>Esqueceu a Senha?</Link>
       <div style={{ marginBottom: 30 }}>
         {!removeLoading && <Loading />}
-        {message && <Message type={type} msg={message} onClose={close()} />}
+        {message && <Message type={type} msg={message} />}
         <button onClick={handleLogin} className="btn-cad" style={{ marginRight: '100px' }}>Logar</button>
         <button className="btn-log" onClick={() => (window.location.href = '/cadastro')}>Criar Conta</button>
       </div>
