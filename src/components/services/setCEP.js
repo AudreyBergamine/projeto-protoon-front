@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const SetCEP = ({ onEnderecoChange, onCEPChange }) => {
     const [cep, setCep] = useState('');
+    const [alert, setAlert] = useState('')
     const [endereco, setEndereco] = useState({
         logradouro: '',
         bairro: '',
@@ -19,7 +20,7 @@ const SetCEP = ({ onEnderecoChange, onCEPChange }) => {
         if (value.length > 9) {
             return
         }
-        setCep(value);        
+        setCep(value);
         onCEPChange(value);
     };
 
@@ -33,7 +34,7 @@ const SetCEP = ({ onEnderecoChange, onCEPChange }) => {
         try {
             const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
             const data = response.data;
-    
+
             if (!data.erro) {
                 setEndereco({
                     logradouro: data.logradouro,
@@ -42,6 +43,7 @@ const SetCEP = ({ onEnderecoChange, onCEPChange }) => {
                     estado: data.uf,
                 });
                 onEnderecoChange(data.logradouro, data.bairro, data.localidade, data.uf);
+                setAlert('');
             } else {
                 setEndereco({
                     logradouro: '',
@@ -49,7 +51,7 @@ const SetCEP = ({ onEnderecoChange, onCEPChange }) => {
                     cidade: '',
                     estado: '',
                 });
-                alert('CEP não encontrado.');
+                setAlert('CEP não encontrado.');
             }
         } catch (error) {
             setEndereco({
@@ -58,7 +60,10 @@ const SetCEP = ({ onEnderecoChange, onCEPChange }) => {
                 cidade: '',
                 estado: '',
             });
-            alert('Erro ao buscar CEP.');
+            setAlert('Erro ao buscar CEP.');
+            setTimeout(() => {
+                setAlert('');
+            }, 3000)
         }
     };
 
@@ -73,6 +78,7 @@ const SetCEP = ({ onEnderecoChange, onCEPChange }) => {
                 required
                 minLength={9}
             />
+            <span style={{ color: 'red' }}>{alert}<br></br></span>
         </>
     );
 };
