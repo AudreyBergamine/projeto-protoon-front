@@ -7,54 +7,56 @@ import Message from '../layouts/Message'
 function EmailForm() {
   const [message, setMessage] = useState()
   const [type, setType] = useState()
+  const [alert, setAlert] = useState('')
+  const [emailNull, setEmailNull] = useState(false);
   const [removeLoading, setRemoveLoading] = useState(true)
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [formData, setFormData] = useState({
-    username: ""
+    email: ""
   });
 
   useEffect(() => {
     setFormData({
       ...formData,
-      username: username
+      email: email
     });
-  }, [username]);
-
-  const close = () => {
-    setTimeout(() => {
-      window.location.reload()
-    }, 3000)
-  }
+  }, [email]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setMessage('')
 
-    if (!username) {
-      setMessage('Por favor, preencha o email!')
-      setType('error')
+    if (!email) {
+      setAlert('Por favor, preencha o email!')
+      setEmailNull(true)
+      setTimeout(() => {
+        setEmailNull(false)
+        setAlert('');
+      }, 3000)
       return
-    }
-
-    if (!isValidEmail(username)) {
-      setMessage('Por favor, insira um email válido!')
-      setType('error')
+    } else if (!isValidEmail(email)) {
+      setAlert('Por favor, insira um email válido!')
+      setEmailNull(true)
+      setTimeout(() => {
+        setEmailNull(false)
+        setAlert('');
+      }, 3000)
       return
     }
 
     try {
       const response = await axios.get(`/protoon/municipe/municipes`);
       const users = response.data;
-      const user = users.find(u => u.username === formData.username);
+      const user = users.find(u => u.email === formData.email);
+
       setRemoveLoading(false)
       if (user) {
-
         setTimeout(() => {
           setRemoveLoading(true)
-          navigate(`/atualizarSenha/${formData.username}`);
+          navigate(`/atualizarSenha/${formData.email}`);
         }, 3000)
       } else {
         setTimeout(() => {
@@ -70,10 +72,10 @@ function EmailForm() {
     }
   };
 
-  const isValidEmail = (username) => {
+  const isValidEmail = (email) => {
     // Expressão regular para verificar se o email é válido
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailPattern.test(username);
+    return emailPattern.test(email);
   };
 
   return (
@@ -82,12 +84,14 @@ function EmailForm() {
       <div className="input-container">
         <div className="input-container">
           <label style={{ marginBottom: 15 }}>Email </label>
+          {emailNull &&
+          <span style={{ color: 'red' }}>{alert}<br></br></span>}
           <input
             type="text"
-            name="username"
+            name="email"
             placeholder="Insira o email cadastrado"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value.toLowerCase())}
           />
         </div>
       </div>
@@ -95,7 +99,7 @@ function EmailForm() {
       <button type="submit" className="btn-log">Enviar</button>
       <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
       {!removeLoading && <Loading />}
-      {message && <Message type={type} msg={message} onClose={close()} />}
+      {message && <Message type={type} msg={message} />}
     </form>
   );
 }
