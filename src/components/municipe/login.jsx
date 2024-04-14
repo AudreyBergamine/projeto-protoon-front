@@ -12,6 +12,7 @@ const LoginForm = () => {
 
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [senhaFocused, setSenhaFocused] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const axiosInstance = axios.create({
     baseURL: 'http://localhost:8080/protoon/auth/', // Adjust the base URL as needed
@@ -33,20 +34,10 @@ const LoginForm = () => {
   const handleLogin = async () => {
 
     setMessage('');
-
-    switch (true) {
-      case !email:
-        setMessage('Por favor, preencha o email!')
-        setType('error')
-        return;
-      case !isValidEmail(email):
-        setMessage('Por favor, insira um email válido!')
-        setType('error')
-        return;
-      case !senha:
-        setMessage('Por favor, preencha a senha!')
-        setType('error')
-        return
+    if (!senha) {
+      setMessage('Por favor, preencha a senha!')
+      setType('error')
+      return
     }
 
     try {
@@ -103,6 +94,8 @@ const LoginForm = () => {
     <div>
       <h1>Login</h1>
       <div>
+        {senhaFocused && email.trim() === '' ? <span style={{ color: 'red' }}>Preencha o email<br></br></span> :
+          senhaFocused && !isValidEmail(email) && <span style={{ color: 'red' }}>Email inválido<br></br></span>}
         <input
           type="email"
           placeholder="Email"
@@ -116,12 +109,14 @@ const LoginForm = () => {
           placeholder="Senha"
           value={senha}
           onChange={(e) => setSenha(e.target.value)}
+          onFocus={() => setSenhaFocused(true)}
+          onBlur={() => setSenhaFocused(false)}
         />
       </div>
       <Link to='/recuperarSenha' style={{ textDecoration: 'none' }}>Esqueceu a Senha?</Link>
       <div style={{ marginBottom: 30 }}>
         {!removeLoading && <Loading />}
-        {message && <Message type={type} msg={message} onClose={close()}/>}
+        {message && <Message type={type} msg={message} onClose={close()} />}
         <button onClick={handleLogin} className="btn-cad" style={{ marginRight: '100px' }}>Logar</button>
         <button className="btn-log" onClick={() => (window.location.href = '/cadastro')}>Criar Conta</button>
       </div>
