@@ -22,7 +22,8 @@ import Reclamacao from '../components/reclamacao/Reclamacao';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // Defina um conjunto de rotas privadas
-const privateRoutes = ['/reclamar', '/outra-rota-privada'];
+const privateRoutes = ['/outra-rota-privada'];
+// const privateRoutes = ['/reclamar', '/outra-rota-privada'];
 
 function AppRoutes({ isAuthenticated, role }) {
     const navigate = useNavigate();

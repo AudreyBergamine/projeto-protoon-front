@@ -48,7 +48,11 @@ function EmailForm() {
     }
 
     try {
-      const response = await axios.get(`/protoon/municipe/municipes`);
+      const response = await axios.get('/protoon/municipe/municipes/recuperar-senha/codigo', {
+        params: {
+          email: formData.email
+        }
+      });
       const users = response.data;
       const user = users.find(u => u.email === formData.email);
 
@@ -85,7 +89,7 @@ function EmailForm() {
         <div className="input-container">
           <label style={{ marginBottom: 15 }}>Email </label>
           {emailNull &&
-          <span style={{ color: 'red' }}>{alert}<br></br></span>}
+            <span style={{ color: 'red' }}>{alert}<br></br></span>}
           <input
             type="text"
             name="email"
