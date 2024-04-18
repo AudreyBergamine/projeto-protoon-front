@@ -86,100 +86,36 @@ function Reclamar() {
               <div className="input-container">
 
                 <div>
-                  <label>Problema:</label><br></br>
-                  <input
-                    type="text"
-                    name="nome_municipe"
-                    placeholder="Ex.: Cláudio Silva"
-                    value={formData.nome_municipe}
-                    onChange={handleChange}
-                  />
+                  <label>Problema:</label><br />
+                    <select
+                    style={{ fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center" }}
+                      name="problema"
+                      value={formData.problema}
+                      onChange={handleChange}
+                    >
+                      <option value="">Selecione um problema</option>
+                      <option value="Buraco na rua">Buraco na rua</option>
+                      <option value="Vazamento de água">Vazamento de água</option>
+                      <option value="Problema de iluminação">Problema de iluminação</option>
+                    </select>
                 </div>
+
 
               </div>
             </div>
             <hr></hr>
-            <h3>Endereço</h3>
             <div className="register-form">
               <div className="input-container">
 
                 <div>
-                  <label>Número do cep:</label><br></br>
-                  <input
-                    type="number"
-                    name="num_cep"
-                    placeholder="Ex.: 77777777"
-                    value={formData.num_cep}
+                  <label>Descrição</label><br />
+                  <textarea style={{ width: 600, padding: 20, borderRadius: 10 }}
+                    name="descricao"
+                    rows="5"
+                    placeholder="Ex.: Buraco em minha rua, com risco de acidentes"
+                    value={formData.descricao}
                     onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <label>Logradouro:</label><br></br>
-                  <input
-                    type="text"
-                    name="logradouro"
-                    placeholder="Ex.: Rua das Flores"
-                    value={formData.logradouro}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <label>Nome Endereço:</label><br></br>
-                  <input
-                    type="text"
-                    name="nome_endereco"
-                    placeholder="Ex.: Casa"
-                    value={formData.nome_endereco}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <label>Número do endereço:</label><br></br>
-                  <input
-                    type="number"
-                    name="num_endereco"
-                    placeholder="Ex.: 1025"
-                    value={formData.num_endereco}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <label>Complemento:</label><br></br>
-                  <input
-                    type="text"
-                    name="complemento"
-                    placeholder="Bloco, apartamento, casa, fundos..."
-                    value={formData.complemento}
-                    onChange={handleChange}
-                  />
-                </div>
-
-              </div>
-            </div>
-
-            <div className="register-form">
-              <div className="input-container">
-
-                <div>
-                  <label>Tipo de endereço:</label><br></br>
-                  <input
-                    type="text"
-                    name="tipo_endereco"
-                    placeholder="Ex.: casa, apartamento"
-                    value={formData.tipo_endereco}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div>
-                  <label>Bairro:</label><br></br>
-                  <input
-                    type="text"
-                    name="bairro"
-                    placeholder="Ex.: Bairro das Flores"
-                    value={formData.bairro}
-                    onChange={handleChange}
-                  />
+                  ></textarea>
                 </div>
               </div>
             </div>
