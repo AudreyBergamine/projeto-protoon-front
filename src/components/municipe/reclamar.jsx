@@ -1,73 +1,49 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from '../services/axiosInstance';
+import axios from 'axios';
 import moment from "moment";
 
 //Função de cadastro de municipe
 function Reclamar() {
   const navigate = useNavigate();
+  const [message, setMessage] = useState()
+  const [type, setType] = useState()
+  const [removeLoading, setRemoveLoading] = useState(true)
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
   const [formData, setFormData] = useState({
-    nome_municipe: "",
-    email: "",
-    senha: "",
-    num_CPF: "",
-    data_nascimento: "",
-    endereco: {
-      tipo_endereco: "",
-      num_cep: "",
-      logradouro: "",
-      nome_endereco: "",
-      num_endereco: "",
-      complemento: "",
-      bairro: "",
-      cidade: "",
-      estado: "",
-      pais: ""
-    }
+    assunto: "",
+    descricao: ""
   });
 
 
   //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
   const handleChange = (e) => {
-    //A lista abaixo contém o nome de todos os campos que há em endereço
-    const enderecoFields = ['tipo_endereco', 'num_cep', 'logradouro', 'nome_endereco', 'num_endereco', 'complemento', 'bairro', 'cidade', 'estado', 'pais'];
-
     const { name, value } = e.target;
-
-    if (enderecoFields.includes(name)) {//Caso em um formulário contenha algum nome da lista, então será alterado o valor do objeto endereco
-      setFormData({
-        ...formData,
-        endereco: {
-          ...formData.endereco,
-          [name]: value
-        }
-      });
-
-    } else {//Caso não, será atualizado o campo municipe (todos os outros campos).
-      setFormData({
-        ...formData,
-        [e.target.name]: e.target.value
-      });
-    }
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
-    //const hashedPassword = await bcrypt.hash(formData.senha, 10);
     try {
-      const response = await axios.post('/reclamacoes', {
-        // const response = await axios.post('https://proton-1710414195673.azurewebsites.net/municipes', {
-        ...formData, // Inclua todos os dados do formData
-        // senha: hashedPassword,
-        data_nascimento: formattedDate // Substitua o campo data_nascimento formatado
+      const response = await axios.post('http://localhost:8080/protoon/protocolo/abrir-protocolos', {
+        assunto: formData.assunto,
+        descricao: formData.descricao,
+        id_municipe: 1
       });
 
-      console.log(response.data);
-      alert('Dados enviados com sucesso!');
-      navigate('/login');
+      setTimeout(() => {
+        console.log(response.data);
+        setRemoveLoading(true)
+        setMessage('Reclamação bem sucedida! Redirecionando...')
+        setType('success')
+        setTimeout(() => {
+          navigate('/paginaInicial');
+        }, 3000)
+      }, 3000)
     } catch (error) {
       console.error('Erro ao enviar os dados:', error);
     }
@@ -80,27 +56,23 @@ function Reclamar() {
       <div style={{ paddingBottom: '100px' }}>
         <form onSubmit={handleSubmit}>
           <div>
-
             <h3>Reclame Aqui</h3>
             <div className="register-form">
               <div className="input-container">
-
                 <div>
                   <label>Problema:</label><br />
-                    <select
+                  <select
                     style={{ fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center" }}
-                      name="problema"
-                      value={formData.problema}
-                      onChange={handleChange}
-                    >
-                      <option value="">Selecione um problema</option>
-                      <option value="Buraco na rua">Buraco na rua</option>
-                      <option value="Vazamento de água">Vazamento de água</option>
-                      <option value="Problema de iluminação">Problema de iluminação</option>
-                    </select>
+                    name="assunto"
+                    value={formData.assunto}
+                    onChange={handleChange}
+                  >
+                    <option value="">Selecione um problema</option>
+                    <option value="Buraco na rua">Buraco na rua</option>
+                    <option value="Vazamento de água">Vazamento de água</option>
+                    <option value="Problema de iluminação">Problema de iluminação</option>
+                  </select>
                 </div>
-
-
               </div>
             </div>
             <hr></hr>
@@ -124,9 +96,6 @@ function Reclamar() {
             <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Confirmar</button>
             <button className="btn-log" onClick={() => (window.location.href = '/paginaInicial')}>Voltar</button>
           </div>
-          <footer className="footer">
-            © 2024 Proto-on. Todos os direitos reservados.
-          </footer>
         </form>
       </div>
     </>
