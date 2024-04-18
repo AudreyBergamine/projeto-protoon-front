@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import moment from "moment";
+import Loading from '../layouts/Loading';
+import Message from '../layouts/Message'
 
 //Função de cadastro de municipe
 function Reclamar() {
@@ -35,6 +37,7 @@ function Reclamar() {
         id_municipe: 1
       });
 
+      setRemoveLoading(false)
       setTimeout(() => {
         console.log(response.data);
         setRemoveLoading(true)
@@ -96,6 +99,8 @@ function Reclamar() {
             <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Confirmar</button>
             <button className="btn-log" onClick={() => (window.location.href = '/paginaInicial')}>Voltar</button>
           </div>
+          {!removeLoading && <Loading />}
+          {message && <Message type={type} msg={message} />}
         </form>
       </div>
     </>
