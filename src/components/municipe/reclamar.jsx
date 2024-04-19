@@ -77,8 +77,7 @@ function Reclamar() {
                   </select>
                 </div>
               </div>
-            </div>
-            <hr></hr>
+            </div><br />
             <div className="register-form">
               <div className="input-container">
 
