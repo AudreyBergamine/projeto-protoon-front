@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function TelaUser() {
-  const location = useLocation();
-  const navigate = useNavigate();
+  // const location = useLocation();
+  // const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
 
   const [username, setUsername] = useState(""); // Use useState para username

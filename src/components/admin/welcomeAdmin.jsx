@@ -7,10 +7,10 @@ function TelaAdmin() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
-  const [username, setUsername] = useState("");
+  // const [username, setUsername] = useState("");
   const [tempoRestante, setTempoRestante] = useState(null);
-  const [token, setToken] = useState("");
-  const [role, setRole] = useState("");
+  // const [token, setToken] = useState("");
+  // const [role, setRole] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +34,7 @@ function TelaAdmin() {
             localStorage.removeItem('token');
             setTempoRestante(null);
             alert('Tempo de login expirou');
+            setErrorMessage('Tempo de login expirou')
             navigate('/loginAdmin');
             return prevTempoRestante;
           }
@@ -54,7 +55,7 @@ function TelaAdmin() {
         alert('Usuário deletado com sucesso!');
       }
     } catch (error) {
-      console.error('Erro ao deletar o usuário:', error);
+      console.error('Erro ao deletar o usuário:', error);      
       alert('Erro ao deletar o usuário. Por favor, tente novamente.');
     }
   };

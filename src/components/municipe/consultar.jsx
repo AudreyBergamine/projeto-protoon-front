@@ -1,33 +1,29 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import moment from "moment";
-import Loading from '../layouts/Loading';
-import Message from '../layouts/Message'
 import { format } from 'date-fns';
 
 function Consultar() {
-  const navigate = useNavigate();
-  const [message, setMessage] = useState()
-  const [type, setType] = useState()
-  const [removeLoading, setRemoveLoading] = useState(true)
+  // const navigate = useNavigate();
+  // const [message, setMessage] = useState()
+  // const [type, setType] = useState()
+  // const [removeLoading, setRemoveLoading] = useState(true)
   const [protocolos, setProtocolos] = useState([])
   const [mostrarTabela, setMostrarTabela] = useState(false);
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
-  const [formData, setFormData] = useState({
-    assunto: "",
-    descricao: ""
-  });
+  // const [formData, setFormData] = useState({
+  //   assunto: "",
+  //   descricao: ""
+  // });
 
 
   //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  // const handleChange = (e) => {
+  //   setFormData({
+  //     ...formData,
+  //     [e.target.name]: e.target.value
+  //   });
+  // };
 
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {

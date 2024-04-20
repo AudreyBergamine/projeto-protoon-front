@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './style/App.css';
 import './style/home.css';
 import './style/login.css';
@@ -7,11 +7,10 @@ import AppRoutes from './routes/AppRoutes';
 import Header from './components/layouts/Header';
 import Footer from './components/layouts/Footer';
 import { useState, useEffect  } from 'react';
-import axios from "axios";
-import { BrowserRouter as Router, useNavigate } from 'react-router-dom';
+// import axios from "axios";
+import { BrowserRouter as Router } from 'react-router-dom';
 
-function App() {
- 
+function App() { 
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [role, setRole] = useState('')

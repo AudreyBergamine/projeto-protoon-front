@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import moment from "moment";
+// import moment from "moment";
 import Loading from '../layouts/Loading';
 import Message from '../layouts/Message'
 
@@ -20,7 +20,6 @@ function Reclamar() {
 
   //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
   const handleChange = (e) => {
-    const { name, value } = e.target;
     setFormData({
       ...formData,
       [e.target.name]: e.target.value

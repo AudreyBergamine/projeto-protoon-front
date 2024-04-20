@@ -10,15 +10,15 @@ import Reclamar from '../components/municipe/reclamar';
 import Consultar from '../components/municipe/consultar';
 import SobreNos from '../components/municipe/sobreNos';
 import Contato from '../components/municipe/contato';
-import LoginAdmin from '../components/admin/loginAdmin';
+// import LoginAdmin from '../components/admin/loginAdmin';
 import TelaAdmin from '../components/admin/welcomeAdmin';
 import Teste from '../components/admin/teste';
 import TelaUser from '../components/admin/welcomeUser';
-import ManterReclamacoes from '../components/admin/manterReclamacoes';
-import RegistrarReclamacao from '../components/admin/registrarReclamacao';
-import RegisterFormUser from '../components/admin/registerUser';
+// import ManterReclamacoes from '../components/admin/manterReclamacoes';
+// import RegistrarReclamacao from '../components/admin/registrarReclamacao';
+// import RegisterFormUser from '../components/admin/registerUser';
 import UpdateFormUser from '../components/admin/updateUser';
-import Reclamacao from '../components/reclamacao/Reclamacao';
+// import Reclamacao from '../components/reclamacao/Reclamacao';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // Defina um conjunto de rotas privadas

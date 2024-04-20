@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from "react-router-dom";
 import Loading from '../layouts/Loading';
@@ -22,10 +22,10 @@ const LoginForm = () => {
   });
   // console.log('IdMunicipe: ', localStorage.getItem("idMunicipe"));
 
-  const axiosInstance2 = axios.create({
-    baseURL: 'http://localhost:8080/protoon/', // Adjust the base URL as needed
-    withCredentials: true, // Ensure Axios sends cookies with requests
-  });
+  // const axiosInstance2 = axios.create({
+  //   baseURL: 'http://localhost:8080/protoon/', // Adjust the base URL as needed
+  //   withCredentials: true, // Ensure Axios sends cookies with requests
+  // });
 
   const handleLogin = async () => {
 
@@ -101,18 +101,18 @@ const LoginForm = () => {
     return emailPattern.test(email);
   };
 
-  const testLogin = async () => {
-    try {
-      const response = await axiosInstance2.get('/municipe/municipes');
-      console.log(response.data);
-    } catch (error) {
-      console.error(error.response.data);
-    }
-  };
+  // const testLogin = async () => {
+  //   try {
+  //     const response = await axiosInstance2.get('/municipe/municipes');
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.error(error.response.data);
+  //   }
+  // };
 
-  useEffect(() => {
-    testLogin();
-  }, []); // Call testLogin only once when the component mounts
+  // useEffect(() => {
+  //   testLogin();
+  // }, []); // Call testLogin only once when the component mounts
 
   return (
     <div>

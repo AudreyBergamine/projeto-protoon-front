@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+// import { jwtDecode } from 'jwt-decode';
 
 function Teste() {
-  const location = useLocation();
-  const navigate = useNavigate();
+  // const location = useLocation();
+  // const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
   const [username, setUsername] = useState(""); // Use useState para username
   const [tempoRestante, setTempoRestante] = useState(null);

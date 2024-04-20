@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../services/axiosInstance';
-import { jwtDecode } from 'jwt-decode';
+// import { jwtDecode } from 'jwt-decode';
 
 function ManterReclamacoes() {
 
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [username, setUsername] = useState("");
+  // const [errorMessage, setErrorMessage] = useState('');
+  // const [username, setUsername] = useState("");
   const [tempoRestante, setTempoRestante] = useState(null);
-  const [token, setToken] = useState("");
+  // const [token, setToken] = useState("");
   const [role, setRole] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/users");
+        axios.get("/users");
       } catch (error) {
         console.error("Erro ao buscar os usuários:", error);
       }
@@ -59,13 +59,8 @@ function ManterReclamacoes() {
 
   return (
     <div>
-      {errorMessage ? (
-        <p>{errorMessage}</p>
-      ) : (
         <div>
           <h1>Reclamações</h1>
-
-
           <div>
             <h3>Lista de Reclamações</h3>
             <ul style={{ listStyleType: 'none', padding: 0, marginBottom: 100 }}>
@@ -101,8 +96,7 @@ function ManterReclamacoes() {
               </div>
             </div>
           </div>
-        </div>
-      )}
+        </div>      
     </div>
   );
 }
