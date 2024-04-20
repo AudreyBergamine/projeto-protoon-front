@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from '../services/axiosInstance';
+import axios from 'axios';
 import Loading from '../layouts/Loading';
 import Message from '../layouts/Message'
 
-function EmailForm() {
+function RecuperarSenhaForm() {
   const [message, setMessage] = useState()
   const [type, setType] = useState()
   const [alert, setAlert] = useState('')
@@ -48,19 +48,17 @@ function EmailForm() {
     }
 
     try {
-      const response = await axios.get('/protoon/municipe/municipes/recuperar-senha/codigo', {
+      const response = await axios.post('http://localhost:8080/protoon/municipe/municipes/recuperarSenha/', {
         params: {
           email: formData.email
         }
       });
-      const users = response.data;
-      const user = users.find(u => u.email === formData.email);
 
       setRemoveLoading(false)
-      if (user) {
+      if (response) {
         setTimeout(() => {
           setRemoveLoading(true)
-          navigate(`/atualizarSenha/${formData.email}`);
+          navigate('/atualizarSenha');
         }, 3000)
       } else {
         setTimeout(() => {
@@ -108,4 +106,4 @@ function EmailForm() {
   );
 }
 
-export default EmailForm;
+export default RecuperarSenhaForm;

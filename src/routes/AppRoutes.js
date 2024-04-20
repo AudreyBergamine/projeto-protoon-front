@@ -3,8 +3,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from '../components/home-page/homePage';
 import LoginForm from '../components/municipe/login';
 import RegisterForm from '../components/municipe/register';
-import EmailForm from '../components/municipe/recuperarSenha';
-import RecuperarForm from '../components/municipe/atualizarSenha';
+import RecuperarSenhaForm from '../components/municipe/recuperarSenha';
+import AtualizarForm from '../components/municipe/atualizarSenha';
 import PaginaInical from '../components/municipe/paginaInical';
 import Reclamar from '../components/municipe/reclamar';
 import Consultar from '../components/municipe/consultar';
@@ -48,8 +48,8 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/" element={<Home isAuthenticated={isAuthenticated} role={role} />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/cadastro" element={<RegisterForm />} />
-            <Route path="/recuperarSenha" element={<EmailForm />} />
-            <Route path="/atualizarSenha/:username" element={<RecuperarForm />} />
+            <Route path="/recuperarSenha" element={<RecuperarSenhaForm />} />
+            <Route path="/atualizarSenha" element={<AtualizarForm />} />
             <Route path="/paginaInicial" element={<PaginaInical />} />
             <Route path="/reclamar" element={<Reclamar />} />
             <Route path="/consultar" element={<Consultar />} />

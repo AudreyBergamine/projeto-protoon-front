@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import updateUser from "../admin/api";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import Loading from '../layouts/Loading';
+import Message from '../layouts/Message'
 
-function RecuperarForm() {
+function AtualizarForm() {
+  const [message, setMessage] = useState()
+  const [type, setType] = useState()
+  const [removeLoading, setRemoveLoading] = useState(true)
   const { username } = useParams();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: "",
-    password: ""
+    email: "",
+    codigo: "",
+    senha: ""
   });
 
   useEffect(() => {
@@ -26,10 +33,33 @@ function RecuperarForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateUser(username, formData);
-      alert("Dados atualizados com sucesso!");
+      const response = await axios.post('http://localhost:8080/protoon/municipe/municipes/recuperarSenha/novaSenha', {
+        email: formData.email,
+        codigo: formData.codigo,
+        senha: formData.senha
+      })
+      setRemoveLoading(false)
+      if (response.data === "Senha alterada com sucesso!") {
+        setTimeout(() => {
+          setRemoveLoading(true)
+          setMessage(response.data)
+          setType("success")
+          setTimeout(() => {
+            navigate('/login');
+          }, 3000)
+        }, 3000)
+      } else {
+        setTimeout(() => {
+          setRemoveLoading(true)
+          setMessage(response.data)
+          setType("error")
+        }, 3000)
+        setMessage("")
+      }
     } catch (error) {
-      // O erro será tratado pela função updateUser
+      setMessage("Erro ao atualizar a senha!")
+      setType("error")
+      console.log(error)
     }
   };
 
@@ -41,28 +71,41 @@ function RecuperarForm() {
           <label style={{ marginBottom: 5 }}>Email</label>
           <input
             type="text"
-            name="username"
-            value={formData.username}
+            name="email"
+            value={formData.email}
             onChange={handleChange}
-            readOnly
           />
         </div>
+      </div>
+      <div className="input-container">
         <div className="input-container">
-          <div className="input-container">
-            <label style={{ marginBottom: 5 }}>Senha</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-          </div>
+          <label style={{ marginBottom: 5 }}>Código</label>
+          <input
+            type="text"
+            name="codigo"
+            value={formData.codigo}
+            onChange={handleChange}
+          />
         </div>
       </div>
+      <div className="input-container">
+        <div className="input-container">
+          <label style={{ marginBottom: 5 }}>Senha</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+        </div>
+
+      </div>
+      {!removeLoading && <Loading />}
+      {message && <Message type={type} msg={message} />}
       <button type="submit" className="btn-log">Enviar</button>
       <button className="btn-log" onClick={() => (window.location.href = '/recuperarSenha')}>Voltar</button>
     </form>
   );
 }
 
-export default RecuperarForm;
+export default AtualizarForm;
