@@ -1,58 +1,91 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-// import moment from "moment";
 import Loading from '../layouts/Loading';
-import Message from '../layouts/Message'
+import Message from '../layouts/Message';
 
-//Função de cadastro de municipe
 function Reclamar() {
   const navigate = useNavigate();
-  const [message, setMessage] = useState()
-  const [type, setType] = useState()
-  const [removeLoading, setRemoveLoading] = useState(true)
-  //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
+  const [message, setMessage] = useState();
+  const [type, setType] = useState();
+  const [removeLoading, setRemoveLoading] = useState(true);
   const [formData, setFormData] = useState({
     assunto: "",
-    descricao: ""
+    descricao: "",
+    idSecretaria: "",
+    status: 0,
+    valor: 0
   });
+  const [assuntos, setAssuntos] = useState([]);
 
+  // Buscar os assuntos do banco de dados
+  useEffect(() => {
+    async function fetchAssuntos() {
+      try {
+        const response = await axios.get('http://localhost:8080/protoon/assuntos');
+        // Atualiza o estado com os assuntos retornados
+        setAssuntos(response.data.map(assunto => ({
+          ...assunto,
+          valor: assunto.valor_protocolo // Adicionando o campo valor_protocolo como valor
+        })));
+      } catch (error) {
+        console.error('Erro ao buscar os assuntos:', error);
+      }
+    }
+    fetchAssuntos();
+  }, []);
 
-  //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+
+    if (name === 'assunto') {
+      const selectedAssunto = assuntos.find(assunto => assunto.assunto === value);
+      setFormData(prevState => ({
+        ...prevState,
+        idSecretaria: selectedAssunto ? selectedAssunto.secretaria.id_secretaria : null,
+        valor: selectedAssunto ? selectedAssunto.valor : null
+      }));
+    }
   };
 
-  //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const idMunicipe = localStorage.getItem('idMunicipe');
+    if (!idMunicipe) {
+      console.error('ID do munícipe não encontrado!');
+      return;
+    }
+
     try {
-      const response = await axios.post('http://localhost:8080/protoon/protocolo/abrir-protocolos', {
+      const currentDate = new Date(); // Obtém a data e hora atuais
+      const response = await axios.post(`http://localhost:8080/protoon/protocolo/abrir-protocolos/${idMunicipe}/${formData.idSecretaria}`, {
         assunto: formData.assunto,
         descricao: formData.descricao,
-        id_municipe: 1
+        id_municipe: idMunicipe,
+        status: formData.status,
+        valor: formData.valor,
+        data_protocolo: currentDate // Envia a data e hora atuais para data_protocolo
       });
 
-      setRemoveLoading(false)
+      setRemoveLoading(false);
       setTimeout(() => {
         console.log(response.data);
-        setRemoveLoading(true)
-        setMessage('Reclamação bem sucedida! Redirecionando...')
-        setType('success')
+        setRemoveLoading(true);
+        setMessage('Reclamação bem sucedida! Redirecionando...');
+        setType('success');
         setTimeout(() => {
           navigate('/paginaInicial');
-        }, 3000)
-      }, 3000)
+        }, 3000);
+      }, 3000);
     } catch (error) {
       console.error('Erro ao enviar os dados:', error);
     }
   };
 
-
-  //Por fim é retornado o html para ser exibido no front end, junto com as funções acima.
   return (
     <>
       <div style={{ paddingBottom: '100px' }}>
@@ -70,16 +103,15 @@ function Reclamar() {
                     onChange={handleChange}
                   >
                     <option value="">Selecione um problema</option>
-                    <option value="Buraco na rua">Buraco na rua</option>
-                    <option value="Vazamento de água">Vazamento de água</option>
-                    <option value="Problema de iluminação">Problema de iluminação</option>
+                    {assuntos.map(assunto => (
+                      <option key={assunto.id_assunto} value={assunto.assunto}>{assunto.assunto}</option>
+                    ))}
                   </select>
                 </div>
               </div>
             </div><br />
             <div className="register-form">
               <div className="input-container">
-
                 <div>
                   <label>Descrição</label><br />
                   <textarea style={{ width: 600, padding: 20, borderRadius: 10 }}
@@ -92,10 +124,23 @@ function Reclamar() {
                 </div>
               </div>
             </div>
+            <div className="register-form">
+              <div className="input-container">
+                <div>
+                  <label>Valor:</label><br />
+                  <input
+                    type="text"
+                    name="valor"
+                    value={formData.valor}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <div style={{ marginTop: -30 }}>
             <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Confirmar</button>
-            <button className="btn-log" onClick={() => (window.location.href = '/paginaInicial')}>Voltar</button>
+            <button className="btn-log" onClick={() => navigate('/paginaInicial')}>Voltar</button>
           </div>
           {!removeLoading && <Loading />}
           {message && <Message type={type} msg={message} />}
