@@ -93,7 +93,7 @@ function AtualizarForm() {
           <label style={{ marginBottom: 5 }}>Senha</label>
           <input
             type="password"
-            name="password"
+            name="senha"
             value={formData.password}
             onChange={handleChange}
           />

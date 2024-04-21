@@ -48,10 +48,8 @@ function RecuperarSenhaForm() {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/protoon/municipe/municipes/recuperarSenha/', {
-        params: {
-          email: formData.email
-        }
+      const response = await axios.post('http://localhost:8080/protoon/municipe/municipes/recuperarSenha/', {        
+          email: email        
       });
 
       setRemoveLoading(false)
