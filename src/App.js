@@ -3,6 +3,7 @@ import './style/App.css';
 import './style/home.css';
 import './style/login.css';
 import './style/cadastro.css';
+import './style/menuLogin.css';
 import AppRoutes from './routes/AppRoutes';
 import Header from './components/layouts/Header';
 import Footer from './components/layouts/Footer';
@@ -20,6 +21,7 @@ function App() {
     const checkAuthentication = async () => {
       const id= localStorage.getItem("idMunicipe")
       const roleUser = localStorage.getItem("role")
+      
       if (id && roleUser){
         
         setIsAuthenticated(true);

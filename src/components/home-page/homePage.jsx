@@ -1,10 +1,20 @@
 import PaginaInicial from "../municipe/paginaInical";
-
+import { useEffect, useState } from "react";
 function Home({isAuthenticated, role}) {
     //TODO: Criar página inicial de funcionário e implementar a lógica abaixo, igual fiz com a de municipe
+     const [shouldRenderPaginaInicial, setShouldRenderPaginaInicial] = useState(false);
+     useEffect(() => {
+        if (isAuthenticated && role === "MUNICIPE") {
+            setShouldRenderPaginaInicial(true);
+        } else {
+            setShouldRenderPaginaInicial(false);
+        }
+    }, [isAuthenticated, role]);
 
-    if(isAuthenticated && role ==="MUNICIPE"){
-        return (<div>
+
+    
+    if(shouldRenderPaginaInicial){
+        return ( <div>
             <PaginaInicial/>
         </div>)
     }

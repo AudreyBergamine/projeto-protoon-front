@@ -95,7 +95,7 @@ function Reclamar() {
           </div>
           <div style={{ marginTop: -30 }}>
             <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Confirmar</button>
-            <button className="btn-log" onClick={() => (window.location.href = '/paginaInicial')}>Voltar</button>
+            <button className="btn-log" onClick={() => (window.location.href = '/')}>Voltar</button>
           </div>
           {!removeLoading && <Loading />}
           {message && <Message type={type} msg={message} />}

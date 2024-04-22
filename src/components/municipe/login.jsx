@@ -27,6 +27,10 @@ const LoginForm = () => {
   //   withCredentials: true, // Ensure Axios sends cookies with requests
   // });
 
+  const homePage = async () =>{
+    navigate("/"); // Redirecionar após login
+}
+
   const handleLogin = async () => {
 
     if (email.trim() === '') {
@@ -74,9 +78,8 @@ const LoginForm = () => {
         console.log('Authentication successful:', response.data);
         // If authentication is successful, you can handle the response as needed
         setRemoveLoading(true)
-        navigate('/')
       }, 3000)
-
+      window.location.href = '/'; // Redirecionar para a página inicial após o login
       // Optionally, you can redirect the user to another page upon successful authentication
       // history.push('/dashboard');
     } catch (error) {
