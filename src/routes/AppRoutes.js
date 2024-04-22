@@ -34,7 +34,7 @@ function AppRoutes({ isAuthenticated, role }) {
 
         // Redirecionamentos com base no estado de autenticação e nas rotas privadas
         if ((location.pathname === '/login' || location.pathname === '/cadastro') && isAuthenticated) {
-            navigate('/paginaInicial', { replace: true });
+            navigate('/', { replace: true });
         } else if (isPrivateRoute && !isAuthenticated && location.pathname !== '/') {
             navigate('/', { replace: true });
         } else if (isPrivateRoute && !isAuthenticated) {
