@@ -8,6 +8,7 @@ body {
     padding: 0;
     box-sizing: border-box;
     text-decoration: none;
+    margin-top: 120px;
 }
 
 .header {
@@ -16,6 +17,19 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+    position: fixed;
+    top: 0;    
+}
+
+.footer {
+    background-color: #2D9596;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 
 .title-proton a {
@@ -150,14 +164,4 @@ ul {
     .btn-log, .btn-cad {
       transition: linear;
     }
-}
-
-.footer {
-    background-color: #2D9596;
-    color: white;
-    text-align: center;
-    padding: 20px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
 }

@@ -59,6 +59,23 @@ function Reclamar() {
       console.error('ID do munícipe não encontrado!');
       return;
     }
+    if (formData.assunto === "") {
+      setMessage('Selecione um problema');
+      setType('error')
+      setTimeout(() => {
+        setMessage('');
+      }, 3000);
+      return;
+    }
+
+    if (formData.descricao.length < 10) {
+      setMessage('Descreva o Problema!');
+      setType('error')
+      setTimeout(() => {
+        setMessage('');
+      }, 3000);
+      return;
+    }
 
     try {
       const currentDate = new Date(); // Obtém a data e hora atuais
@@ -133,17 +150,18 @@ function Reclamar() {
                     name="valor"
                     value={formData.valor}
                     onChange={handleChange}
+                    readOnly
                   />
                 </div>
               </div>
             </div>
           </div>
-          <div style={{ marginTop: -30 }}>
-            <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Confirmar</button>
-            <button className="btn-log" onClick={() => navigate('/paginaInicial')}>Voltar</button>
-          </div>
-          {!removeLoading && <Loading />}
+          {removeLoading && <div style={{ marginTop: -30 }}>
           {message && <Message type={type} msg={message} />}
+          <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Confirmar</button>
+            <button className="btn-log" onClick={() => navigate('/paginaInicial')}>Voltar</button>
+          </div>}
+          {!removeLoading && <Loading />}
         </form>
       </div>
     </>
