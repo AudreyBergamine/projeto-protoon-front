@@ -43,7 +43,7 @@ function Header({ isAuthenticated, role }) {
                         <ul className="nav-links">
                             <li>
                                 <a href="#">Serviços</a>
-                                <ul className='submenu' style={{ borderRadius: 15 }}>
+                                <ul className='submenu'>
                                     <li><a href="./reclamar">Abrir reclamação</a></li>
                                     <li><a href="/consultar">Consultar protocolos</a></li>
                                 </ul>
