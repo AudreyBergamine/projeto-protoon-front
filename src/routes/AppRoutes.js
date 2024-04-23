@@ -5,20 +5,16 @@ import LoginForm from '../components/municipe/login';
 import RegisterForm from '../components/municipe/register';
 import RecuperarSenhaForm from '../components/municipe/recuperarSenha';
 import AtualizarForm from '../components/municipe/atualizarSenha';
-import PaginaInical from '../components/municipe/paginaInical';
+import PaginaInicalMunicipe from '../components/municipe/paginaInicalMunicipe';
 import Reclamar from '../components/municipe/reclamar';
 import Consultar from '../components/municipe/consultar';
 import SobreNos from '../components/municipe/sobreNos';
 import Contato from '../components/municipe/contato';
-// import LoginAdmin from '../components/admin/loginAdmin';
 import TelaAdmin from '../components/admin/welcomeAdmin';
 import Teste from '../components/admin/teste';
 import TelaUser from '../components/admin/welcomeUser';
-// import ManterReclamacoes from '../components/admin/manterReclamacoes';
-// import RegistrarReclamacao from '../components/admin/registrarReclamacao';
-// import RegisterFormUser from '../components/admin/registerUser';
+import RegisterFuncionario from '../components/secretario/cadastrarFuncionarios';
 import UpdateFormUser from '../components/admin/updateUser';
-// import Reclamacao from '../components/reclamacao/Reclamacao';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // Defina um conjunto de rotas privadas
@@ -50,11 +46,14 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/cadastro" element={<RegisterForm />} />
             <Route path="/recuperarSenha" element={<RecuperarSenhaForm />} />
             <Route path="/atualizarSenha" element={<AtualizarForm />} />
-            <Route path="/paginaInicial" element={<PaginaInical />} />
+            <Route path="/paginaInicial" element={<PaginaInicalMunicipe />} />
             <Route path="/reclamar" element={<Reclamar />} />
             <Route path="/consultar" element={<Consultar />} />
             <Route path="/sobreNos" element={<SobreNos />} />
             <Route path="/contato" element={<Contato />} />
+            
+            {/* SECRETARIO */}
+            <Route path="/cadastro-funcionarios" element={<RegisterFuncionario />} />
 
             {/* ADMIN */}
             <Route path="/welcomeAdmin" element={<TelaAdmin />} />
