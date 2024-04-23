@@ -7,8 +7,6 @@
     position: relative; /* Mover a posição relativa para cá para evitar repetição */
 }
 
-
-
 .avatar {
     width: 70px;
     height: 70px;
@@ -32,10 +30,12 @@
     left: 50%; /* Centralizando o menu */
     transform: translateX(-50%); /* Centralizando o menu */
 }
+
 .menu li {
     padding: 3px;
     cursor: pointer;
 }
+
 .perfilMenu a{
     display: block; /* Transformar o link em um bloco para ocupar todo o espaço do elemento pai */
     color: #09717d;
@@ -48,8 +48,6 @@
     padding: 0;
     margin: 0;
 }
-
-
 
 .menu li:hover {
     background-color: #f0f0f0; /* Mudança de cor do item do menu ao passar o mouse */

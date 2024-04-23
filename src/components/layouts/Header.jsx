@@ -3,7 +3,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import cidadaoImg from '../../assets/cidadao.jpg';
-function Header({ isAuthenticated, role}) {
+import logoImg from '../../assets/logo.png';
+function Header({ isAuthenticated, role }) {
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -11,7 +12,7 @@ function Header({ isAuthenticated, role}) {
         baseURL: 'http://localhost:8080/protoon/',
         withCredentials: true
     });
-    const homePage = async () =>{
+    const homePage = async () => {
         navigate("/"); // Redirecionar após logout
     }
 
@@ -33,8 +34,31 @@ function Header({ isAuthenticated, role}) {
     return (
         <div>
             <header className="header">
-                <div className="title-proton"><a href="/">PROTO-ON</a></div>
+                <div className="title-proton"><a href="/">
+                    <img className="logo" id="cidadao" src={logoImg} alt="Logo do site"
+                        style={{ backgroundColor: 'white', borderRadius: '50%', width: 60 }} />
+                </a></div>
                 <nav>
+                    <div style={{ marginLeft: 800 }}>
+                        <ul className="nav-links">
+                            <li>
+                                <a href="#">Serviços</a>
+                                <ul className="submenu">
+                                    <li><a href="./reclamar">Abrir reclamação</a></li>
+                                    <li><a href="/consultar">Consultar protocolos</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Mais</a>
+                                <ul className="submenu">
+                                    <li><a href="./contato">Contato</a></li>
+                                    <li><a href="./sobreNos">Sobre nós</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    </nav>
+                    <nav>
                     <ul className="nav-links">
                         {isAuthenticated && role === "MUNICIPE" && (
                             <div className="avatar-container">

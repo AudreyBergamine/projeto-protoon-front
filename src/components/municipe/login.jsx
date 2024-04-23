@@ -20,12 +20,6 @@ const LoginForm = () => {
     baseURL: 'http://localhost:8080/protoon/auth/', // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
-  // console.log('IdMunicipe: ', localStorage.getItem("idMunicipe"));
-
-  // const axiosInstance2 = axios.create({
-  //   baseURL: 'http://localhost:8080/protoon/', // Adjust the base URL as needed
-  //   withCredentials: true, // Ensure Axios sends cookies with requests
-  // });
 
   const homePage = async () =>{
     navigate("/"); // Redirecionar após login
@@ -77,11 +71,11 @@ const LoginForm = () => {
       setTimeout(() => {
         console.log('Authentication successful:', response.data);
         // If authentication is successful, you can handle the response as needed
+        window.location.href = '/'; // Redirecionar para a página inicial após o login
+        // Optionally, you can redirect the user to another page upon successful authentication
+        // history.push('/dashboard');
         setRemoveLoading(true)
       }, 3000)
-      window.location.href = '/'; // Redirecionar para a página inicial após o login
-      // Optionally, you can redirect the user to another page upon successful authentication
-      // history.push('/dashboard');
     } catch (error) {
       // Handle authentication errors
       console.error('Authentication error:', error.response.data);
