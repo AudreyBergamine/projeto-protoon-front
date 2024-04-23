@@ -1,4 +1,4 @@
-function PaginaInicial() {
+function PaginaInicialMunicipe() {
 
   return (
     <>
@@ -10,4 +10,4 @@ function PaginaInicial() {
   );
 }
 
-export default PaginaInicial;
+export default PaginaInicialMunicipe;

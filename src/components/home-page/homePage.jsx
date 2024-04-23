@@ -1,4 +1,4 @@
-import PaginaInicial from "../municipe/paginaInical";
+import PaginaInicial from "../municipe/paginaInicalMunicipe";
 function Home({isAuthenticated, role}) {
     //TODO: Criar página inicial de funcionário e implementar a lógica abaixo, igual fiz com a de municipe
      
