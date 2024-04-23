@@ -444,10 +444,10 @@ function RegisterForm() {
         </div>
         {message && <Message type={type} msg={message} />}
         {!removeLoading && <Loading />}
-        <div style={{ marginTop: -30 }}>
+        {removeLoading && <div style={{ marginTop: -30 }}>
           <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
           <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
-        </div>
+        </div>}
       </div>
       <footer className="footer">
         © 2024 Proto-on. Todos os direitos reservados.

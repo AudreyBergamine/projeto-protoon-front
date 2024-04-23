@@ -43,7 +43,7 @@ function Header({ isAuthenticated, role }) {
                         <ul className="nav-links">
                             <li>
                                 <a href="#">Serviços</a>
-                                <ul className="submenu">
+                                <ul className='submenu' style={{ borderRadius: 15 }}>
                                     <li><a href="./reclamar">Abrir reclamação</a></li>
                                     <li><a href="/consultar">Consultar protocolos</a></li>
                                 </ul>
@@ -68,8 +68,8 @@ function Header({ isAuthenticated, role }) {
                                 <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
                                     <ul>
                                         <div className="perfilMenu">
-                                            <li><a href="updateMunicipe.php" style={{ fontWeight: 'bold' }}>Perfil</a></li>
-                                            <li><a href="../view/suporte-cliente.php" style={{ fontWeight: 'bold' }}>Suporte</a></li>
+                                            <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
+                                            <li><a href="" style={{ fontWeight: 'bold' }}>Suporte</a></li>
                                             <li><button onClick={handleLogout} style={{ fontWeight: 'bold', background: 'none', border: 'none', cursor: 'pointer' }}>Sair</button></li>
                                         </div>
                                     </ul>

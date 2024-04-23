@@ -80,10 +80,10 @@ function RecuperarSenhaForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1>Digite Seu email para recuperação de Senha</h1>
+      <h1 style={{ marginTop: 150, marginBottom: 50 }}>Digite Seu email para recuperação de Senha</h1>
       <div className="input-container">
         <div className="input-container">
-          <label style={{ marginBottom: 15 }}>Email </label>
+          <label style={{ marginBottom: 15, marginLeft: 10 }}>Email </label>
           {emailNull &&
             <span style={{ color: 'red' }}>{alert}<br></br></span>}
           <input
@@ -96,8 +96,8 @@ function RecuperarSenhaForm() {
         </div>
       </div>
 
-      <button type="submit" className="btn-log">Enviar</button>
-      <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
+      {removeLoading && <><button type="submit" className="btn-log">Enviar</button>
+      <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button></>}
       {!removeLoading && <Loading />}
       {message && <Message type={type} msg={message} />}
     </form>

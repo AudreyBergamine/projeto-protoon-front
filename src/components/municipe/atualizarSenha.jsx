@@ -68,7 +68,7 @@ function AtualizarForm() {
       <h1>Atualizar Usuário</h1>
       <div className="input-container">
         <div className="input-container">
-          <label style={{ marginBottom: 5 }}>Email</label>
+          <label style={{ marginBottom: 5, marginLeft: 10 }}>Email</label>
           <input
             type="text"
             name="email"
@@ -79,7 +79,7 @@ function AtualizarForm() {
       </div>
       <div className="input-container">
         <div className="input-container">
-          <label style={{ marginBottom: 5 }}>Código</label>
+          <label style={{ marginBottom: 5, marginLeft: 10 }}>Código</label>
           <input
             type="text"
             name="codigo"
@@ -90,7 +90,7 @@ function AtualizarForm() {
       </div>
       <div className="input-container">
         <div className="input-container">
-          <label style={{ marginBottom: 5 }}>Senha</label>
+          <label style={{ marginBottom: 5, marginLeft: 10 }}>Senha</label>
           <input
             type="password"
             name="senha"

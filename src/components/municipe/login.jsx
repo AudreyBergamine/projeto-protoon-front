@@ -98,19 +98,6 @@ const LoginForm = () => {
     return emailPattern.test(email);
   };
 
-  // const testLogin = async () => {
-  //   try {
-  //     const response = await axiosInstance2.get('/municipe/municipes');
-  //     console.log(response.data);
-  //   } catch (error) {
-  //     console.error(error.response.data);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   testLogin();
-  // }, []); // Call testLogin only once when the component mounts
-
   return (
     <div>
       <h1>Login</h1>
@@ -141,8 +128,8 @@ const LoginForm = () => {
       <div style={{ marginBottom: 30 }}>
         {!removeLoading && <Loading />}
         {message && <Message type={type} msg={message} />}
-        <button onClick={handleLogin} className="btn-cad" style={{ marginRight: '100px' }}>Logar</button>
-        <button className="btn-log" onClick={() => (window.location.href = '/cadastro')}>Criar Conta</button>
+        {removeLoading && <><button onClick={handleLogin} className="btn-cad" style={{ marginRight: '100px' }}>Logar</button>
+        <button className="btn-log" onClick={() => (window.location.href = '/cadastro')}>Criar Conta</button></>}
       </div>
       {errorMessage && <p>{errorMessage}</p>}
     </div>
