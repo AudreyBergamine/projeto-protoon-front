@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Home from '../components/home-page/homePage';
-import LoginForm from '../components/municipe/login';
+import Home from '../components/gerais/homePage';
+import LoginForm from '../components/gerais/login';
 import RegisterForm from '../components/municipe/register';
 import RecuperarSenhaForm from '../components/municipe/recuperarSenha';
 import AtualizarForm from '../components/municipe/atualizarSenha';

@@ -66,7 +66,19 @@ const LoginForm = () => {
       });
 
       setRemoveLoading(false)
-      localStorage.setItem("idMunicipe", response.data.id);
+      if(response.data.role === "MUNICIPE"){
+        localStorage.setItem("idMunicipe", response.data.id);
+      }
+      if(response.data.role === "SECRETARIO"){
+        localStorage.setItem("idSecretario", response.data.id);
+      }
+      if(response.data.role === "COORDENADOR"){
+        localStorage.setItem("idCoordenador", response.data.id);
+      }
+      if(response.data.role === "FUNCIONARIO"){
+        localStorage.setItem("idFuncionario", response.data.id);
+      }
+      
       localStorage.setItem("role", response.data.role);
       setTimeout(() => {
         console.log('Authentication successful:', response.data);
