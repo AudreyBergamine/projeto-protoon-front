@@ -19,7 +19,7 @@ function RegisterForm() {
   const [removeLoading, setRemoveLoading] = useState(true)
 
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080/protoon/auth/', // Adjust the base URL as needed
+    baseURL: 'http://localhost:8080', // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
@@ -184,7 +184,7 @@ function RegisterForm() {
 
         const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
         try {
-          const response = await axiosInstance.post('register/municipe', {
+          const response = await axiosInstance.post('/protoon/auth/register/municipe', {
             ...formData, // Inclua todos os dados do formData
             data_nascimento: formattedDate, // Substitua o campo data_nascimento formatado
 

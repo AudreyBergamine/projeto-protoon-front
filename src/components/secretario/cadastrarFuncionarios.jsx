@@ -51,10 +51,8 @@ function RegisterFuncionario() {
   const [secretarias, setSecretarias] = useState([]);
   const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
   // Estado para controlar o tipo de funcionário selecionado
-const [selectedRole, setSelectedRole] = useState("");
 
 // Estado para controlar a secretaria selecionada
-const [selectedSecretaria, setSelectedSecretaria] = useState("");
 
 
   useEffect(() => {

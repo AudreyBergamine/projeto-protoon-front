@@ -72,7 +72,8 @@ function Header({ isAuthenticated, role }) {
                                 <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
                                     <ul>
                                         <div className="perfilMenu">
-                                            <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
+                                            <li><a href="perfil" style={{ fontWeight: 'bold' }}>Perfil</a></li>
+                                            <li><a href="" style={{ fontWeight: 'bold' }}>Reclamações</a></li>
                                             <li><a href="" style={{ fontWeight: 'bold' }}>Suporte</a></li>
                                             <li><button onClick={handleLogout} style={{ fontWeight: 'bold', background: 'none', border: 'none', cursor: 'pointer' }}>Sair</button></li>
                                         </div>
@@ -116,6 +117,25 @@ function Header({ isAuthenticated, role }) {
                             </div>
                             </div>
                         )}
+                        {isAuthenticated && role === "COORDENADOR" && (
+                            <div>
+                            <div className="avatar-container">
+                                <div className="avatar" id="avatar">
+                                    <img className="cidadao" id="cidadao" src={coordednadorImg} alt="Foto do Usuário" onClick={toggleMenu} />
+                                </div>
+                                <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
+                                    <ul>
+                                        <div className="perfilMenu">
+                                            <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
+                                            <li><a href="" style={{ fontWeight: 'bold' }}>Aprovar redirecionamentos</a></li>
+                                            <li><button onClick={handleLogout} style={{ fontWeight: 'bold', background: 'none', border: 'none', cursor: 'pointer' }}>Sair</button></li>
+                                        </div>
+                                    </ul>
+                                </div>
+                            </div>
+                            </div>
+                        )}
+                        
                     </ul>
                 </nav>
             </header>

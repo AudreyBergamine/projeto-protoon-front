@@ -15,7 +15,11 @@ import Teste from '../components/admin/teste';
 import TelaUser from '../components/admin/welcomeUser';
 import RegisterFuncionario from '../components/secretario/cadastrarFuncionarios';
 import UpdateFormUser from '../components/admin/updateUser';
+import ReclamacoesRetornadasMunicipe from '../components/municipe/reclamacoesRetornadasMunicipe';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ListarProtocolosBySecretaria from '../components/gerais/listarProtocolos';
+import AnalisarProtocolos from '../components/gerais/analisarProtocolos';
+import PerfilMunicipe from '../components/municipe/perfilMunicipe';
 
 // Defina um conjunto de rotas privadas
 const privateRoutes = ['/outra-rota-privada'];
@@ -40,9 +44,12 @@ function AppRoutes({ isAuthenticated, role }) {
 
     return (
         <Routes>
-            {/* MUNICIPE */}
+            {/* GERAIS (Rotas onde 3 ou mais entidades usam) */} 
             <Route path="/" element={<Home isAuthenticated={isAuthenticated} role={role} />} />
             <Route path="/login" element={<LoginForm />} />
+            <Route path="/protocolos" element={<ListarProtocolosBySecretaria />} />
+            <Route path="/protocolo/:id" element={<AnalisarProtocolos />} />
+            {/* MUNICIPE */}  
             <Route path="/cadastro" element={<RegisterForm />} />
             <Route path="/recuperarSenha" element={<RecuperarSenhaForm />} />
             <Route path="/atualizarSenha" element={<AtualizarForm />} />
@@ -51,6 +58,10 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/consultar" element={<Consultar />} />
             <Route path="/sobreNos" element={<SobreNos />} />
             <Route path="/contato" element={<Contato />} />
+            <Route path="/retornadas" element={<ReclamacoesRetornadasMunicipe />} />
+            <Route path="/perfil" element={<PerfilMunicipe />} />
+            
+            
             
             {/* SECRETARIO */}
             <Route path="/cadastro-funcionarios" element={<RegisterFuncionario />} />

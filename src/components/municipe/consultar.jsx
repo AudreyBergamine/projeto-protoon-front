@@ -5,12 +5,16 @@ import { format } from 'date-fns';
 function Consultar() {
   const [protocolos, setProtocolos] = useState([])
   const [mostrarTabela, setMostrarTabela] = useState(false);
-
+  const axiosInstance = axios.create({
+    baseURL: 'http://localhost:8080',
+    withCredentials: true,
+  });
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get('http://localhost:8080/protoon/protocolo')
+      const id = localStorage.getItem('idMunicipe')
+      const response = await axiosInstance('/protoon/municipe/municipes/protocolos/'+id)
       setProtocolos(response.data)
       setMostrarTabela(true)
 
