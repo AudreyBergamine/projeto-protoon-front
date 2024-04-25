@@ -19,7 +19,7 @@ function App() {
 
   useEffect(() => {
     const checkAuthentication = async () => {
-      const id= localStorage.getItem("idMunicipe")
+      const id = localStorage.getItem("idFuncionario") || localStorage.getItem("idCoordenador") || localStorage.getItem("idSecretario");
       const roleUser = localStorage.getItem("role")
       
       if (id && roleUser){

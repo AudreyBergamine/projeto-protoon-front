@@ -69,13 +69,13 @@ const LoginForm = () => {
       if(response.data.role === "MUNICIPE"){
         localStorage.setItem("idMunicipe", response.data.id);
       }
-      else if(response.data.role === "SECRETARIO"){
+      if(response.data.role === "SECRETARIO"){
         localStorage.setItem("idSecretario", response.data.id);
       }
-      else if(response.data.role === "COORDENADOR"){
+      if(response.data.role === "COORDENADOR"){
         localStorage.setItem("idCoordenador", response.data.id);
       }
-      else if(response.data.role === "FUNCIONARIO"){
+      if(response.data.role === "FUNCIONARIO"){
         localStorage.setItem("idFuncionario", response.data.id);
       }
       
