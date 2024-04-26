@@ -1,4 +1,10 @@
+import { useNavigate } from "react-router-dom";
+
+
+
 function PaginaInicialMunicipe() {
+  const navigate = useNavigate()
+  
 
   return (
     <>

@@ -31,8 +31,7 @@ function PerfilMunicipe(){
 
   const fetchData = async () => {
     try {
-      const id = localStorage.getItem('idMunicipe');
-      const response = await axiosInstance.get(`/protoon/municipe/municipes/${id}`);
+      const response = await axiosInstance.get(`/protoon/municipe/municipes/bytoken`);
       const data = response.data;
       setFormData(data);
     } catch (error) {

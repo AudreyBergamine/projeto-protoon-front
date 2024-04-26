@@ -16,13 +16,18 @@ function Reclamar() {
     status: 0,
     valor: 0
   });
+
+  const axiosInstance = axios.create({
+    baseURL: 'http://localhost:8080', // Adjust the base URL as needed
+    withCredentials: true, // Set withCredentials to true
+  });
   const [assuntos, setAssuntos] = useState([]);
 
   // Buscar os assuntos do banco de dados
   useEffect(() => {
     async function fetchAssuntos() {
       try {
-        const response = await axios.get('http://localhost:8080/protoon/assuntos');
+        const response = await axiosInstance.get('/protoon/assuntos');
         // Atualiza o estado com os assuntos retornados
         setAssuntos(response.data.map(assunto => ({
           ...assunto,
@@ -54,11 +59,11 @@ function Reclamar() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const idMunicipe = localStorage.getItem('idMunicipe');
-    if (!idMunicipe) {
-      console.error('ID do munícipe não encontrado!');
-      return;
-    }
+    // const idMunicipe = localStorage.getItem('idMunicipe');
+    // if (!idMunicipe) {
+    //   console.error('ID do munícipe não encontrado!');
+    //   return;
+    // }
     if (formData.assunto === "") {
       setMessage('Selecione um problema');
       setType('error')
@@ -79,10 +84,9 @@ function Reclamar() {
 
     try {
       const currentDate = new Date(); // Obtém a data e hora atuais
-      const response = await axios.post(`http://localhost:8080/protoon/protocolo/abrir-protocolos/${idMunicipe}/${formData.idSecretaria}`, {
+      const response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos/${formData.idSecretaria}`, {
         assunto: formData.assunto,
         descricao: formData.descricao,
-        id_municipe: idMunicipe,
         status: formData.status,
         valor: formData.valor,
         data_protocolo: currentDate // Envia a data e hora atuais para data_protocolo

@@ -7,6 +7,7 @@ import logoImg from '../../assets/logo.png';
 import coordednadorImg from '../../assets/coordenador.png'
 import funcionarioImg from '../../assets/funcionario.png'
 import secretarioImg from '../../assets/secretario.png'
+import { RedirectWithToggle, RedirectWithoutToggle } from '../../routes/Redirect';
 function Header({ isAuthenticated, role }) {
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
@@ -15,9 +16,15 @@ function Header({ isAuthenticated, role }) {
         baseURL: 'http://localhost:8080/protoon/',
         withCredentials: true
     });
-    const homePage = async () => {
-        navigate("/"); // Redirecionar após logout
-    }
+
+    useEffect(() => {
+        document.addEventListener('click', notToggleMenu);
+    
+        return () => {
+          document.removeEventListener('click', notToggleMenu);
+        };
+      }, []);
+ 
 
     const handleLogout = async () => {
         try {
@@ -29,10 +36,36 @@ function Header({ isAuthenticated, role }) {
         }
     };
 
-
-    const toggleMenu = () => {
-        setMenuOpen(prevState => !prevState);
+    //Função para ativar e desativar o menuzinho quando clicar na foto do usuário
+    const toggleMenu = (e) => {
+        e.stopPropagation(); // Impede a propagação do evento para o documento
+        setMenuOpen(prevState => !prevState); //expressão lambda se um for verdadeiro é troca para falso (e vice-versa)
     };
+    const notToggleMenu = () =>{
+        if (menuOpen){
+            setMenuOpen(false)
+        }
+    }
+
+    //TROCAR DE ROTAS
+
+    //MUNICIPES
+    const sendToPerfilMunicipe = async (e) => {
+        navigate("/perfil"); // Redirecionar para protocolo
+        toggleMenu(e) //Desativa o menu
+    }
+  
+    const sendToConsultar = async (e) => {
+        navigate("/consultar"); // Redirecionar para protocolo
+        toggleMenu(e)
+    }
+
+    //FUNCIONARIOS
+    const sendToProtocolos = async (e) => {
+        navigate("/protocolos"); // Redirecionar para protocolo
+        toggleMenu(e)
+    }
+  
 
     return (
         <div>
@@ -72,10 +105,10 @@ function Header({ isAuthenticated, role }) {
                                 <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
                                     <ul>
                                         <div className="perfilMenu">
-                                            <li><a href="perfil" style={{ fontWeight: 'bold' }}>Perfil</a></li>
-                                            <li><a href="" style={{ fontWeight: 'bold' }}>Reclamações</a></li>
+                                            <li><a onClick={sendToPerfilMunicipe} style={{ fontWeight: 'bold' }}>Perfil</a></li>
+                                            <li><a onClick={sendToConsultar} style={{ fontWeight: 'bold' }}>Reclamações</a></li>
                                             <li><a href="" style={{ fontWeight: 'bold' }}>Suporte</a></li>
-                                            <li><button onClick={handleLogout} style={{ fontWeight: 'bold', background: 'none', border: 'none', cursor: 'pointer' }}>Sair</button></li>
+                                            <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
                                         </div>
                                     </ul>
                                 </div>
@@ -91,8 +124,8 @@ function Header({ isAuthenticated, role }) {
                                     <ul>
                                         <div className="perfilMenu">
                                             <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
-                                            <li><a href="" style={{ fontWeight: 'bold' }}>Protocólos</a></li>
-                                            <li><button onClick={handleLogout} style={{ fontWeight: 'bold', background: 'none', border: 'none', cursor: 'pointer' }}>Sair</button></li>
+                                            <li><a onClick={sendToProtocolos} style={{ fontWeight: 'bold' }}>Protocólos</a></li>
+                                            <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
                                         </div>
                                     </ul>
                                 </div>
@@ -110,7 +143,7 @@ function Header({ isAuthenticated, role }) {
                                         <div className="perfilMenu">
                                             <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
                                             <li><a href="" style={{ fontWeight: 'bold' }}>Editar dados de funcionários</a></li>
-                                            <li><button onClick={handleLogout} style={{ fontWeight: 'bold', background: 'none', border: 'none', cursor: 'pointer' }}>Sair</button></li>
+                                            <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
                                         </div>
                                     </ul>
                                 </div>
@@ -128,7 +161,7 @@ function Header({ isAuthenticated, role }) {
                                         <div className="perfilMenu">
                                             <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
                                             <li><a href="" style={{ fontWeight: 'bold' }}>Aprovar redirecionamentos</a></li>
-                                            <li><button onClick={handleLogout} style={{ fontWeight: 'bold', background: 'none', border: 'none', cursor: 'pointer' }}>Sair</button></li>
+                                            <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
                                         </div>
                                     </ul>
                                 </div>
