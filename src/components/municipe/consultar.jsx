@@ -14,7 +14,7 @@ function Consultar() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const id = localStorage.getItem('idMunicipe')
+      const id = localStorage.getItem('idUsuario')
       const response = await axiosInstance('/protoon/protocolo/meus-protocolos/'+id)
       // const response = await axiosInstance('/protoon/municipe/municipes/protocolos/'+id)
       setProtocolos(response.data)

@@ -2,11 +2,11 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import URL from '../services/url';
 
 function ListarProtocolosBySecretaria(){
     const axiosInstance = axios.create({
-        baseURL: 'http://localhost:8080', // Adjust the base URL as needed
+        baseURL: URL, // Adjust the base URL as needed
         withCredentials: true, // Set withCredentials to true
       });
 
@@ -70,11 +70,9 @@ const filteredProtocolos = protocolos.filter((protocolo) => {
         value={pesquisarProt}
         onChange={(e) => setPesquisarProt(e.target.value)}
       />
-          <table>
-            <thead>
-            
-              <tr>
-                <th>ID</th>
+          <table style={{ margin: 'auto', padding: 20 }}>
+            <thead>            
+              <tr>                
                 <th>Assunto</th>
                 <th>Número</th>
                 <th>Data</th>
@@ -86,13 +84,17 @@ const filteredProtocolos = protocolos.filter((protocolo) => {
             <tbody>
               {filteredProtocolos.map((protocolo) => (
                 <tr key={protocolo.id_protocolo} onClick={() => handleClick(protocolo.id_protocolo)}>
-                  <td>{protocolo.id_protocolo}</td>
-                  <td>{protocolo.assunto}</td>
+                  
+                  <td style={{ textAlign: 'center', minWidth: 300 }}>{protocolo.assunto}</td>
                   <td>{protocolo.numero_protocolo}</td>
-                  <td>{formatarDataHora(protocolo.data_protocolo)}</td>
-                  <td>{protocolo.descricao}</td>
-                  <td>{protocolo.status}</td>
-                  <td>{protocolo.valor}</td>
+                  <td style={{ textAlign: 'center', minWidth: 300 }}>{formatarDataHora(protocolo.data_protocolo)}</td>
+                  <td style={{ textAlign: 'center', minWidth: 200, maxWidth: 200, wordWrap: 'break-word' }}>
+                    <div style={{ maxHeight: '50px', overflowY: 'auto' }}>
+                      {protocolo.descricao}
+                    </div>
+                  </td>
+                  <td style={{ textAlign: 'center', minWidth: 200 }}>{protocolo.status}</td>
+                  <td style={{ textAlign: 'center', minWidth: 100 }}>{protocolo.valor}</td>
                 </tr>
               ))}
             </tbody>

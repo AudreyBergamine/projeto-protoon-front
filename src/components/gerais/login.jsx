@@ -70,7 +70,7 @@ const LoginForm = () => {
  
       
       localStorage.setItem("role", response.data.role);
-      localStorage.setItem("idMunicipe", response.data.id);
+      localStorage.setItem("idUsuario", response.data.id);
       setTimeout(() => {
         console.log('Authentication successful:', response.data);
         // If authentication is successful, you can handle the response as needed

@@ -3,10 +3,12 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import URL from '../services/url';
+
 function AnalisarProtocolos() {
   const navigate = useNavigate()
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: URL,
     withCredentials: true,
   });
   const [protocolo, setProtocolo] = useState(null);
@@ -163,7 +165,11 @@ function AnalisarProtocolos() {
           </tr>
           <tr>
             <td>Descrição</td>
-            <td>{protocolo.descricao}</td>
+            <td style={{ textAlign: 'center', minWidth: 200, maxWidth: 200, wordWrap: 'break-word' }}>
+                    <div style={{ maxHeight: '50px', overflowY: 'auto' }}>
+                      {protocolo.descricao}
+                    </div>
+                  </td>
           </tr>
           <tr>
             <td>Status</td>

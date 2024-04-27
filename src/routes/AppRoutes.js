@@ -10,7 +10,7 @@ import Reclamar from '../components/municipe/reclamar';
 import Consultar from '../components/municipe/consultar';
 import SobreNos from '../components/municipe/sobreNos';
 import Contato from '../components/municipe/contato';
-import RegisterFuncionario from '../components/secretario/cadastrarFuncionarios';
+import CadastrarFuncionario from '../components/secretario/cadastrarFuncionarios';
 import ReclamacoesRetornadasMunicipe from '../components/municipe/reclamacoesRetornadasMunicipe';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ListarProtocolosBySecretaria from '../components/gerais/listarProtocolos';
@@ -58,7 +58,7 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/perfil" element={<PerfilMunicipe />} />
             
             {/* SECRETARIO */}
-            <Route path="/cadastro-funcionarios" element={<RegisterFuncionario />} />
+            <Route path="/cadastrarFuncionarios" element={<CadastrarFuncionario />} />
 
             {/* Rota de redirecionamento padrão */}
             <Route path="*" element={<Navigate to="/" />} />

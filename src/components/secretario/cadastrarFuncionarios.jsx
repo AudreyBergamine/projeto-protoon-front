@@ -8,9 +8,10 @@ import SetCPF from "../services/setCPF";
 import SetCEP from "../services/setCEP";
 import Loading from '../layouts/Loading';
 import Message from '../layouts/Message'
+import URL from '../services/url';
 
 //Função de cadastro de municipe
-function RegisterFuncionario() {
+function CadastrarFuncionario() {
   const [message, setMessage] = useState()
   const [cpfValid, setCpfValid] = useState(false);
   const [alert, setAlert] = useState('');
@@ -19,7 +20,7 @@ function RegisterFuncionario() {
   const [removeLoading, setRemoveLoading] = useState(true)
 
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080', // Adjust the base URL as needed
+    baseURL: URL, // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
   
@@ -203,7 +204,7 @@ function RegisterFuncionario() {
     }
 
     try {
-      const response = await axios.get(`http://localhost:8080/protoon/municipe/municipes`);
+      const response = await axios.get(URL + `/protoon/municipe/municipes`);
       const minicipes = response.data;
       const muicipeEmail = minicipes.find(muicipe => {
         return muicipe.email === formData.email;
@@ -525,10 +526,10 @@ function RegisterFuncionario() {
         </div>
         {message && <Message type={type} msg={message} />}
         {!removeLoading && <Loading />}
-        <div style={{ marginTop: -30 }}>
+        {!removeLoading && <div style={{ marginTop: -30 }}>
           <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
           <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
-        </div>
+        </div>}
       </div>
       <footer className="footer">
         © 2024 Proto-on. Todos os direitos reservados.
@@ -536,4 +537,4 @@ function RegisterFuncionario() {
     </form>
   );
 }
-export default RegisterFuncionario
+export default CadastrarFuncionario
