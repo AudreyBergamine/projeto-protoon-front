@@ -10,11 +10,7 @@ import Reclamar from '../components/municipe/reclamar';
 import Consultar from '../components/municipe/consultar';
 import SobreNos from '../components/municipe/sobreNos';
 import Contato from '../components/municipe/contato';
-import TelaAdmin from '../components/admin/welcomeAdmin';
-import Teste from '../components/admin/teste';
-import TelaUser from '../components/admin/welcomeUser';
 import RegisterFuncionario from '../components/secretario/cadastrarFuncionarios';
-import UpdateFormUser from '../components/admin/updateUser';
 import ReclamacoesRetornadasMunicipe from '../components/municipe/reclamacoesRetornadasMunicipe';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ListarProtocolosBySecretaria from '../components/gerais/listarProtocolos';
@@ -61,16 +57,8 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/retornadas" element={<ReclamacoesRetornadasMunicipe />} />
             <Route path="/perfil" element={<PerfilMunicipe />} />
             
-            
-            
             {/* SECRETARIO */}
             <Route path="/cadastro-funcionarios" element={<RegisterFuncionario />} />
-
-            {/* ADMIN */}
-            <Route path="/welcomeAdmin" element={<TelaAdmin />} />
-            <Route path="/teste" element={<Teste />} />
-            <Route path="/welcomeUser" element={<TelaUser />} />
-            <Route path="/updateUser/:username" element={<UpdateFormUser />} />
 
             {/* Rota de redirecionamento padrão */}
             <Route path="*" element={<Navigate to="/" />} />

@@ -7,7 +7,8 @@ import logoImg from '../../assets/logo.png';
 import coordednadorImg from '../../assets/coordenador.png'
 import funcionarioImg from '../../assets/funcionario.png'
 import secretarioImg from '../../assets/secretario.png'
-import { RedirectWithToggle, RedirectWithoutToggle } from '../../routes/Redirect';
+// import { RedirectWithToggle, RedirectWithoutToggle } from '../../routes/Redirect';
+
 function Header({ isAuthenticated, role }) {
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);

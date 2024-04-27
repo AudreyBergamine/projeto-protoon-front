@@ -73,7 +73,7 @@ function Reclamar() {
       return;
     }
 
-    if (formData.descricao.length < 10) {
+    if (formData.descricao.length < 3) {
       setMessage('Descreva o Problema!');
       setType('error')
       setTimeout(() => {
