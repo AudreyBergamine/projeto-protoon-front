@@ -73,7 +73,7 @@ function Header({ isAuthenticated, role }) {
             <header className="header">
                 <div className="title-proton">
                     <a href="/">
-                        <img className="logo" id="cidadao" src={logoImg} alt="Logo do site" style={{ backgroundColor: 'white', borderRadius: '50%', width: 60 }} />
+                        <img className="logo" id="cidadao" src={logoImg} alt="Logo do site" style={{ height: 60, marginLeft: -30 }} />
                     </a>
                 </div>
                 <nav>
