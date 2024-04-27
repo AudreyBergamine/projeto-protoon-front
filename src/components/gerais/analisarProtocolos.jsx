@@ -22,7 +22,7 @@ function AnalisarProtocolos() {
   useEffect(() => {
     async function fetchProtocolo() {
       try {
-        if(localStorage.getItem('role') ==='COORDENADOR'){
+        if (localStorage.getItem('role') === 'COORDENADOR') {
           const response1 = await axiosInstance.get('/protoon/secretaria');
           setSecretarias(response1.data);
         }
@@ -36,18 +36,18 @@ function AnalisarProtocolos() {
     fetchProtocolo();
   }, [id]);
 
-  
 
-  const updateProtocolo = async () =>{
+
+  const updateProtocolo = async () => {
     try {
       console.log("Novo status selecionado:", statusSelecionado); // Adicionando console.log para depurar
-    
-      const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.id_protocolo}`,{
+
+      const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.id_protocolo}`, {
         ...protocolo,
         status: statusSelecionado
       });
-  
-      if(response.status.valueOf() == 200){
+
+      if (response.status.valueOf() == 200) {
         setSuccessMessage("Protocolo atualizado com sucesso.");
 
         // Limpa a mensagem de sucesso após alguns segundos
@@ -65,7 +65,7 @@ function AnalisarProtocolos() {
       const response1 = await axiosInstance.get(`/protoon/secretaria/${idSecretariaSelecionada}`)
       console.log(response1.data)
       const secretariaData = response1.data;
-  
+
       // Exibe um alerta de confirmação antes de redirecionar o protocolo
       const confirmRedirect = window.confirm("Tem certeza que deseja redirecionar o protocolo?");
       if (confirmRedirect) {
@@ -73,10 +73,10 @@ function AnalisarProtocolos() {
           ...protocolo,
           secretaria: secretariaData
         });
-  
+
         if (response2.status.valueOf() == 200) {
           setSuccessMessage("Protocolo redirecionado com sucesso.");
-  
+
           // Limpa a mensagem de sucesso após alguns segundos
           setTimeout(() => {
             setSuccessMessage("");
@@ -97,7 +97,6 @@ function AnalisarProtocolos() {
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-      second: "2-digit",
       timeZone: "America/Sao_Paulo"
     };
     return data.toLocaleString("pt-BR", options);
@@ -106,7 +105,7 @@ function AnalisarProtocolos() {
     const selectedSecretariaId = e.target.value;
     setIdSecretariaSelecionada(selectedSecretariaId);
   };
-  
+
   const handleStatusChange = (e) => {
     const novoStatus = e.target.value;
     setStatusSelecionado(novoStatus); // Atualiza o estado com o novo status selecionado
@@ -121,148 +120,150 @@ function AnalisarProtocolos() {
   }
 
   return (
-    <div>
-    {successMessage && <div className="success-message">{successMessage}</div>}
-      <h1>Detalhes do Protocolo</h1>
+    <>
+      <div style={{ padding: 40 }}>
+        {successMessage && <div className="success-message">{successMessage}</div>}
+        <h1>Detalhes do Protocolo</h1>
 
-       {/* Select para a secretaria */}
-       {role === "COORDENADOR" && (
-<div>
-  <label>Secretaria:</label><br />
-  <select
-    style={{ fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center" }}
-    value={idSecretariaSelecionada} // Aqui se precisa usar idSecretariaSelecionada em vez de selectedSecretaria
-    onChange={handleSecretariaChange}
-  >
-    <option value="">Selecione a secretaria que o funcionário trabalhará</option>
-    {secretarias.map(secretaria => (
-      <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
-        {secretaria.nome_secretaria}
-      </option>
-    ))}
-  </select>
-  <button className="btn-log" onClick={redirectProtocolo}>Redirecionar Protocolo</button>
-</div>
-)}
+        {/* Select para a secretaria */}
+        {role === "COORDENADOR" && (
+          <div>
+            <h3 style={{ marginLeft: -180, marginBottom: -30 }}>Secretaria</h3>
+            <select
+              style={{ fontSize: 18, marginRight: 10, padding: 10, borderRadius: 10, textAlign: "center" }}
+              value={idSecretariaSelecionada} // Aqui se precisa usar idSecretariaSelecionada em vez de selectedSecretaria
+              onChange={handleSecretariaChange}
+            >
+              <option value="">Selecione a secretaria que o funcionário trabalhará</option>
+              {secretarias.map(secretaria => (
+                <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
+                  {secretaria.nome_secretaria}
+                </option>
+              ))}
+            </select>
+            <button className="btn-log" onClick={redirectProtocolo}>Redirecionar Protocolo</button>
+          </div>
+        )}        
+        <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 20 }}>
+          <legend style={{ fontWeight: 'bold', fontSize: 20 }}>Protocolo</legend>
+        <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '100%', padding: 30 }}>
+          <thead>
+            <div style={{ marginTop: 30 }}></div>
+            <tr>
+              <th>Assunto</th>
+              <th>Número</th>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Status</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style={{ textAlign: 'center', minWidth: 300 }}>{protocolo.assunto}</td>
+              <td>{protocolo.numero_protocolo}</td>
+              <td style={{ textAlign: 'center', minWidth: 200 }}>{formatarDataHora(protocolo.data_protocolo)}</td>
+              <td style={{ textAlign: 'center', minWidth: 150, maxWidth: 450, wordWrap: 'break-word' }}>
+                <div style={{ maxHeight: '50px', overflowY: 'auto' }}>
+                  {protocolo.descricao}
+                </div>
+              </td>
+              <td>
+                <select
+                  value={statusSelecionado}
+                  onChange={handleStatusChange}
+                >
+                  <option value="EM_ANDAMENTO">EM ANDAMENTO</option>
+                  <option value="CIENCIA">CIÊNCIA</option>
+                  <option value="CIENCIA_ENTREGA">CIÊNCIA ENTREGA</option>
+                  <option value="CONCLUIDO">CONCLUÍDO</option>
+                </select>
+              </td>
+              <td style={{ textAlign: 'center', minWidth: 100 }}>R$ {protocolo.valor}</td>
+            </tr>
+          </tbody>
+        </table>
+        </fieldset>       
 
-      <table>
-        <tbody>
-          <tr>
-            <td>ID do Protocolo</td>
-            <td>{protocolo.id_protocolo}</td>
-          </tr>
-          <tr>
-            <td>Assunto</td>
-            <td>{protocolo.assunto}</td>
-          </tr>
-          <tr>
-            <td>Número do Protocolo</td>
-            <td>{protocolo.numero_protocolo}</td>
-          </tr>
-          <tr>
-            <td>Data do Protocolo</td>
-            <td>{formatarDataHora(protocolo.data_protocolo)}</td>
-          </tr>
-          <tr>
-            <td>Descrição</td>
-            <td style={{ textAlign: 'center', minWidth: 200, maxWidth: 200, wordWrap: 'break-word' }}>
-                    <div style={{ maxHeight: '50px', overflowY: 'auto' }}>
-                      {protocolo.descricao}
-                    </div>
-                  </td>
-          </tr>
-          <tr>
-            <td>Status</td>
-            <td>
-              <select
-                value={statusSelecionado}
-                onChange={handleStatusChange}
-              >
-                <option value="EM_ANDAMENTO">EM ANDAMENTO</option>
-                <option value="CIENCIA">CIÊNCIA</option>
-                <option value="CIENCIA_ENTREGA">CIÊNCIA ENTREGA</option>
-                <option value="CONCLUIDO">CONCLUÍDO</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td>Valor</td>
-            <td>{protocolo.valor}</td>
-          </tr>
-          <tr>
-            <td>Secretaria</td>
-            <td>
-              <ul>
-              {protocolo.secretaria ? (
-      <>
-        <li>ID: {protocolo.secretaria.id_secretaria}</li>
-        <li>Nome: {protocolo.secretaria.nome_secretaria}</li>
-        <li>Responsável: {protocolo.secretaria.nome_responsavel}</li>
-        <li>Email: {protocolo.secretaria.email}</li>
-        <li>Endereço: {protocolo.secretaria.endereco.logradouro}, {protocolo.secretaria.endereco.num_endereco}, {protocolo.secretaria.endereco.complemento}, {protocolo.secretaria.endereco.bairro}, {protocolo.secretaria.endereco.cidade} - {protocolo.secretaria.endereco.estado}, {protocolo.secretaria.endereco.pais}</li>
-      </>
-    ) : (
-      <li>Carregando...</li>
-    )}
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>Munícipe</td>
-            <td>
-              <ul>
-              {protocolo.municipe ? (
+      {protocolo.secretaria ? (
         <>
-          <li>ID: {protocolo.municipe.id}</li>
-          <li>Nome: {protocolo.municipe.nome}</li>
-          <li>Email: {protocolo.municipe.email}</li>
-          <li>CPF: {protocolo.municipe.num_CPF}</li>
-          <li>Celular: {protocolo.municipe.celular}</li>
-          <li>Data de Nascimento: {protocolo.municipe.data_nascimento}</li>
-          {protocolo.municipe.endereco && (
-            <li>
-              Endereço: {protocolo.municipe.endereco.logradouro}, {protocolo.municipe.endereco.num_endereco}, {protocolo.municipe.endereco.complemento}, {protocolo.municipe.endereco.bairro}, {protocolo.municipe.endereco.cidade} - {protocolo.municipe.endereco.estado}, {protocolo.municipe.endereco.pais}
-            </li>
-          )}
+          <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 20 }}>
+            <legend style={{ fontWeight: 'bold', fontSize: 20 }}>Secretaria</legend>
+            <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
+              <thead>
+                <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Nome</p></td>
+                <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Responsável</p></td>
+                <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Email</p></td>
+                <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Endereço</p></td>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style={{ width: 100 }}>{protocolo.secretaria.nome_secretaria}</td>
+                  <td style={{ width: 100 }}>{protocolo.secretaria.nome_responsavel}</td>
+                  <td style={{ width: 100 }}>{protocolo.secretaria.email}</td>
+                  <td style={{ maxWidth: 500 }}>{protocolo.secretaria.endereco.logradouro}, {protocolo.secretaria.endereco.num_endereco}, {protocolo.secretaria.endereco.complemento}, {protocolo.secretaria.endereco.bairro}, {protocolo.secretaria.endereco.cidade} - {protocolo.secretaria.endereco.estado}, {protocolo.secretaria.endereco.pais}</td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
         </>
       ) : (
         <li>Carregando...</li>
       )}
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>Endereço do Protocolo</td>
-            <td>
-              <ul>
-                  {protocolo.endereco ? (
-        <>
-          <li>ID: {protocolo.endereco.id_endereco}</li>
-          <li>Tipo: {protocolo.endereco.tipo_endereco}</li>
-          <li>CEP: {protocolo.endereco.num_cep}</li>
-          <li>Logradouro: {protocolo.endereco.logradouro}</li>
-          <li>Número: {protocolo.endereco.num_endereco}</li>
-          <li>Complemento: {protocolo.endereco.complemento}</li>
-          <li>Bairro: {protocolo.endereco.bairro}</li>
-          <li>Cidade: {protocolo.endereco.cidade}</li>
-          <li>Estado: {protocolo.endereco.estado}</li>
-          <li>País: {protocolo.endereco.pais}</li>
-        </>
-      ) : (
-        <li>Carregando...</li>
-      )}
-              </ul>
-            </td>
-          </tr>
-         
-        </tbody>
-
-        
-      </table>
+      <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 20 }}>
+        <legend style={{ fontWeight: 'bold', fontSize: 20 }}>Municipe</legend>
+        <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
+          <thead>
+            <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Nome</p></td>
+            <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Email</p></td>
+            <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>CPF</p></td>
+            <td style={{ minWidth: 100 }}><p style={{ fontWeight: 700 }}>Celular</p></td>
+            <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Data de Nascimento</p></td>
+            <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Endereço</p></td>
+          </thead>
+          <tbody>
+            <tr>
+              <td style={{ width: 100 }}>{protocolo.municipe.nome}</td>
+              <td style={{ width: 100 }}>{protocolo.municipe.email}</td>
+              <td style={{ width: 100 }}>{protocolo.municipe.num_CPF}</td>
+              <td style={{ width: 100 }}>{protocolo.municipe.data_nascimento}</td>
+              <td style={{ maxWidth: 50 }}>{protocolo.municipe.celular}</td>
+              <td style={{ maxWidth: 500, minWidth: 300 }}>{protocolo.secretaria.endereco.logradouro}, {protocolo.secretaria.endereco.num_endereco}, {protocolo.secretaria.endereco.complemento}, {protocolo.secretaria.endereco.bairro}, {protocolo.secretaria.endereco.cidade} - {protocolo.secretaria.endereco.estado}, {protocolo.secretaria.endereco.pais}</td>
+            </tr>
+          </tbody>
+        </table>
+      </fieldset>
+      <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 20 }}>
+        <legend style={{ fontWeight: 'bold', fontSize: 20 }}>Endereço do Protocolo</legend>
+        <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
+          <thead>
+            <td style={{ minWidth: 100 }}><p style={{ fontWeight: 700 }}>CEP</p></td>
+            <td style={{ minWidth: 250 }}><p style={{ fontWeight: 700 }}>Logradouro</p></td>
+            <td style={{ minWidth: 100 }}><p style={{ fontWeight: 700 }}>Número</p></td>
+            <td style={{ minWidth: 150 }}><p style={{ fontWeight: 700 }}>Complemento</p></td>
+            <td style={{ minWidth: 100 }}><p style={{ fontWeight: 700 }}>Bairro</p></td>
+            <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Cidade</p></td>
+            <td style={{ minWidth: 100 }}><p style={{ fontWeight: 700 }}>Estado</p></td>
+            <td style={{ minWidth: 100 }}><p style={{ fontWeight: 700 }}>País</p></td>
+          </thead>
+          <tbody>
+            <tr>
+              <td style={{ width: 100 }}>{protocolo.endereco.num_cep}</td>
+              <td style={{ width: 100 }}>{protocolo.endereco.logradouro}</td>
+              <td style={{ width: 100 }}>{protocolo.endereco.num_endereco}</td>
+              <td style={{ width: 100 }}>{protocolo.endereco.complemento}</td>
+              <td style={{ maxWidth: 50 }}>{protocolo.endereco.bairro}</td>
+              <td style={{ maxWidth: 50 }}>{protocolo.endereco.cidade}</td>
+              <td style={{ maxWidth: 50 }}>{protocolo.endereco.estado}</td>
+              <td style={{ maxWidth: 50 }}>{protocolo.endereco.pais}</td>
+            </tr>
+          </tbody>
+        </table>
+      </fieldset>      
+      
       <button className="btn-log" onClick={updateProtocolo}>Salvar Alterações</button>
-      <br></br><br></br><br></br><br></br>
-
-    </div>
+    </div >
+    </>
   );
 }
 export default AnalisarProtocolos
