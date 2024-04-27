@@ -27,7 +27,7 @@ function Home({isAuthenticated, role}) {
                     <h1 className="main-title" style={{ marginTop: 200 }}>BEM VINDO AO PROTO-ON</h1>
                     <div className="btn-container">
                         <button className="btn-log" onClick={() => (window.location.href = '/login')}>Login</button>
-                        <button className="btn-cad" onClick={() => (window.location.href = '/cadastro')}>Cadastro</button>
+                        <button className="btn-cad" onClick={() => (window.location.href = '/cadastrarMunicipe')}>Cadastro</button>
                     </div>
                 </main>
             

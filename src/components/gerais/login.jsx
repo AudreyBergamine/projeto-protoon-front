@@ -131,7 +131,7 @@ const LoginForm = () => {
         {!removeLoading && <Loading />}
         {message && <Message type={type} msg={message} />}
         {removeLoading && <><button onClick={handleLogin} className="btn-cad" style={{ marginRight: '100px' }}>Logar</button>
-        <button className="btn-log" onClick={() => (window.location.href = '/cadastro')}>Criar Conta</button></>}
+        <button className="btn-log" onClick={() => (window.location.href = '/cadastrarMunicipe')}>Criar Conta</button></>}
       </div>
       {errorMessage && <p>{errorMessage}</p>}
     </div>

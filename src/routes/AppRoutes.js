@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from '../components/gerais/homePage';
 import LoginForm from '../components/gerais/login';
-import RegisterForm from '../components/municipe/register';
+import CadastrarMunicipe from '../components/municipe/cadastrarMunicipe';
 import RecuperarSenhaForm from '../components/municipe/recuperarSenha';
 import AtualizarForm from '../components/municipe/atualizarSenha';
 import PaginaInicalMunicipe from '../components/municipe/paginaInicalMunicipe';
@@ -46,7 +46,7 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/protocolos" element={<ListarProtocolosBySecretaria />} />
             <Route path="/protocolo/:id" element={<AnalisarProtocolos />} />
             {/* MUNICIPE */}  
-            <Route path="/cadastro" element={<RegisterForm />} />
+            <Route path="/cadastrarMunicipe" element={<CadastrarMunicipe />} />
             <Route path="/recuperarSenha" element={<RecuperarSenhaForm />} />
             <Route path="/atualizarSenha" element={<AtualizarForm />} />
             <Route path="/paginaInicial" element={<PaginaInicalMunicipe />} />

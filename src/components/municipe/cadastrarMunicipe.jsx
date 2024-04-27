@@ -10,7 +10,7 @@ import Loading from '../layouts/Loading';
 import Message from '../layouts/Message'
 
 //Função de cadastro de municipe
-function RegisterForm() {
+function CadastrarMunicipe() {
   const [message, setMessage] = useState()
   const [cpfValid, setCpfValid] = useState(false);
   const [alert, setAlert] = useState('');
@@ -456,4 +456,4 @@ function RegisterForm() {
   );
 }
 
-export default RegisterForm;
+export default CadastrarMunicipe;
