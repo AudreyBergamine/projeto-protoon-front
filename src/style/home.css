@@ -182,3 +182,9 @@ ul {
         transition: linear;
     }
 }
+
+.rowTable:hover {
+    background-color: #2D9596;
+    cursor: pointer;
+    color: #f0f0f0;
+}

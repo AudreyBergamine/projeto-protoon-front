@@ -526,7 +526,7 @@ function CadastrarFuncionario() {
         </div>
         {message && <Message type={type} msg={message} />}
         {!removeLoading && <Loading />}
-        {!removeLoading && <div style={{ marginTop: -30 }}>
+        {removeLoading && <div style={{ marginTop: -30 }}>
           <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
           <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
         </div>}
