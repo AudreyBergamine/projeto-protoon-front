@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Loading from '../layouts/Loading';
 import Message from '../layouts/Message'
+import URL from '../services/url';
 
 function RecuperarSenhaForm() {
   const [message, setMessage] = useState()
@@ -48,7 +49,7 @@ function RecuperarSenhaForm() {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/protoon/municipe/municipes/recuperarSenha/', {        
+      const response = await axios.post(URL + '/protoon/municipe/municipes/recuperarSenha/', {        
           email: email        
       });
 

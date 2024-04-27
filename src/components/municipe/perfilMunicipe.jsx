@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import URL from '../services/url';
 
 function PerfilMunicipe(){
     
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: URL,
     withCredentials: true,
   });
 

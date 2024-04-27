@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import URL from '../services/url';
 import axios from 'axios';
 import { useNavigate, Link } from "react-router-dom";
 import Loading from '../layouts/Loading';
@@ -17,7 +18,7 @@ const LoginForm = () => {
   const [senhaNull, setSenhaNull] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080/protoon/auth/', // Adjust the base URL as needed
+    baseURL: URL + '/protoon/auth/', // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
 

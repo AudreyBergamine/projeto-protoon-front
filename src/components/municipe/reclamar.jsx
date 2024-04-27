@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Loading from '../layouts/Loading';
 import Message from '../layouts/Message';
+import URL from '../services/url';
 
 function Reclamar() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ function Reclamar() {
   });
 
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080', // Adjust the base URL as needed
+    baseURL: URL, // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
   const [assuntos, setAssuntos] = useState([]);

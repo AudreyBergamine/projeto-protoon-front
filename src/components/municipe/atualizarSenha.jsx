@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Loading from '../layouts/Loading';
 import Message from '../layouts/Message'
+import URL from '../services/url';
 
 function AtualizarForm() {
   const [message, setMessage] = useState()
@@ -33,7 +34,7 @@ function AtualizarForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/protoon/municipe/municipes/recuperarSenha/novaSenha', {
+      const response = await axios.post(URL + '/protoon/municipe/municipes/recuperarSenha/novaSenha', {
         email: formData.email,
         codigo: formData.codigo,
         senha: formData.senha
@@ -102,8 +103,8 @@ function AtualizarForm() {
       </div>
       {!removeLoading && <Loading />}
       {message && <Message type={type} msg={message} />}
-      <button type="submit" className="btn-log">Enviar</button>
-      <button className="btn-log" onClick={() => (window.location.href = '/recuperarSenha')}>Voltar</button>
+      {removeLoading && <><button type="submit" className="btn-log">Enviar</button>
+      <button className="btn-log" onClick={() => (window.location.href = '/recuperarSenha')}>Voltar</button></>}
     </form>
   );
 }

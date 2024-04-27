@@ -8,6 +8,7 @@ import SetCPF from "../services/setCPF";
 import SetCEP from "../services/setCEP";
 import Loading from '../layouts/Loading';
 import Message from '../layouts/Message'
+import URL from '../services/url';
 
 //Função de cadastro de municipe
 function CadastrarMunicipe() {
@@ -19,7 +20,7 @@ function CadastrarMunicipe() {
   const [removeLoading, setRemoveLoading] = useState(true)
 
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080', // Adjust the base URL as needed
+    baseURL: URL, // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
@@ -154,7 +155,7 @@ function CadastrarMunicipe() {
     }
 
     try {
-      const response = await axios.get(`http://localhost:8080/protoon/municipe/municipes`);
+      const response = await axios.get(URL + `/protoon/municipe/municipes`);
       const minicipes = response.data;
       const muicipeEmail = minicipes.find(muicipe => {
         return muicipe.email === formData.email;

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import { format } from 'date-fns';
+import URL from '../services/url';
 
 function Consultar() {
   const [protocolos, setProtocolos] = useState([])
   const [mostrarTabela, setMostrarTabela] = useState(false);
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: URL,
     withCredentials: true,
   });
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
