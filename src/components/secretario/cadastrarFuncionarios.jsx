@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
-import { setEndereco } from "../services/formsComplete";
 import SetCelular from "../services/setCelular";
 import SetCPF from "../services/setCPF";
 import SetCEP from "../services/setCEP";
@@ -14,6 +13,7 @@ import URL from '../services/url';
 function CadastrarFuncionario() {
   const [message, setMessage] = useState()
   const [cpfValid, setCpfValid] = useState(false);
+  const [endereco, setEndereco] = useState();
   const [alert, setAlert] = useState('');
   const [type, setType] = useState()
   const navigate = useNavigate();
@@ -411,6 +411,7 @@ function CadastrarFuncionario() {
                 onChange={handleChange}
                 required
                 readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
             <div>
@@ -478,6 +479,7 @@ function CadastrarFuncionario() {
                 required
                 minLength={2}
                 readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
 
@@ -492,6 +494,7 @@ function CadastrarFuncionario() {
                 required
                 minLength={2}
                 readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
 
@@ -506,6 +509,7 @@ function CadastrarFuncionario() {
                 required
                 minLength={2}
                 readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
 
@@ -517,6 +521,7 @@ function CadastrarFuncionario() {
                 placeholder="Ex.: Brasil"
                 value={formData.endereco.pais ? formData.endereco.pais : ""}
                 readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
                 onChange={(e) => handleChangePais(e.target.value)}
                 required
                 minLength={3}

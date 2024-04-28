@@ -26,13 +26,14 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 1;
     width: auto; /* Alteração para largura automática */
-    left: 50%;
+    right: -480%;
     transform: translateX(-50%);
 }
 
 .menu li {
     padding: 3px;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .perfilMenu a {

@@ -20,12 +20,12 @@ function Header({ isAuthenticated, role }) {
 
     useEffect(() => {
         document.addEventListener('click', notToggleMenu);
-    
+
         return () => {
-          document.removeEventListener('click', notToggleMenu);
+            document.removeEventListener('click', notToggleMenu);
         };
-      }, []);
- 
+    }, []);
+
 
     const handleLogout = async () => {
         try {
@@ -42,8 +42,8 @@ function Header({ isAuthenticated, role }) {
         e.stopPropagation(); // Impede a propagação do evento para o documento
         setMenuOpen(prevState => !prevState); //expressão lambda se um for verdadeiro é troca para falso (e vice-versa)
     };
-    const notToggleMenu = () =>{
-        if (menuOpen){
+    const notToggleMenu = () => {
+        if (menuOpen) {
             setMenuOpen(false)
         }
     }
@@ -55,7 +55,7 @@ function Header({ isAuthenticated, role }) {
         navigate("/perfil"); // Redirecionar para protocolo
         toggleMenu(e) //Desativa o menu
     }
-  
+
     const sendToConsultar = async (e) => {
         navigate("/consultar"); // Redirecionar para protocolo
         toggleMenu(e)
@@ -66,7 +66,6 @@ function Header({ isAuthenticated, role }) {
         navigate("/protocolos"); // Redirecionar para protocolo
         toggleMenu(e)
     }
-  
 
     return (
         <div>
@@ -117,59 +116,59 @@ function Header({ isAuthenticated, role }) {
                         )}
                         {isAuthenticated && role === "FUNCIONARIO" && (
                             <div>
-                            <div className="avatar-container">
-                                <div className="avatar" id="avatar">
-                                    <img className="cidadao" id="cidadao" src={funcionarioImg} alt="Foto do Usuário" onClick={toggleMenu} />
+                                <div className="avatar-container">
+                                    <div className="avatar" id="avatar">
+                                        <img className="cidadao" id="cidadao" src={funcionarioImg} alt="Foto do Usuário" onClick={toggleMenu} />
+                                    </div>
+                                    <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
+                                        <ul>
+                                            <div className="perfilMenu">
+                                                <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
+                                                <li><a onClick={sendToProtocolos} style={{ fontWeight: 'bold' }}>Protocólos</a></li>
+                                                <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
+                                            </div>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
-                                    <ul>
-                                        <div className="perfilMenu">
-                                            <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
-                                            <li><a onClick={sendToProtocolos} style={{ fontWeight: 'bold' }}>Protocólos</a></li>
-                                            <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
-                                        </div>
-                                    </ul>
-                                </div>
-                            </div>
                             </div>
                         )}
                         {isAuthenticated && role === "SECRETARIO" && (
                             <div>
-                            <div className="avatar-container">
-                                <div className="avatar" id="avatar">
-                                    <img className="cidadao" id="cidadao" src={secretarioImg} alt="Foto do Usuário" onClick={toggleMenu} />
+                                <div className="avatar-container">
+                                    <div className="avatar" id="avatar">
+                                        <img className="cidadao" id="cidadao" src={secretarioImg} alt="Foto do Usuário" onClick={toggleMenu} />
+                                    </div>
+                                    <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
+                                        <ul>
+                                            <div className="perfilMenu">
+                                                <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
+                                                <li><a href="" style={{ fontWeight: 'bold' }}>Editar dados de funcionários</a></li>
+                                                <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
+                                            </div>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
-                                    <ul>
-                                        <div className="perfilMenu">
-                                            <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
-                                            <li><a href="" style={{ fontWeight: 'bold' }}>Editar dados de funcionários</a></li>
-                                            <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
-                                        </div>
-                                    </ul>
-                                </div>
-                            </div>
                             </div>
                         )}
                         {isAuthenticated && role === "COORDENADOR" && (
                             <div>
-                            <div className="avatar-container">
-                                <div className="avatar" id="avatar">
-                                    <img className="cidadao" id="cidadao" src={coordednadorImg} alt="Foto do Usuário" onClick={toggleMenu} />
+                                <div className="avatar-container">
+                                    <div className="avatar" id="avatar">
+                                        <img className="cidadao" id="cidadao" src={coordednadorImg} alt="Foto do Usuário" onClick={toggleMenu} />
+                                    </div>
+                                    <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
+                                        <ul>
+                                            <div className="perfilMenu">
+                                                <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
+                                                <li><a href="" style={{ fontWeight: 'bold' }}>Aprovar redirecionamentos</a></li>
+                                                <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
+                                            </div>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
-                                    <ul>
-                                        <div className="perfilMenu">
-                                            <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
-                                            <li><a href="" style={{ fontWeight: 'bold' }}>Aprovar redirecionamentos</a></li>
-                                            <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
-                                        </div>
-                                    </ul>
-                                </div>
-                            </div>
                             </div>
                         )}
-                        
+
                     </ul>
                 </nav>
             </header>

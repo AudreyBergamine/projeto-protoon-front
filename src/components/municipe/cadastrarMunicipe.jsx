@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
-import { setEndereco } from "../services/formsComplete";
 import SetCelular from "../services/setCelular";
 import SetCPF from "../services/setCPF";
 import SetCEP from "../services/setCEP";
@@ -14,6 +13,7 @@ import URL from '../services/url';
 function CadastrarMunicipe() {
   const [message, setMessage] = useState()
   const [cpfValid, setCpfValid] = useState(false);
+  const [endereco, setEndereco] = useState();
   const [alert, setAlert] = useState('');
   const [type, setType] = useState()
   const navigate = useNavigate();
@@ -156,11 +156,11 @@ function CadastrarMunicipe() {
 
     try {
       const response = await axios.get(URL + `/protoon/municipe/municipes`);
-      const minicipes = response.data;
-      const muicipeEmail = minicipes.find(muicipe => {
+      const municipes = response.data;
+      const muicipeEmail = municipes.find(muicipe => {
         return muicipe.email === formData.email;
       });
-      const muicipeCPF = minicipes.find(muicipe => {
+      const muicipeCPF = municipes.find(muicipe => {
         return muicipe.num_CPF === formData.num_CPF;
       });
       setRemoveLoading(false)
@@ -330,6 +330,7 @@ function CadastrarMunicipe() {
                 onChange={handleChange}
                 required
                 readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
             <div>
@@ -397,6 +398,7 @@ function CadastrarMunicipe() {
                 required
                 minLength={2}
                 readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
 
@@ -411,6 +413,7 @@ function CadastrarMunicipe() {
                 required
                 minLength={2}
                 readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
 
@@ -425,6 +428,7 @@ function CadastrarMunicipe() {
                 required
                 minLength={2}
                 readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
 
@@ -436,6 +440,7 @@ function CadastrarMunicipe() {
                 placeholder="Ex.: Brasil"
                 value={formData.endereco.pais ? formData.endereco.pais : ""}
                 readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
                 onChange={(e) => handleChangePais(e.target.value)}
                 required
                 minLength={3}
