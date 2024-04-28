@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { format } from 'date-fns';
 import URL from '../services/url';
-import { FiRefreshCcw, FiArrowLeft } from 'react-icons/fi';
+// import { FiRefreshCcw, FiArrowLeft } from 'react-icons/fi';
 
 function Consultar() {
   const [protocolos, setProtocolos] = useState([]);

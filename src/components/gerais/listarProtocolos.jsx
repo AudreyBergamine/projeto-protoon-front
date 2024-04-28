@@ -85,9 +85,9 @@ function ListarProtocolosBySecretaria() {
             <React.Fragment key={protocolo.id_protocolo} >              
               <tr onClick={() => handleClick(protocolo.id_protocolo)} className="rowTable">
                 <td style={{ textAlign: 'center', minWidth: 300 }}>{protocolo.assunto}</td>
-                <td>{protocolo.numero_protocolo}</td>
+                <td style={{ textAlign: 'center', minWidth: 80 }}>{protocolo.numero_protocolo}</td>
                 <td style={{ textAlign: 'center', minWidth: 200 }}>{formatarDataHora(protocolo.data_protocolo)}</td>
-                <td style={{ textAlign: 'center', minWidth: 450, maxWidth: 450, wordWrap: 'break-word' }}>
+                <td style={{ textAlign: 'center', minWidth: 250, maxWidth: 450, wordWrap: 'break-word' }}>
                   <div style={{ maxHeight: '50px', overflowY: 'auto' }}>
                     {protocolo.descricao}
                   </div>
