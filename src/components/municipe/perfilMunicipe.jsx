@@ -128,16 +128,6 @@ function PerfilMunicipe() {
     }
   };
 
-  const handleChangeNome = (nome) => {
-    if (/^[a-zA-Z\s]*$/.test(nome)) {
-      const formattedNome = formatValue(nome);
-      setFormData({
-        ...formData,
-        nome: formattedNome
-      });
-    }
-  };
-
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -220,7 +210,6 @@ function PerfilMunicipe() {
                 name="nome"
                 placeholder="Ex.: Cláudio Silva"
                 value={formData.nome}
-                onChange={(e) => handleChangeNome(e.target.value)}
                 readOnly
                 minLength={3}
                 className='readonly-bg'
