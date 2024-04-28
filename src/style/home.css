@@ -13,15 +13,18 @@ body {
 
 .header {
     background-color: #2D9596;
-    padding: 20px;
+    padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 40px;
+    height: 40px; /* Diminuí a altura para 40 pixels */
     position: fixed;
     top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 
 .footer {
     background-color: #2D9596;

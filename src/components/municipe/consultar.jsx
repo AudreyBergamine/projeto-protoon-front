@@ -2,30 +2,35 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { format } from 'date-fns';
 import URL from '../services/url';
+import { FiRefreshCcw, FiArrowLeft } from 'react-icons/fi';
 
 function Consultar() {
-  const [protocolos, setProtocolos] = useState([])
+  const [protocolos, setProtocolos] = useState([]);
   const [mostrarTabela, setMostrarTabela] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const axiosInstance = axios.create({
     baseURL: URL,
     withCredentials: true,
   });
-  //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const id = localStorage.getItem('idUsuario')
-      const response = await axiosInstance('/protoon/protocolo/meus-protocolos/'+id)
-      // const response = await axiosInstance('/protoon/municipe/municipes/protocolos/'+id)
-      setProtocolos(response.data)
-      setMostrarTabela(true)
+    setLoading(true);
+    setError(null);
 
+    try {
+      const id = localStorage.getItem('idUsuario');
+      const response = await axiosInstance.get('/protoon/protocolo/meus-protocolos/' + id);
+      setProtocolos(response.data);
+      setMostrarTabela(true);
     } catch (error) {
-      console.error('Erro ao enviar os dados:', error);
+      console.error('Erro ao buscar os protocolos:', error);
+      setError('Erro ao buscar os protocolos. Por favor, tente novamente.');
+    } finally {
+      setLoading(false);
     }
-    protocolos.forEach((protocolo) => {
-      console.log(protocolo.assunto);
-    });
   };
 
   function truncateText(text, maxLength) {
@@ -36,46 +41,58 @@ function Consultar() {
   }
 
   return (
-    <>
+    <div style={{ height: '100vh', width: '100vw', overflow: 'hidden', paddingTop: 20 }}>
+      {error && (
+        <div style={{ color: 'red', textAlign: 'center', marginBottom: 20 }}>{error}</div>
+      )}
       {mostrarTabela && (
-        <table style={{ marginTop: 20, borderCollapse: 'collapse', width: '100%' }}>
-          <thead>
+        <table style={{ marginTop: 20, borderCollapse: 'collapse', width: '100%', borderRadius: 10, overflow: 'hidden' }}>
+          <thead style={{ backgroundColor: "#f2f2f2" }}>
             <tr>
-              <th>Assunto</th>
-              <th>Descrição</th>
-              <th>Secretaria</th>
-              <th>Etapa</th>
-              <th>Valor</th>
-              <th>Data Prot.</th>
+              <th style={{ padding: 10, textAlign: 'center', fontSize: 16 }}>Assunto</th>
+              <th style={{ padding: 10, textAlign: 'center', fontSize: 16 }}>Descrição</th>
+              <th style={{ padding: 10, textAlign: 'center', fontSize: 16 }}>Secretaria</th>
+              <th style={{ padding: 10, textAlign: 'center', fontSize: 16 }}>Etapa</th>
+              <th style={{ padding: 10, textAlign: 'center', fontSize: 16 }}>Valor</th>
+              <th style={{ padding: 10, textAlign: 'center', fontSize: 16 }}>Data Prot.</th>
             </tr>
           </thead>
-          <div style={{ marginTop: 30 }}></div>
           <tbody>
             {protocolos.map((protocolo, index) => (
               <React.Fragment key={protocolo.id}>
                 <tr>
-                  <td style={{ textAlign: 'center', minWidth: 200 }}>{protocolo.assunto}</td>
-                  <td style={{ textAlign: 'center', minWidth: 200, maxWidth: 200, wordWrap: 'break-word' }}>
+                  <td style={{ padding: 10, textAlign: 'center', fontSize: 14 }}>{protocolo.assunto}</td>
+                  <td style={{ padding: 10, textAlign: 'center', fontSize: 14 }}>
                     <div style={{ maxHeight: '50px', overflowY: 'auto' }}>
-                      {protocolo.descricao}
+                      {truncateText(protocolo.descricao, 50)}
                     </div>
                   </td>
-                  <td style={{ textAlign: 'center', minWidth: 200 }}>{protocolo.secretaria.nome_secretaria}</td>
-                  <td style={{ textAlign: 'center', minWidth: 100 }}>{protocolo.status}</td>
-                  <td style={{ textAlign: 'center', minWidth: 100 }}>{protocolo.valor}</td>
-                  <td style={{ textAlign: 'center', minWidth: 100 }}>{format(new Date(protocolo.data_protocolo), 'dd/MM/yyyy HH:mm')}</td>
+                  <td style={{ padding: 10, textAlign: 'center', fontSize: 14 }}>{protocolo.secretaria.nome_secretaria}</td>
+                  <td style={{ padding: 10, textAlign: 'center', fontSize: 14 }}>{protocolo.status}</td>
+                  <td style={{ padding: 10, textAlign: 'center', fontSize: 14 }}>{protocolo.valor}</td>
+                  <td style={{ padding: 10, textAlign: 'center', fontSize: 14 }}>{format(new Date(protocolo.data_protocolo), 'dd/MM/yyyy HH:mm')}</td>
                 </tr>
-                {index < protocolos.length - 1 && <tr><td colSpan="7"><hr /></td></tr>}
+                {index < protocolos.length - 1 && <tr><td colSpan="7" style={{ backgroundColor: "#f2f2f2" }}><hr /></td></tr>}
               </React.Fragment>
             ))}
           </tbody>
         </table>
       )}
-      <div style={{ display: 'flex', flexDirection: 'column', width: 200, alignItems: 'center', margin: 'auto', justifyContent: 'space-between', height: '30vh', padding: 100 }}>
-        {!mostrarTabela && (<button className="btn-log" onClick={handleSubmit}>Consultar</button>)}
-        <button className="btn-log" onClick={() => (window.location.href = '/paginaInicial')}>Voltar</button>
+      {!mostrarTabela && (
+        <div style={{ display: "flex", justifyContent: "center", marginTop: 20 }}>
+          <button className="btn-log" onClick={handleSubmit} disabled={loading}>
+            {loading ? <FiRefreshCcw style={{ marginRight: 8 }} /> : null}
+            {loading ? 'Consultando...' : 'Consultar Protocolos'}
+          </button>
+        </div>
+      )}
+      <div style={{ display: "flex", justifyContent: "center", marginTop: 20 }}>
+        <button className="btn-log" onClick={() => (window.location.href = "/paginaInicial")}>
+          <FiArrowLeft style={{ marginRight: 8 }} />
+          Voltar
+        </button>
       </div>
-    </>
+    </div>
   );
 }
 
