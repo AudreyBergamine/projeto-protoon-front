@@ -13,9 +13,9 @@ function PerfilMunicipe() {
   const navigate = useNavigate();
 
   const [message, setMessage] = useState()
+  const [type, setType] = useState()
   const [endereco, setEndereco] = useState();
   const [alert, setAlert] = useState('');
-  const [type, setType] = useState()
   const idUsuario = localStorage.getItem('idUsuario');
   const [removeLoading, setRemoveLoading] = useState(true)
 

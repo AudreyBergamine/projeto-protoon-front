@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+
 import Home from '../components/gerais/homePage';
 import LoginForm from '../components/gerais/login';
+
 import CadastrarMunicipe from '../components/municipe/cadastrarMunicipe';
 import RecuperarSenhaForm from '../components/municipe/recuperarSenha';
 import AtualizarForm from '../components/municipe/atualizarSenha';
@@ -10,12 +12,12 @@ import Reclamar from '../components/municipe/reclamar';
 import Consultar from '../components/municipe/consultar';
 import SobreNos from '../components/municipe/sobreNos';
 import Contato from '../components/municipe/contato';
-import CadastrarFuncionario from '../components/secretario/cadastrarFuncionarios';
+import PerfilMunicipe from '../components/municipe/perfilMunicipe';
 import ReclamacoesRetornadasMunicipe from '../components/municipe/reclamacoesRetornadasMunicipe';
-import { useLocation, useNavigate } from 'react-router-dom';
+
+import CadastrarFuncionario from '../components/secretario/cadastrarFuncionarios';
 import ListarProtocolosBySecretaria from '../components/gerais/listarProtocolos';
 import AnalisarProtocolos from '../components/gerais/analisarProtocolos';
-import PerfilMunicipe from '../components/municipe/perfilMunicipe';
 
 // Defina um conjunto de rotas privadas
 const privateRoutes = ['/outra-rota-privada'];
