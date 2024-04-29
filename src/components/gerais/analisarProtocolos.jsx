@@ -121,7 +121,7 @@ function AnalisarProtocolos() {
 
   return (
     <>
-      <div style={{ padding: 40 }}>
+      <div style={{ padding: 40, marginTop: -100 }}>
         {successMessage && <div className="success-message">{successMessage}</div>}
         <h1>Detalhes do Protocolo</h1>
 
@@ -216,9 +216,9 @@ function AnalisarProtocolos() {
           <thead>
             <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Nome</p></td>
             <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Email</p></td>
-            <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>CPF</p></td>
-            <td style={{ minWidth: 100 }}><p style={{ fontWeight: 700 }}>Celular</p></td>
+            <td style={{ minWidth: 150 }}><p style={{ fontWeight: 700 }}>CPF</p></td>
             <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Data de Nascimento</p></td>
+            <td style={{ minWidth: 150 }}><p style={{ fontWeight: 700 }}>Celular</p></td>
             <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Endereço</p></td>
           </thead>
           <tbody>

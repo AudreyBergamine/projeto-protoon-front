@@ -2,9 +2,9 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 function PaginaInicialSecretario() {
-  const handleCadastrarClick = () => {
-    return <Navigate to="/cadastro-funcionarios" />;
-  };
+  // const handleCadastrarClick = () => {
+  //   return <Navigate to="/cadastro-funcionarios" />;
+  // };
 
   return (
     <>
@@ -20,7 +20,10 @@ function PaginaInicialSecretario() {
           padding: 100,
         }}
       >
-        <button className="btn-log" onClick={handleCadastrarClick}>
+        {/* <button className="btn-log" onClick={handleCadastrarClick}>
+          Cadastrar Funcionários
+        </button> */}
+        <button className="btn-log" onClick={() => (window.location.href = '/cadastrarFuncionarios')}>
           Cadastrar Funcionários
         </button>
       </div>
