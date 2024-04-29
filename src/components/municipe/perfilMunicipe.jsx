@@ -13,9 +13,9 @@ function PerfilMunicipe() {
   const navigate = useNavigate();
 
   const [message, setMessage] = useState()
+  const [type, setType] = useState()
   const [endereco, setEndereco] = useState();
   const [alert, setAlert] = useState('');
-  const [type, setType] = useState()
   const idUsuario = localStorage.getItem('idUsuario');
   const [removeLoading, setRemoveLoading] = useState(true)
 
@@ -411,7 +411,7 @@ function PerfilMunicipe() {
         {message && <Message type={type} msg={message} />}
         {!removeLoading && <Loading />}
         {removeLoading && <div style={{ marginTop: -30 }}>
-          <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
+          <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Atualizar</button>
           <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
         </div>}
       </div>
