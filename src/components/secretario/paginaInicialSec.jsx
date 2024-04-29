@@ -20,7 +20,7 @@ function PaginaInicialSecretario() {
           padding: 100,
         }}
       >
-        <button className="btn-log" onClick={() => (window.location.href = '/cadastrarFuncionarios')}>
+        <button className="btn-log" onClick={handleCadastrarClick}>
           Cadastrar Funcionários
         </button>
       </div>
