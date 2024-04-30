@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import moment from "moment";
+import { useParams } from "react-router-dom";
 import SetCelular from "../services/setCelular";
 import SetCEP from "../services/setCEP";
 import Loading from '../layouts/Loading';
@@ -9,13 +9,15 @@ import Message from '../layouts/Message'
 import URL from '../services/url';
 
 //Função de cadastro de municipe
-function PerfilMunicipe() {
+function AnalisarFuncionarios() {
+    const role = localStorage.getItem('role')
   const navigate = useNavigate();
-
+  const [funcionario, setFuncionario] = useState(null);
   const [message, setMessage] = useState()
   const [type, setType] = useState()
   const [endereco, setEndereco] = useState();
   const [alert, setAlert] = useState('');
+  const { id } = useParams();
   const [removeLoading, setRemoveLoading] = useState(true)
 
   const axiosInstance = axios.create({
@@ -49,22 +51,24 @@ function PerfilMunicipe() {
   };
 
   useEffect(() => {
-    setEndereco('num_cep')
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const response = await axiosInstance.get(`/protoon/municipe/municipes/bytoken`);
-      const data = response.data;
-      setFormData(data);
-    } catch (error) {
-      console.error('Erro ao obter dados do perfil:', error);
+    async function fetchFuncionario() {
+      try {
+        if (localStorage.getItem('role') === 'SECRETARIO') {
+          const response1 = await axiosInstance.get(`/protoon/funcionarios/byid/${id}`);
+          setFormData(response1.data);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar o protocolo:', error);
+      }
     }
-  };
+    fetchFuncionario();
+  }, [id]);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+ 
+
+ 
+
+
 
   const formatValue = (value) => {
     // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem no sepaados da palavra
@@ -150,7 +154,7 @@ function PerfilMunicipe() {
     }
 
     try {
-      const response = await axiosInstance.put(`/protoon/municipe/municipes/bytoken`, formData);
+      const response = await axiosInstance.put(`/protoon/funcionarios/byid${id}`, formData);
 
       setRemoveLoading(false)
 
@@ -421,4 +425,4 @@ function PerfilMunicipe() {
   );
 }
 
-export default PerfilMunicipe;
+export default AnalisarFuncionarios;

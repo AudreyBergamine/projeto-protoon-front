@@ -16,8 +16,10 @@ import PerfilMunicipe from '../components/municipe/perfilMunicipe';
 import ReclamacoesRetornadasMunicipe from '../components/municipe/reclamacoesRetornadasMunicipe';
 
 import CadastrarFuncionario from '../components/secretario/cadastrarFuncionarios';
+import ListarFuncionarios from '../components/secretario/listarFuncionarios';
 import ListarProtocolosBySecretaria from '../components/gerais/listarProtocolos';
 import AnalisarProtocolos from '../components/gerais/analisarProtocolos';
+import AnalisarFuncionarios from '../components/secretario/analisarFuncionarios';
 
 // Defina um conjunto de rotas privadas
 const privateRoutes = ['/outra-rota-privada'];
@@ -61,6 +63,8 @@ function AppRoutes({ isAuthenticated, role }) {
             
             {/* SECRETARIO */}
             <Route path="/cadastrar-funcionarios" element={<CadastrarFuncionario />} />
+            <Route path="/funcionarios" element={<ListarFuncionarios />} />
+            <Route path="/funcionario/:id" element={<AnalisarFuncionarios />} />
 
             {/* Rota de redirecionamento padrão */}
             <Route path="*" element={<Navigate to="/" />} />

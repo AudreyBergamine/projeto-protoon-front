@@ -66,6 +66,11 @@ function Header({ isAuthenticated, role }) {
         navigate("/protocolos"); // Redirecionar para protocolo
         toggleMenu(e)
     }
+    const sendToFuncionarios = async (e) => {
+        navigate("/funcionarios"); // Redirecionar para protocolo
+        toggleMenu(e)
+    }
+    
 
     return (
         <div>
@@ -142,7 +147,7 @@ function Header({ isAuthenticated, role }) {
                                         <ul>
                                             <div className="perfilMenu">
                                                 <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
-                                                <li><a href="" style={{ fontWeight: 'bold' }}>Editar dados de funcionários</a></li>
+                                                <li><a onClick={sendToFuncionarios} style={{ fontWeight: 'bold' }}>Editar dados de funcionários</a></li>
                                                 <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
                                             </div>
                                         </ul>
