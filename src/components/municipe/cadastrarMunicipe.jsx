@@ -154,37 +154,9 @@ function CadastrarMunicipe() {
       return;
     }
 
-    try {
-      const response = await axios.get(URL + `/protoon/municipe/municipes`);
-      const municipes = response.data;
-      const muicipeEmail = municipes.find(muicipe => {
-        return muicipe.email === formData.email;
-      });
-      const muicipeCPF = municipes.find(muicipe => {
-        return muicipe.num_CPF === formData.num_CPF;
-      });
-      setRemoveLoading(false)
-      if (muicipeEmail) {
-        setTimeout(() => {
-          setMessage('Email Indisponível')
-          setType('error')
-          setRemoveLoading(true)
-          return
-        }, 3000)
-      } else if (muicipeCPF) {
-        setTimeout(() => {
-          console.log('email available')
-          setMessage('CPF Indisponível')
-          setType('error')
-          setRemoveLoading(true)
-          return
-        }, 3000)
-      } else {
 
-        console.log('email and CEP available')
-
-        const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
         try {
+          const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
           const response = await axiosInstance.post('/protoon/auth/register/municipe', {
             ...formData, // Inclua todos os dados do formData
             data_nascimento: formattedDate, // Substitua o campo data_nascimento formatado
@@ -192,7 +164,6 @@ function CadastrarMunicipe() {
           });
 
           setRemoveLoading(false)
-
           setTimeout(() => {
             console.log(response.data);
             setRemoveLoading(true)
@@ -207,15 +178,17 @@ function CadastrarMunicipe() {
           setTimeout(() => {
             setRemoveLoading(true)
             console.error('Erro ao enviar os dados:', error);
-            setMessage('Falha ao tentar fazer o Cadastro!')
+            if (error.response && error.response.data && error.response.data.message) {
+              setMessage(error.response.data.message); // Exibir a mensagem de erro do servidor
+            } else {
+              setMessage('Falha ao tentar fazer o Cadastro!'); // Se não houver mensagem de erro específica, exibir uma mensagem genérica
+            }
             setType('error')
           }, 3000)
         }
       }
-    } catch (error) {
-      console.log(error)
-    }
-  };
+    
+  
 
   //Por fim é retornado o html para ser exibido no front end, junto com as funções acima.
   return (
