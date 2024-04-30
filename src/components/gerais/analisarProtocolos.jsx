@@ -37,7 +37,7 @@ function AnalisarProtocolos() {
   const updateProtocolo = async () => {
     try {
       console.log("Novo status selecionado:", statusSelecionado); // Adicionando console.log para depurar
-      console.log(protocolo.numero_protocolo)
+      console.log(idSecretariaSelecionada)
       const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.numero_protocolo}`, {
         ...protocolo,
         status: statusSelecionado
@@ -65,7 +65,7 @@ function AnalisarProtocolos() {
       // Exibe um alerta de confirmação antes de redirecionar o protocolo
       const confirmRedirect = window.confirm("Tem certeza que deseja redirecionar o protocolo?");
       if (confirmRedirect) {
-        const response2 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.id_protocolo}`, {
+        const response2 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.numero_protocolo}`, {
           ...protocolo,
           secretaria: secretariaData
         });
