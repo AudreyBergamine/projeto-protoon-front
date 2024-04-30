@@ -100,7 +100,7 @@ function Reclamar() {
         setMessage('Reclamação bem sucedida! Redirecionando...');
         setType('success');
         setTimeout(() => {
-          navigate('/paginaInicial');
+          navigate('/');
         }, 3000);
       }, 3000);
     } catch (error) {

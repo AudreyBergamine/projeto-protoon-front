@@ -203,37 +203,12 @@ function CadastrarFuncionario() {
       return;
     }
 
-    try {
-      const response = await axios.get(URL + `/protoon/municipe/municipes`);
-      const minicipes = response.data;
-      const muicipeEmail = minicipes.find(muicipe => {
-        return muicipe.email === formData.email;
-      });
-      const muicipeCPF = minicipes.find(muicipe => {
-        return muicipe.num_CPF === formData.num_CPF;
-      });
-      setRemoveLoading(false)
-      if (muicipeEmail) {
-        setTimeout(() => {
-          setMessage('Email Indisponível')
-          setType('error')
-          setRemoveLoading(true)
-          return
-        }, 3000)
-      } else if (muicipeCPF) {
-        setTimeout(() => {
-          console.log('email available')
-          setMessage('CPF Indisponível')
-          setType('error')
-          setRemoveLoading(true)
-          return
-        }, 3000)
-      } else {
+    
 
-        console.log('email and CEP available')
         
-        const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
+        
         try {
+          const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
           const response = await axiosInstance.post('protoon/auth/register/funcionario/'+idSecretariaSelecionada, {
             ...formData, // Inclua todos os dados do formData
             role: formData.role.toUpperCase(),
@@ -262,10 +237,7 @@ function CadastrarFuncionario() {
           }, 3000)
         }
       }
-    } catch (error) {
-      console.log(error)
-    }
-  };
+    
 
   //Por fim é retornado o html para ser exibido no front end, junto com as funções acima.
   return (

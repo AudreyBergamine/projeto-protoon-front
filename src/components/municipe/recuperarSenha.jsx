@@ -57,7 +57,7 @@ function RecuperarSenhaForm() {
       if (response) {
         setTimeout(() => {
           setRemoveLoading(true)
-          navigate('/atualizarSenha');
+          navigate('/atualizar-senha');
         }, 3000)
       } else {
         setTimeout(() => {
