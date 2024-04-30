@@ -2,11 +2,9 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import URL from '../services/url';
 
 function AnalisarProtocolos() {
-  const navigate = useNavigate()
   const axiosInstance = axios.create({
     baseURL: URL,
     withCredentials: true,
@@ -36,18 +34,16 @@ function AnalisarProtocolos() {
     fetchProtocolo();
   }, [id]);
 
-
-
   const updateProtocolo = async () => {
     try {
       console.log("Novo status selecionado:", statusSelecionado); // Adicionando console.log para depurar
 
-      const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.id_protocolo}`, {
+      const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.numero_protocolo}`, {
         ...protocolo,
         status: statusSelecionado
       });
 
-      if (response.status.valueOf() == 200) {
+      if (response.status.valueOf() === 200) {
         setSuccessMessage("Protocolo atualizado com sucesso.");
 
         // Limpa a mensagem de sucesso após alguns segundos
@@ -74,7 +70,7 @@ function AnalisarProtocolos() {
           secretaria: secretariaData
         });
 
-        if (response2.status.valueOf() == 200) {
+        if (response2.status.valueOf() === 200) {
           setSuccessMessage("Protocolo redirecionado com sucesso.");
 
           // Limpa a mensagem de sucesso após alguns segundos
