@@ -65,7 +65,7 @@ function AnalisarProtocolos() {
       // Exibe um alerta de confirmação antes de redirecionar o protocolo
       const confirmRedirect = window.confirm("Tem certeza que deseja redirecionar o protocolo?");
       if (confirmRedirect) {
-        const response2 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.id_protocolo}`, {
+        const response2 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.numero_protocolo}`, {
           ...protocolo,
           secretaria: secretariaData
         });
