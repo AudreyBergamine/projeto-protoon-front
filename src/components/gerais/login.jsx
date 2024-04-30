@@ -127,12 +127,12 @@ const LoginForm = () => {
           onBlur={() => setSenhaFocused(false)}
         />
       </div>
-      <Link to='/recuperarSenha' style={{ textDecoration: 'none' }}>Esqueceu a Senha?</Link>
+      <Link to='/recuperar-senha' style={{ textDecoration: 'none' }}>Esqueceu a Senha?</Link>
       <div style={{ marginBottom: 30 }}>
         {!removeLoading && <Loading />}
         {message && <Message type={type} msg={message} />}
         {removeLoading && <><button onClick={handleLogin} className="btn-cad" style={{ marginRight: '100px' }}>Logar</button>
-        <button className="btn-log" onClick={() => (window.location.href = '/cadastrarMunicipe')}>Criar Conta</button></>}
+        <button className="btn-log" onClick={() => (window.location.href = '/cadastrar-municipe')}>Criar Conta</button></>}
       </div>
       {errorMessage && <p>{errorMessage}</p>}
     </div>

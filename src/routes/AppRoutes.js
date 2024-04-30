@@ -48,19 +48,19 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/protocolos" element={<ListarProtocolosBySecretaria />} />
             <Route path="/protocolo/:id" element={<AnalisarProtocolos />} />
             {/* MUNICIPE */}  
-            <Route path="/cadastrarMunicipe" element={<CadastrarMunicipe />} />
-            <Route path="/recuperarSenha" element={<RecuperarSenhaForm />} />
-            <Route path="/atualizarSenha" element={<AtualizarForm />} />
-            <Route path="/paginaInicial" element={<PaginaInicalMunicipe />} />
+            <Route path="/cadastrar-municipe" element={<CadastrarMunicipe />} />
+            <Route path="/recuperar-senha" element={<RecuperarSenhaForm />} />
+            <Route path="/atualizar-senha" element={<AtualizarForm />} />
+            <Route path="/pagina-inicial" element={<PaginaInicalMunicipe />} />
             <Route path="/reclamar" element={<Reclamar />} />
             <Route path="/consultar" element={<Consultar />} />
-            <Route path="/sobreNos" element={<SobreNos />} />
+            <Route path="/sobre-nos" element={<SobreNos />} />
             <Route path="/contato" element={<Contato />} />
             <Route path="/retornadas" element={<ReclamacoesRetornadasMunicipe />} />
             <Route path="/perfil" element={<PerfilMunicipe />} />
             
             {/* SECRETARIO */}
-            <Route path="/cadastrarFuncionarios" element={<CadastrarFuncionario />} />
+            <Route path="/cadastrar-funcionarios" element={<CadastrarFuncionario />} />
 
             {/* Rota de redirecionamento padrão */}
             <Route path="*" element={<Navigate to="/" />} />
