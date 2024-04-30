@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +23,7 @@ function ListarProtocolosBySecretaria() {
         console.log(response1.data.secretaria)
         const id_secretaria = response1.data.secretaria.id_secretaria;
 
-        const response2 = await axiosInstance.get(`/protoon/secretaria/protocolos/`+id_secretaria);
+        const response2 = await axiosInstance.get(`/protoon/secretaria/protocolos/2`);
         // const response2 = await axiosInstance.get(`/protoon/secretaria/protocolos/${id_secretaria}`);
         setProtocolos(response2.data);
       } catch (error) {

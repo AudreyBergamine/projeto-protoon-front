@@ -41,8 +41,8 @@ function AnalisarProtocolos() {
   const updateProtocolo = async () => {
     try {
       console.log("Novo status selecionado:", statusSelecionado); // Adicionando console.log para depurar
-
-      const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.id_protocolo}`, {
+      console.log(protocolo.numero_protocolo)
+      const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.numero_protocolo}`, {
         ...protocolo,
         status: statusSelecionado
       });
