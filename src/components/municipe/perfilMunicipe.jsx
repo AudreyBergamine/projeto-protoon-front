@@ -15,6 +15,7 @@ function PerfilMunicipe() {
   const [message, setMessage] = useState()
   const [type, setType] = useState()
   const [endereco, setEndereco] = useState();
+  const [celularValue, setCelularValue] = useState('');
   const [alert, setAlert] = useState('');
   const [removeLoading, setRemoveLoading] = useState(true)
 
@@ -57,6 +58,8 @@ function PerfilMunicipe() {
       const response = await axiosInstance.get(`/protoon/municipe/municipes/bytoken`);
       const data = response.data;
       setFormData(data);
+
+      setCelularValue(data.celular);
     } catch (error) {
       console.error('Erro ao obter dados do perfil:', error);
     }
@@ -247,6 +250,7 @@ function PerfilMunicipe() {
             <div>
               <label>Celular:</label><br></br>
               <SetCelular
+              celularValue={celularValue}
                 onCelularChange={handleChangeCelular}
               />
             </div>

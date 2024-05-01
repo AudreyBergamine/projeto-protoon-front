@@ -1,9 +1,10 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function PaginaInicialSecretario() {
+  const navigate = useNavigate()
    const handleCadastrarClick = () => {
-     return <Navigate to="/cadastro-funcionarios" />;
+     navigate("/cadastrar-funcionarios");
    };
 
   return (

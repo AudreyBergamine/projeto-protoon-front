@@ -10,15 +10,18 @@ import URL from '../services/url';
 
 //Função de cadastro de municipe
 function AnalisarFuncionarios() {
-    const role = localStorage.getItem('role')
   const navigate = useNavigate();
   const [funcionario, setFuncionario] = useState(null);
+  const [celularValue, setCelularValue] = useState('');
   const [message, setMessage] = useState()
   const [type, setType] = useState()
   const [endereco, setEndereco] = useState();
   const [alert, setAlert] = useState('');
   const { id } = useParams();
   const [removeLoading, setRemoveLoading] = useState(true)
+  const roles = ["Coordenador", "Funcionario"]
+  const [secretarias, setSecretarias] = useState([]);
+  const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
 
   const axiosInstance = axios.create({
     baseURL: URL, // Adjust the base URL as needed
@@ -28,10 +31,10 @@ function AnalisarFuncionarios() {
   const [formData, setFormData] = useState({
     nome: "",
     email: "",
-    senha: "",
     num_CPF: "",
     celular: "",
     data_nascimento: "",
+    role: "",
     endereco: {
       tipo_endereco: "",
       num_cep: "",
@@ -51,11 +54,43 @@ function AnalisarFuncionarios() {
   };
 
   useEffect(() => {
+    setEndereco('num_cep')
+  }, []);
+
+
+  useEffect(() => {
     async function fetchFuncionario() {
       try {
         if (localStorage.getItem('role') === 'SECRETARIO') {
-          const response1 = await axiosInstance.get(`/protoon/funcionarios/byid/${id}`);
-          setFormData(response1.data);
+          const response1 = await axiosInstance.get(`/protoon/funcionarios/${id}`);
+          const data = response1.data;
+          setFormData({
+            endereco: {
+              tipo_endereco: data.endereco.tipo_endereco,
+              num_cep: data.endereco.num_cep,
+              logradouro: data.endereco.logradouro,
+              nome_endereco: data.endereco.nome_endereco,
+              num_endereco: data.endereco.num_endereco,
+              complemento: data.endereco.complemento,
+              bairro: data.endereco.bairro,
+              cidade: data.endereco.cidade,
+              estado: data.endereco.estado,
+              pais: data.endereco.pais
+            },
+            nome: data.nome,
+            email: data.email,
+            role: data.role,
+            num_CPF: data.num_CPF,
+            data_nascimento: data.data_nascimento,
+            celular: data.celular,
+            numTelefoneFixo: data.numTelefoneFixo
+          });
+          setCelularValue(data.celular);
+          setIdSecretariaSelecionada(data.secretaria.id_secretaria)
+          const celularDoFuncionario = response1.data.celular; // Obtém o valor do celular do funcionário
+          setCelularValue(celularDoFuncionario); // Define o valor do celular no estado
+          const response2 = await axiosInstance.get('/protoon/secretaria');
+          setSecretarias(response2.data);
         }
       } catch (error) {
         console.error('Erro ao buscar o protocolo:', error);
@@ -64,11 +99,12 @@ function AnalisarFuncionarios() {
     fetchFuncionario();
   }, [id]);
 
- 
+  const handleSecretariaChange = (e) => {
+    const selectedSecretariaId = e.target.value;
+    setIdSecretariaSelecionada(selectedSecretariaId);
+  };
 
  
-
-
 
   const formatValue = (value) => {
     // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem no sepaados da palavra
@@ -154,7 +190,11 @@ function AnalisarFuncionarios() {
     }
 
     try {
-      const response = await axiosInstance.put(`/protoon/funcionarios/byid${id}`, formData);
+      console.log(id)
+      console.log(idSecretariaSelecionada)
+      console.log(formData)
+      const response = await axiosInstance.put(`/protoon/funcionarios/${id}/${idSecretariaSelecionada}`,formData
+    );
 
       setRemoveLoading(false)
 
@@ -164,7 +204,7 @@ function AnalisarFuncionarios() {
         setMessage('Atualização dos Dados feita com Sucesso! Redirecionando...')
         setType('success')
         setTimeout(() => {
-          navigate(-1);
+          navigate("/");
         }, 3000)
       }, 3000)
     } catch (error) {
@@ -251,7 +291,9 @@ function AnalisarFuncionarios() {
             <div>
               <label>Celular:</label><br></br>
               <SetCelular
+              celularValue={celularValue}
                 onCelularChange={handleChangeCelular}
+                
               />
             </div>
 
@@ -268,7 +310,24 @@ function AnalisarFuncionarios() {
             </div>
 
           </div>
+         
         </div>
+        <div>
+            <h3 style={{ marginLeft: -180, marginBottom: -30 }}>Secretaria</h3>
+            <select
+              style={{ fontSize: 18, marginRight: 10, padding: 10, borderRadius: 10, textAlign: "center" }}
+              value={idSecretariaSelecionada} // Aqui se precisa usar idSecretariaSelecionada em vez de selectedSecretaria
+              onChange={handleSecretariaChange}
+            >
+              <option value="">Selecione a secretaria que o funcionário trabalhará</option>
+              {secretarias.map(secretaria => (
+                <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
+                  {secretaria.nome_secretaria}
+                </option>
+              ))}
+            </select>
+          </div>
+          
         <hr></hr>
         <h3>Endereço</h3>
         <div className="register-form">

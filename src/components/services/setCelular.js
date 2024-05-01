@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const SetCelular = ({ celularId, onCelularChange }) => {
+const SetCelular = ({ celularValue, onCelularChange }) => {
 
+    
     const [celular, setCelular] = useState('');    
+    useEffect(() => {
+        setCelular(celularValue);
+      }, [celularValue]);
 
     const formatCelular = (event) => {
         let value = event.target.value;
