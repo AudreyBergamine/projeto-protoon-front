@@ -153,7 +153,7 @@ function CadastrarMunicipe() {
       setType('error');
       return;
     }
-
+  
 
         try {
           const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
@@ -187,6 +187,10 @@ function CadastrarMunicipe() {
           }, 3000)
         }
       }
+
+      const sendToLogin = async()=>{
+        navigate("/login")
+    }
     
   
 
@@ -425,7 +429,7 @@ function CadastrarMunicipe() {
         {!removeLoading && <Loading />}
         {removeLoading && <div style={{ marginTop: -30 }}>
           <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
-          <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
+          <button className="btn-log" onClick={sendToLogin}>Voltar</button>
         </div>}
       </div>
       <footer className="footer">

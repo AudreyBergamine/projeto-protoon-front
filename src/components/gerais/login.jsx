@@ -22,8 +22,8 @@ const LoginForm = () => {
     withCredentials: true, // Set withCredentials to true
   });
 
-  const homePage = async () =>{
-    navigate("/"); // Redirecionar após login
+  const sendToCadastrar = async () =>{
+    navigate("/cadastrar-municipe"); // Redirecionar após login
 }
 
   const handleLogin = async () => {
@@ -131,7 +131,7 @@ const LoginForm = () => {
         {!removeLoading && <Loading />}
         {message && <Message type={type} msg={message} />}
         {removeLoading && <><button onClick={handleLogin} className="btn-cad" style={{ marginRight: '100px' }}>Logar</button>
-        <button className="btn-log" onClick={() => (window.location.href = '/cadastrar-municipe')}>Criar Conta</button></>}
+        <button className="btn-log" onClick={sendToCadastrar}>Criar Conta</button></>}
       </div>
       {errorMessage && <p>{errorMessage}</p>}
     </div>
