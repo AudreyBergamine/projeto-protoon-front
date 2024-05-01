@@ -21,8 +21,7 @@ function Consultar() {
     setError(null);
 
     try {
-      const id = localStorage.getItem('idUsuario');
-      const response = await axiosInstance.get('/protoon/protocolo/meus-protocolos/' + id);
+      const response = await axiosInstance.get(`/protoon/protocolo/meus-protocolos`);
       setProtocolos(response.data);
       setMostrarTabela(true);
     } catch (error) {
