@@ -297,7 +297,7 @@ function CadastrarMunicipe() {
               />
             </div>
             
-            {/* Tipos de Logradouros:
+            {/* TODO: Tipos de Logradouros: ( FAZER LISTA SUSPENSA COM ESSES TIPOS DE LOGRADOUROS)
                   Rua
                   Avenida
                   Travessa
