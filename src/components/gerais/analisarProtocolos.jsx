@@ -146,8 +146,8 @@ function AnalisarProtocolos() {
             <button className="btn-log" onClick={redirectProtocolo}>Redirecionar Protocolo</button>
           </div>
         )}        
-        <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 20 }}>
-          <legend style={{ fontWeight: 'bold', fontSize: 20 }}>Protocolo</legend>
+        <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
+  <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Protocolo</legend>
         <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '100%', padding: 30 }}>
           <thead>
             <div style={{ marginTop: 30 }}></div>
@@ -189,8 +189,8 @@ function AnalisarProtocolos() {
 
       {protocolo.secretaria ? (
         <>
-          <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 20 }}>
-            <legend style={{ fontWeight: 'bold', fontSize: 20 }}>Secretaria</legend>
+        <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
+  <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Secretaria</legend>
             <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
               <thead>
                 <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Nome</p></td>
@@ -212,8 +212,8 @@ function AnalisarProtocolos() {
       ) : (
         <li>Carregando...</li>
       )}
-      <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 20 }}>
-        <legend style={{ fontWeight: 'bold', fontSize: 20 }}>Municipe</legend>
+      <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
+  <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Municipe</legend>
         <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
           <thead>
             <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Nome</p></td>
@@ -235,8 +235,8 @@ function AnalisarProtocolos() {
           </tbody>
         </table>
       </fieldset>
-      <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 20 }}>
-        <legend style={{ fontWeight: 'bold', fontSize: 20 }}>Endereço do Protocolo</legend>
+      <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
+  <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Endereço do Protocolo</legend>
         <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
           <thead>
             <td style={{ minWidth: 100 }}><p style={{ fontWeight: 700 }}>CEP</p></td>

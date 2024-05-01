@@ -77,8 +77,8 @@ function PerfilCoordenador() {
 
   
  
-  const voltarAnterior = async() =>{
-    navigate(-1)
+  const voltarIndex = async() =>{
+    navigate("/")
   }
   
 
@@ -315,7 +315,7 @@ function PerfilCoordenador() {
         {message && <Message type={type} msg={message} />}
         {!removeLoading && <Loading />}
         {removeLoading && <div style={{ marginTop: -30 }}>
-          <button className="btn-log" onClick={voltarAnterior}>Voltar</button>
+          <button className="btn-log" onClick={voltarIndex}>Voltar</button>
         </div>}
       </div>
       <footer className="footer">

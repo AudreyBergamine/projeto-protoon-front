@@ -36,7 +36,7 @@ function AppRoutes({ isAuthenticated, role }) {
         const isPrivateRoute = privateRoutes.includes(location.pathname);
 
         // Redirecionamentos com base no estado de autenticação e nas rotas privadas
-        if ((location.pathname === '/login' || location.pathname === '/cadastro') && isAuthenticated) {
+        if ((location.pathname === '/login' || location.pathname === '/cadastrar-municipe' ) && isAuthenticated) {
             navigate('/', { replace: true });
         } else if (isPrivateRoute && !isAuthenticated && location.pathname !== '/') {
             navigate('/', { replace: true });
