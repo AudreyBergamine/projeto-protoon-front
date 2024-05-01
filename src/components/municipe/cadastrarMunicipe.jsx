@@ -298,11 +298,11 @@ function CadastrarMunicipe() {
             </div>
 
             <div>
-              <label>Logradouro:</label><br></br>
+              <label>Tipo de Logradouro:</label><br></br>
               <input
                 type="text"
                 name="logradouro"
-                placeholder="Ex.: Rua, Avenida, Alameda"
+                placeholder="Ex.: Rua, Avenida, Alameda..."
                 value={formData.endereco.logradouro}
                 onChange={handleChange}
                 required
