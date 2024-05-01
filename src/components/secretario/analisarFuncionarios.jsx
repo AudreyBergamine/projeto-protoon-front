@@ -324,13 +324,12 @@ function AnalisarFuncionarios() {
          
         </div>
         <div>
-            <h3 style={{ marginLeft: -180, marginBottom: -30 }}>Secretaria</h3>
+            <h3 >Secretaria</h3>
             <select
               style={{ fontSize: 18, marginRight: 10, padding: 10, borderRadius: 10, textAlign: "center" }}
               value={idSecretariaSelecionada} // Aqui se precisa usar idSecretariaSelecionada em vez de selectedSecretaria
               onChange={handleSecretariaChange}
             >
-              <option value="">Selecione a secretaria que o funcionário trabalhará</option>
               {secretarias.map(secretaria => (
                 <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
                   {secretaria.nome_secretaria}
