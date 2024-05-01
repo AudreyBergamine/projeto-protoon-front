@@ -296,7 +296,17 @@ function CadastrarMunicipe() {
                 }}
               />
             </div>
-
+            
+            {/* Tipos de Logradouros:
+                  Rua
+                  Avenida
+                  Travessa
+                  Alameda
+                  Estrada
+                  Rodovia
+                  Beco
+                  Praça
+            */}
             <div>
               <label>Tipo de Logradouro:</label><br></br>
               <input
