@@ -281,7 +281,7 @@ function CadastrarMunicipe() {
           <div className="input-container">
 
             <div>
-              <label>Número do cep:</label><br></br>
+              <label>Número do CEP:</label><br></br>
               <SetCEP
                 onAlertChange={handleAlertChange}
                 onEnderecoChange={handleEnderecoChange}
@@ -356,7 +356,7 @@ function CadastrarMunicipe() {
               <input
                 type="text"
                 name="complemento"
-                placeholder="Bloco, apartamento, casa, fundos..."
+                placeholder="Bloco / Nº do Apartamento / Fundos..."
                 value={formData.endereco.complemento}
                 onChange={handleChange}
               />
@@ -369,11 +369,11 @@ function CadastrarMunicipe() {
           <div className="input-container">
 
             <div>
-              <label>Tipo de endereço:</label><br></br>
+              <label>Tipo de Endereço:</label><br></br>
               <input
                 type="text"
                 name="tipo_endereco"
-                placeholder="Ex.: casa, apartamento"
+                placeholder="Ex.: Casa / Apartamento"
                 value={formData.endereco.tipo_endereco}
                 onChange={handleChange}
                 minLength={3}
