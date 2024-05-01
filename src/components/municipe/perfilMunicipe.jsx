@@ -53,19 +53,22 @@ function PerfilMunicipe() {
     setEndereco('num_cep')
   }, []);
 
-  const fetchData = async () => {
-    try {
-      const response = await axiosInstance.get(`/protoon/municipe/municipes/bytoken`);
-      const data = response.data;
-      setFormData(data);
-
-      setCelularValue(data.celular);
-    } catch (error) {
-      console.error('Erro ao obter dados do perfil:', error);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      console.log("Teste");
+      try {
+        const response = await axiosInstance.get(`/protoon/municipe/municipes/bytoken`);
+        const data = response.data;
+        console.log(data)
+        setFormData(data);
+        const celularMunicipe = response.data.celular;
+        console.log(celularMunicipe);
+        setCelularValue(celularMunicipe);
+      } catch (error) {
+        console.error('Erro ao obter dados do perfil:', error);
+      }
+    };
+  
     fetchData();
   }, []);
 
@@ -250,7 +253,8 @@ function PerfilMunicipe() {
             <div>
               <label>Celular:</label><br></br>
               <SetCelular
-              celularValue={celularValue}
+                celularValue={celularValue}
+
                 onCelularChange={handleChangeCelular}
               />
             </div>

@@ -6,6 +6,9 @@ function PaginaInicialSecretario() {
    const handleCadastrarClick = () => {
      navigate("/cadastrar-funcionarios");
    };
+   const sendToFuncionarios = async () => {
+        navigate("/funcionarios"); // Redirecionar para protocolo
+    }
 
   return (
     <>
@@ -26,6 +29,9 @@ function PaginaInicialSecretario() {
         </button> */}
         <button className="btn-log" onClick={handleCadastrarClick}>
           Cadastrar Funcionários
+        </button>
+        <button className="btn-log" onClick={sendToFuncionarios}>
+          Alterar dados de Funcionários
         </button>
       </div>
     </>
