@@ -297,7 +297,11 @@ function CadastrarMunicipe() {
               />
             </div>
             
-            {/* TODO: Tipos de Logradouros: ( FAZER LISTA SUSPENSA COM ESSES TIPOS DE LOGRADOUROS)
+            {/* OPÇÃO 1 - TROCAR A PALAVRA LOGRADOURO POR ENDEREÇO E TIRAR:  Nome Endereço*/}
+
+            {/* OPÇÃO 2: FAZER LISTA SUSPENSA COM ESSES TIPOS DE LOGRADOUROS
+            
+                Tipos de Logradouros:
                   Rua
                   Avenida
                   Travessa
@@ -314,8 +318,10 @@ function CadastrarMunicipe() {
                   Aeroporto
           
             */}
+
+            
             <div>
-              <label>Tipo de Logradouro:</label><br></br>
+              <label>Tipo de Logradouro:</label><br></br> 
               <input
                 type="text"
                 name="logradouro"
