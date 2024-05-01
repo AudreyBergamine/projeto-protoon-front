@@ -323,7 +323,7 @@ function CadastrarMunicipe() {
               />
             </div>
             <div>
-              <label>Número do endereço:</label><br></br>
+              <label>Número:</label><br></br>
               <input
                 type="number"
                 name="num_endereco"
