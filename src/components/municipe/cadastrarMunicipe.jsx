@@ -325,7 +325,7 @@ function CadastrarMunicipe() {
               <input
                 type="text"
                 name="logradouro"
-                placeholder="Ex.: Rua, Avenida, Alameda..."
+                placeholder="Ex.: Rua, Avenida, Alameda..." // Rua 23 de Maio / Avenida Mogi das Cruzes
                 value={formData.endereco.logradouro}
                 onChange={handleChange}
                 required
