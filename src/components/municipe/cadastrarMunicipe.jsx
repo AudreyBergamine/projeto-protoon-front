@@ -302,7 +302,7 @@ function CadastrarMunicipe() {
               <input
                 type="text"
                 name="logradouro"
-                placeholder="Ex.: Rua das Flores"
+                placeholder="Ex.: Rua, Avenida, Alameda"
                 value={formData.endereco.logradouro}
                 onChange={handleChange}
                 required
@@ -315,7 +315,7 @@ function CadastrarMunicipe() {
               <input
                 type="text"
                 name="nome_endereco"
-                placeholder="Ex.: Casa"
+                placeholder="Ex.: Marechael Teodoro"
                 value={formData.endereco.nome_endereco}
                 onChange={handleChange}
                 required
