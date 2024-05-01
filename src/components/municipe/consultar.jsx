@@ -3,13 +3,18 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import URL from '../services/url';
 import { FiRefreshCcw, FiArrowLeft } from 'react-icons/fi';
+import { useNavigate } from "react-router-dom";
 
 function Consultar() {
   const [protocolos, setProtocolos] = useState([]);
   const [mostrarTabela, setMostrarTabela] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate()
 
+  const sendToIndex = async ()=>{
+    navigate("/")
+  }
   const axiosInstance = axios.create({
     baseURL: URL,
     withCredentials: true,
@@ -86,7 +91,7 @@ function Consultar() {
         </div>
       )}
       <div style={{ display: "flex", justifyContent: "center", marginTop: 20 }}>
-        <button className="btn-log" onClick={() => (window.location.href = "/paginaInicial")}>
+        <button className="btn-log" onClick={sendToIndex}>
           <FiArrowLeft style={{ marginRight: 8 }} />
           Voltar
         </button>

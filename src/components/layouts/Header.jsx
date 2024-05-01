@@ -17,15 +17,13 @@ function Header({ isAuthenticated, role }) {
         baseURL: 'http://localhost:8080/protoon/',
         withCredentials: true
     });
-
     useEffect(() => {
         document.addEventListener('click', notToggleMenu);
-
+    
         return () => {
             document.removeEventListener('click', notToggleMenu);
         };
-    }, []);
-
+    }, [menuOpen]);
 
     const handleLogout = async () => {
         try {
@@ -114,7 +112,8 @@ function Header({ isAuthenticated, role }) {
                         {isAuthenticated && role === "MUNICIPE" && (
                             <div className="avatar-container">
                                 <div className="avatar" id="avatar">
-                                    <img className="cidadao" id="cidadao" src={cidadaoImg} alt="Foto do Usuário" onClick={toggleMenu} />
+                                <img className="cidadao" src={cidadaoImg} alt="Foto do Usuário" onClick={toggleMenu} />
+
                                 </div>
                                 <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
                                     <ul>
@@ -132,7 +131,7 @@ function Header({ isAuthenticated, role }) {
                             <div>
                                 <div className="avatar-container">
                                     <div className="avatar" id="avatar">
-                                        <img className="cidadao" id="cidadao" src={funcionarioImg} alt="Foto do Usuário" onClick={toggleMenu} />
+                                        <img className="cidadao"  src={funcionarioImg} alt="Foto do Usuário" onClick={toggleMenu} />
                                     </div>
                                     <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
                                         <ul>
@@ -149,7 +148,7 @@ function Header({ isAuthenticated, role }) {
                             <div>
                                 <div className="avatar-container">
                                     <div className="avatar" id="avatar">
-                                        <img className="cidadao" id="cidadao" src={secretarioImg} alt="Foto do Usuário" onClick={toggleMenu} />
+                                        <img className="cidadao" src={secretarioImg} alt="Foto do Usuário" onClick={toggleMenu} />
                                     </div>
                                     <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
                                         <ul>
@@ -166,7 +165,7 @@ function Header({ isAuthenticated, role }) {
                             <div>
                                 <div className="avatar-container">
                                     <div className="avatar" id="avatar">
-                                        <img className="cidadao" id="cidadao" src={coordednadorImg} alt="Foto do Usuário" onClick={toggleMenu} />
+                                        <img className="cidadao" src={coordednadorImg} alt="Foto do Usuário" onClick={toggleMenu} />
                                     </div>
                                     <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
                                         <ul>

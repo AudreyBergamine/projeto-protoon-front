@@ -25,7 +25,8 @@ import PerfilCoordenador from '../components/coordenador/perfilCoord';
 import PerfilFuncionario from '../components/funcionario/perfilFuncionario';
 
 // Defina um conjunto de rotas privadas
-const privateRoutes = ['/outra-rota-privada'];
+const privateRoutes = ['/protocolos', '/protocolo/', '/retornadas', '/reclamar', '/consultar', '/perfil',
+'/cadastrar-funcionarios', '/funcionarios', '/funcionario/', '/perfil-secretario', '/perfil-funcionario', 'perfil-coordenador' ];
 // const privateRoutes = ['/reclamar', '/outra-rota-privada'];
 
 function AppRoutes({ isAuthenticated, role }) {
@@ -33,7 +34,8 @@ function AppRoutes({ isAuthenticated, role }) {
     const location = useLocation();
 
     useEffect(() => {
-        const isPrivateRoute = privateRoutes.includes(location.pathname);
+        const isPrivateRoute = privateRoutes.some(route => location.pathname.startsWith(route));
+
 
         // Redirecionamentos com base no estado de autenticação e nas rotas privadas
         if ((location.pathname === '/login' || location.pathname === '/cadastrar-municipe' ) && isAuthenticated) {

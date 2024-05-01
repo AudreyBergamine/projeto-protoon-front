@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { format } from 'date-fns';
+import { useNavigate } from "react-router-dom";
 
 function ReclamacoesRetornadasMunicipe() {
   const [protocolos, setProtocolos] = useState([]);
 
+  const navigate = useNavigate()
   useEffect(() => {
     async function fetchData() {
       try {
@@ -63,7 +65,7 @@ function ReclamacoesRetornadasMunicipe() {
         </tbody>
       </table>
       <div style={{ display: 'flex', flexDirection: 'column', width: 200, alignItems: 'center', margin: 'auto', justifyContent: 'space-between', height: '30vh', padding: 100 }}>
-        <button className="btn-log" onClick={() => (window.location.href = '/paginaInicial')}>Voltar</button>
+        <button className="btn-log" onClick={() => navigate("/")}>Voltar</button>
       </div>
     </>
   );
