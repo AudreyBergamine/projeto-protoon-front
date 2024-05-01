@@ -304,8 +304,15 @@ function CadastrarMunicipe() {
                   Alameda
                   Estrada
                   Rodovia
-                  Beco
+                  Chácara
                   Praça
+                  Viela
+                  Campo
+                  Beco
+                  Área
+                  Colônia
+                  Aeroporto
+          
             */}
             <div>
               <label>Tipo de Logradouro:</label><br></br>
