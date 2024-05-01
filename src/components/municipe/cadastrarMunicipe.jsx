@@ -311,7 +311,7 @@ function CadastrarMunicipe() {
               />
             </div>
             <div>
-              <label>Nome Endereço:</label><br></br>
+              <label>Endereço:</label><br></br>
               <input
                 type="text"
                 name="nome_endereco"
