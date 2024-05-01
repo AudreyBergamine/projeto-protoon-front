@@ -18,7 +18,7 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 40px; /* Diminuí a altura para 40 pixels */
+    height: 60px; /* Livia - aumentei, para o ícone ter mais espaço e o avatar ficar centralizado */
     position: fixed;
     top: 0;
     z-index: 1000;

@@ -91,7 +91,7 @@ function PerfilCoordenador() {
     <form >
       <div style={{ paddingBottom: '50px' }}>
 
-        <h3 style={{ marginTop: '-50px' }}>Dados Pessoais</h3>
+        <h3>Dados Pessoais</h3>
         <div className="register-form">
           <div className="input-container">
 

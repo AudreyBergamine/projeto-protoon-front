@@ -323,7 +323,7 @@ function CadastrarFuncionario() {
             <div>
   <label>Tipo funcionário:</label><br />
   <select
-  style={{ fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center" }}
+  style={{ fontSize: 11, padding: 10, borderRadius: 10, textAlign: "center" }}
   name="role"
   value={formData.role} // Alterado de selectedRole para formData.role
   onChange={handleRoleChange} // Mantido o mesmo handler
@@ -339,7 +339,7 @@ function CadastrarFuncionario() {
 <div>
   <label>Secretaria:</label><br />
   <select
-    style={{ fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center" }}
+    style={{ fontSize: 11, padding: 10, borderRadius: 10, textAlign: "center" }}
     value={idSecretariaSelecionada} // Aqui se precisa usar idSecretariaSelecionada em vez de selectedSecretaria
     onChange={handleSecretariaChange}
   >
