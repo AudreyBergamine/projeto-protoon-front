@@ -238,6 +238,9 @@ function CadastrarFuncionario() {
         }
       }
     
+      const sendToLogin = async()=>{
+        navigate("/login")
+    }
 
   //Por fim é retornado o html para ser exibido no front end, junto com as funções acima.
   return (
@@ -505,7 +508,7 @@ function CadastrarFuncionario() {
         {!removeLoading && <Loading />}
         {removeLoading && <div style={{ marginTop: -30 }}>
           <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
-          <button className="btn-log" onClick={() => (window.location.href = '/login')}>Voltar</button>
+          <button className="btn-log" onClick={sendToLogin}>Voltar</button>
         </div>}
       </div>
       <footer className="footer">
