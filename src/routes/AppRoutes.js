@@ -20,6 +20,9 @@ import ListarFuncionarios from '../components/secretario/listarFuncionarios';
 import ListarProtocolosBySecretaria from '../components/gerais/listarProtocolos';
 import AnalisarProtocolos from '../components/gerais/analisarProtocolos';
 import AnalisarFuncionarios from '../components/secretario/analisarFuncionarios';
+import PerfilSecretario from '../components/secretario/perfilSecretario';
+import PerfilCoordenador from '../components/coordenador/perfilCoord';
+import PerfilFuncionario from '../components/funcionario/perfilFuncionario';
 
 // Defina um conjunto de rotas privadas
 const privateRoutes = ['/outra-rota-privada'];
@@ -65,8 +68,15 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/cadastrar-funcionarios" element={<CadastrarFuncionario />} />
             <Route path="/funcionarios" element={<ListarFuncionarios />} />
             <Route path="/funcionario/:id" element={<AnalisarFuncionarios />} />
-
+            <Route path="/perfil-secretario" element={<PerfilSecretario />} />
             {/* Rota de redirecionamento padrão */}
+
+            {/* COORDENADOR */}
+            <Route path="/perfil-coordenador" element={<PerfilCoordenador />} />
+
+            {/* FUNCIONARIO */}
+            <Route path="/perfil-funcionario" element={<PerfilFuncionario />} />
+
             <Route path="*" element={<Navigate to="/" />} />
         </Routes>
     );

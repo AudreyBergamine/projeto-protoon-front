@@ -34,6 +34,10 @@ function ListarFuncionarios() {
     // Redirecionar para outra página com o ID do protocolo na URL usando navigate
     navigate(`/funcionario/${id}`);
   };
+  
+  const voltarIndex = async() =>{
+    navigate("/")
+  }
 
   //Função para formatar a data e a hora com base no Brasil/sp
   const formatarDataHora = (dataString) => {
@@ -97,6 +101,8 @@ function ListarFuncionarios() {
           ))}
         </tbody>
       </table>
+      <button className="btn-log" onClick={voltarIndex}>Voltar</button>
+
     </div >
     </>
   );

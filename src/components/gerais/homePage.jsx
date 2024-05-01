@@ -1,6 +1,7 @@
 import PaginaInicial from "../municipe/paginaInicalMunicipe";
 import PaginaInicialSecretario from "../secretario/paginaInicialSec";
 import PaginaInicialCoordenador from "../coordenador/paginaInicialCoord";
+import PaginaInicialFuncionario from "../funcionario/paginaInicialFuncionario";
 function Home({ isAuthenticated, role }) {
     //TODO: Criar página inicial de funcionário e implementar a lógica abaixo, igual fiz com a de municipe
 
@@ -22,6 +23,12 @@ function Home({ isAuthenticated, role }) {
     if (isAuthenticated && role === "COORDENADOR") {
         return (<div>
             <PaginaInicialCoordenador />
+        </div>)
+    }
+
+    if (isAuthenticated && role === "FUNCIONARIO") {
+        return (<div>
+            <PaginaInicialFuncionario />
         </div>)
     }
 

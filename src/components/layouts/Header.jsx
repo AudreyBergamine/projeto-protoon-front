@@ -66,6 +66,18 @@ function Header({ isAuthenticated, role }) {
         navigate("/protocolos"); // Redirecionar para protocolo
         toggleMenu(e)
     }
+    const sendToPerfilSecretario = async (e) => {
+        navigate("/perfil-secretario"); // Redirecionar para protocolo
+        toggleMenu(e)
+    }
+    const sendToPerfilCoordenador = async (e) => {
+        navigate("/perfil-coordenador"); // Redirecionar para protocolo
+        toggleMenu(e)
+    }
+    const sendToPerfilFuncionario = async (e) => {
+        navigate("/perfil-funcionario"); // Redirecionar para protocolo
+        toggleMenu(e)
+    }
     
     
 
@@ -125,8 +137,7 @@ function Header({ isAuthenticated, role }) {
                                     <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
                                         <ul>
                                             <div className="perfilMenu">
-                                                <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
-                                                <li><a onClick={sendToProtocolos} style={{ fontWeight: 'bold' }}>Protocólos</a></li>
+                                                <li><a onClick={sendToPerfilFuncionario} style={{ fontWeight: 'bold' }}>Perfil</a></li>
                                                 <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
                                             </div>
                                         </ul>
@@ -143,7 +154,7 @@ function Header({ isAuthenticated, role }) {
                                     <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
                                         <ul>
                                             <div className="perfilMenu">
-                                                <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
+                                                <li><a onClick={sendToPerfilSecretario} style={{ fontWeight: 'bold' }}>Perfil</a></li>
                                                 <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
                                             </div>
                                         </ul>
@@ -160,8 +171,7 @@ function Header({ isAuthenticated, role }) {
                                     <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
                                         <ul>
                                             <div className="perfilMenu">
-                                                <li><a href="" style={{ fontWeight: 'bold' }}>Perfil</a></li>
-                                                <li><a href="" style={{ fontWeight: 'bold' }}>Aprovar redirecionamentos</a></li>
+                                                <li><a onClick={sendToPerfilCoordenador} style={{ fontWeight: 'bold' }}>Perfil</a></li>
                                                 <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
                                             </div>
                                         </ul>

@@ -1,26 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import SetCelular from "../services/setCelular";
-import SetCEP from "../services/setCEP";
 import Loading from '../layouts/Loading';
 import Message from '../layouts/Message'
 import URL from '../services/url';
 
 //Função de cadastro de municipe
-function AnalisarFuncionarios() {
+function PerfilCoordenador() {
   const navigate = useNavigate();
-  const [celularValue, setCelularValue] = useState('');
   const [message, setMessage] = useState()
   const [type, setType] = useState()
-  const [endereco, setEndereco] = useState();
   const [alert, setAlert] = useState('');
-  const { id } = useParams();
   const [removeLoading, setRemoveLoading] = useState(true)
-  const roles = ["COORDENADOR", "FUNCIONARIO"]
-  const [secretarias, setSecretarias] = useState([]);
-  const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
 
   const axiosInstance = axios.create({
     baseURL: URL, // Adjust the base URL as needed
@@ -48,20 +39,11 @@ function AnalisarFuncionarios() {
     }
   });
 
-  const handleAlertChange = (newAlert) => {
-    setAlert(newAlert);    
-  };
-
-  useEffect(() => {
-    setEndereco('num_cep')
-  }, []);
-
 
   useEffect(() => {
     async function fetchFuncionario() {
       try {
-        if (localStorage.getItem('role') === 'SECRETARIO') {
-          const response1 = await axiosInstance.get(`/protoon/funcionarios/${id}`);
+          const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
           const data = response1.data;
           setFormData({
             endereco: {
@@ -84,173 +66,29 @@ function AnalisarFuncionarios() {
             celular: data.celular,
             numTelefoneFixo: data.numTelefoneFixo
           });
-          setCelularValue(data.celular);
-          setIdSecretariaSelecionada(data.secretaria.id_secretaria)
           const celularDoFuncionario = response1.data.celular; // Obtém o valor do celular do funcionário
-          setCelularValue(celularDoFuncionario); // Define o valor do celular no estado
-          const response2 = await axiosInstance.get('/protoon/secretaria');
-          setSecretarias(response2.data);
-        }
+        
       } catch (error) {
         console.error('Erro ao buscar o protocolo:', error);
       }
     }
     fetchFuncionario();
-  }, [id]);
+  }, []);
 
-  const handleSecretariaChange = (e) => {
-    const selectedSecretariaId = e.target.value;
-    setIdSecretariaSelecionada(selectedSecretariaId);
-  };
-
- 
-
-  const formatValue = (value) => {
-    // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem no sepaados da palavra
-    return value.toLowerCase().replace(/( de | da | do | das | dos )/g, (match) => match.toLowerCase())
-      .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase());
-  };
-
-
-  //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
-  const handleChange = (e) => {
-    //A lista abaixo contém o nome de todos os campos que há em endereço
-    const enderecoFields = ['tipo_endereco', 'num_cep', 'logradouro', 'nome_endereco', 'num_endereco', 'complemento', 'bairro', 'cidade', 'estado', 'pais'];
-
-    const { name, value } = e.target;
-
-    let formattedValue = formatValue(value);
-
-    if (enderecoFields.includes(name)) {//Caso em um formulário contenha algum nome da lista, então será alterado o valor do objeto endereco
-      setFormData({
-        ...formData,
-        endereco: {
-          ...formData.endereco,
-          [name]: formattedValue
-        }
-      });
-
-    } else {
-      setFormData({
-        ...formData,
-        [name]: formattedValue
-      });
-    }
-
-  }
-
-  const handleRoleChange = (e) => {
-    const { value } = e.target;
-    setFormData({
-      ...formData,
-      role: value
-    });
-  };
-
-  const handleEnderecoChange = (logradouro, bairro, cidade, estado, pais) => {
-    setFormData({
-      ...formData,
-      endereco: {
-        ...formData.endereco,
-        logradouro,
-        bairro,
-        cidade,
-        estado,
-        pais: "Brasil"
-      }
-    });
-  };
-
-  const handleChangePais = (pais) => {
-    if (/^[a-zA-Z\s]*$/.test(pais)) {
-      const formattedPais = formatValue(pais);
-      setFormData({
-        ...formData,
-        endereco: {
-          ...formData.endereco,
-          pais: formattedPais
-        }
-      });
-    }
-  };
-
+  
  
   const voltarAnterior = async() =>{
     navigate(-1)
   }
-  //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  
 
-    if (formData.celular.length < 15) {
-      setMessage('Número de celular inválido')
-      setType('error')
-      setTimeout(() => {
-        setMessage('')
-      }, 3000)
-      return
-    }
+  
 
-    if (formData.endereco.num_cep.length < 9) {
-      setMessage('CEP inválido')
-      setType('error')
-      setTimeout(() => {
-        setMessage('')
-      }, 3000)
-      return
-    }
-
-    try {
-      console.log(id)
-      console.log(idSecretariaSelecionada)
-      console.log(formData)
-      const response = await axiosInstance.put(`/protoon/funcionarios/${id}/${idSecretariaSelecionada}`,formData
-    );
-
-      setRemoveLoading(false)
-
-      setTimeout(() => {
-        console.log(response.data);
-        setRemoveLoading(true)
-        setMessage('Atualização dos Dados feita com Sucesso! Redirecionando...')
-        setType('success')
-        setTimeout(() => {
-          navigate("/");
-        }, 3000)
-      }, 3000)
-    } catch (error) {
-      setRemoveLoading(false)
-      setTimeout(() => {
-        setRemoveLoading(true)
-        console.error('Erro ao enviar os dados:', error);
-        setMessage('Falha ao tentar fazer o Cadastro!')
-        setType('error')
-      }, 3000)
-    }
-
-  };
-
-  const handleChangeCEP = (formattedCEP) => {
-    setFormData({
-      ...formData,
-      endereco: {
-        ...formData.endereco,
-        num_cep: formattedCEP
-      }
-    });
-  };
-
-  const handleChangeCelular = (formattedCelular) => {
-    setFormData({
-      ...formData,
-      celular: formattedCelular
-    });
-  };
-
+ 
   //Por fim é retornado o html para ser exibido no front end, junto com as funções acima.
   return (
 
-    <form onSubmit={handleSubmit}>
+    <form >
       <div style={{ paddingBottom: '50px' }}>
 
         <h3 style={{ marginTop: '-50px' }}>Dados Pessoais</h3>
@@ -277,7 +115,6 @@ function AnalisarFuncionarios() {
                 name="email"
                 placeholder="Ex.: claudio.silva@gmail.com"
                 value={formData.email}
-                onChange={handleChange}
                 readOnly
                 className='readonly-bg'
                 minLength={7}
@@ -292,7 +129,6 @@ function AnalisarFuncionarios() {
                 type="text"
                 name="cpf"
                 value={formData.num_CPF}
-                onChange={handleChange}
                 readOnly
                 className='readonly-bg'
                 minLength={6}
@@ -301,11 +137,16 @@ function AnalisarFuncionarios() {
 
             <div>
               <label>Celular:</label><br></br>
-              <SetCelular
-              celularValue={celularValue}
-                onCelularChange={handleChangeCelular}
-                
+              <input
+                type="text"
+                name="logradouro"
+                placeholder="Ex.: Rua das Flores"
+                value={formData.celular}
+                required
+                readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
               />
+                
             </div>
 
             <div>
@@ -314,7 +155,6 @@ function AnalisarFuncionarios() {
                 type="date"
                 name="data_nascimento"
                 value={formData.data_nascimento}
-                onChange={handleChange}
                 readOnly
                 className='readonly-bg'
               />
@@ -323,35 +163,8 @@ function AnalisarFuncionarios() {
           </div>
          
         </div>
-        <div>
-            <h3 style={{ marginLeft: -180, marginBottom: -30 }}>Secretaria</h3>
-            <select
-              style={{ fontSize: 18, marginRight: 10, padding: 10, borderRadius: 10, textAlign: "center" }}
-              value={idSecretariaSelecionada} // Aqui se precisa usar idSecretariaSelecionada em vez de selectedSecretaria
-              onChange={handleSecretariaChange}
-            >
-              <option value="">Selecione a secretaria que o funcionário trabalhará</option>
-              {secretarias.map(secretaria => (
-                <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
-                  {secretaria.nome_secretaria}
-                </option>
-              ))}
-            </select>
-          </div>
           
-          <div>
-        <h3>Selecionar o cargo do funcionário:</h3>
-        <select
-          style={{ fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center" }}
-          name="role"
-          value={formData.role} // Role pré-selecionada
-          onChange={handleRoleChange}
-        >
-          {roles.map(role => (
-            <option key={role} value={role}>{role}</option>
-          ))}
-        </select>
-      </div>
+          
         <hr></hr>
         <h3>Endereço</h3>
         <div className="register-form">
@@ -359,11 +172,16 @@ function AnalisarFuncionarios() {
 
             <div>
               <label>Número do cep:</label><br></br>
-              <SetCEP
-                onAlertChange={handleAlertChange}
-                onEnderecoChange={handleEnderecoChange}
-                onCEPChange={handleChangeCEP}
+              <input
+                type="text"
+                name="cep"
+                value={formData.endereco.num_cep}
+                required
+                readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
               />
+
+              
             </div>
 
             <div>
@@ -373,10 +191,10 @@ function AnalisarFuncionarios() {
                 name="logradouro"
                 placeholder="Ex.: Rua das Flores"
                 value={formData.endereco.logradouro}
-                onChange={handleChange}
                 required
                 readOnly={alert === '' ? true : false}
                 className={alert === '' ? 'readonly-bg' : ""}
+                
               />
             </div>
             <div>
@@ -386,9 +204,10 @@ function AnalisarFuncionarios() {
                 name="nome_endereco"
                 placeholder="Ex.: Casa"
                 value={formData.endereco.nome_endereco}
-                onChange={handleChange}
                 required
                 minLength={3}
+                readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
             <div>
@@ -398,9 +217,10 @@ function AnalisarFuncionarios() {
                 name="num_endereco"
                 placeholder="Ex.: 1025"
                 value={formData.endereco.num_endereco}
-                onChange={handleChange}
                 required
                 min={1}
+                readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
             <div>
@@ -410,7 +230,8 @@ function AnalisarFuncionarios() {
                 name="complemento"
                 placeholder="Bloco, apartamento, casa, fundos..."
                 value={formData.endereco.complemento}
-                onChange={handleChange}
+                readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
 
@@ -427,8 +248,9 @@ function AnalisarFuncionarios() {
                 name="tipo_endereco"
                 placeholder="Ex.: casa, apartamento"
                 value={formData.endereco.tipo_endereco}
-                onChange={handleChange}
                 minLength={3}
+                readOnly={alert === '' ? true : false}
+                className={alert === '' ? 'readonly-bg' : ""}
                 required
               />
             </div>
@@ -440,7 +262,6 @@ function AnalisarFuncionarios() {
                 name="bairro"
                 placeholder="Ex.: Bairro das Flores"
                 value={formData.endereco.bairro}
-                onChange={handleChange}
                 required
                 minLength={2}
                 readOnly={alert === '' ? true : false}
@@ -455,7 +276,6 @@ function AnalisarFuncionarios() {
                 name="cidade"
                 placeholder="Ex.: Ferraz de Vasconcelos"
                 value={formData.endereco.cidade}
-                onChange={handleChange}
                 required
                 minLength={2}
                 readOnly={alert === '' ? true : false}
@@ -470,7 +290,6 @@ function AnalisarFuncionarios() {
                 name="estado"
                 placeholder="Ex.: São Paulo"
                 value={formData.endereco.estado}
-                onChange={handleChange}
                 required
                 minLength={2}
                 readOnly={alert === '' ? true : false}
@@ -487,7 +306,6 @@ function AnalisarFuncionarios() {
                 value={formData.endereco.pais ? formData.endereco.pais : ""}
                 readOnly={alert === '' ? true : false}
                 className={alert === '' ? 'readonly-bg' : ""}
-                onChange={(e) => handleChangePais(e.target.value)}
                 required
                 minLength={3}
               />
@@ -497,7 +315,6 @@ function AnalisarFuncionarios() {
         {message && <Message type={type} msg={message} />}
         {!removeLoading && <Loading />}
         {removeLoading && <div style={{ marginTop: -30 }}>
-          <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Atualizar</button>
           <button className="btn-log" onClick={voltarAnterior}>Voltar</button>
         </div>}
       </div>
@@ -508,4 +325,4 @@ function AnalisarFuncionarios() {
   );
 }
 
-export default AnalisarFuncionarios;
+export default PerfilCoordenador;

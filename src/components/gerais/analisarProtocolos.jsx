@@ -1,10 +1,12 @@
 
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import URL from '../services/url';
 
+
 function AnalisarProtocolos() {
+  const navigate = useNavigate()
   const axiosInstance = axios.create({
     baseURL: URL,
     withCredentials: true,
@@ -33,6 +35,10 @@ function AnalisarProtocolos() {
     }
     fetchProtocolo();
   }, [id]);
+
+  const voltarAnterior = async() =>{
+    navigate(-1)
+  }
 
   const updateProtocolo = async () => {
     try {
@@ -257,7 +263,8 @@ function AnalisarProtocolos() {
         </table>
       </fieldset>      
       
-      <button className="btn-log" onClick={updateProtocolo}>Salvar Alterações</button>
+      <button onClick={updateProtocolo} className="btn-cad" style={{ marginRight: '100px' }}>Salvar Alterações</button>
+       <button className="btn-log" onClick={voltarAnterior}>Voltar</button>
     </div >
     </>
   );
