@@ -311,9 +311,9 @@ function CadastrarMunicipe() {
                 className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
-            <div>
+            {/* <div> */}
               {/* TODO: Ocultar esse trecho para o usuário e deixar nullable */}
-              <label>Nome Endereço:</label><br></br> 
+              {/* <label>Nome Endereço:</label><br></br> 
               <input
                 type="text"
                 name="nome_endereco"
@@ -322,8 +322,8 @@ function CadastrarMunicipe() {
                 onChange={handleChange}
                 required
                 minLength={3}
-              />
-            </div>
+              /> */}
+            {/* </div> */}
             <div>
               <label>Número:</label><br></br>
               <input
