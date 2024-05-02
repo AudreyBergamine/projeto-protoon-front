@@ -16,6 +16,8 @@ function AnalisarProtocolos() {
   const [secretarias, setSecretarias] = useState([]);
   const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
   const [successMessage, setSuccessMessage] = useState(""); // Estado para armazenar a mensagem de sucesso
+  const [redirected, setRedirected] = useState(false);
+
   const { id } = useParams();
   const role = localStorage.getItem('role')
 
@@ -49,13 +51,14 @@ function AnalisarProtocolos() {
         status: statusSelecionado
       });
 
-      if (response.status.valueOf() === 200) {
+      // if (response.status.valueOf() === 200) {
         setSuccessMessage("Protocolo atualizado com sucesso.");
-
+        // Após o redirecionamento bem-sucedido
+        setRedirected(true);
         // Limpa a mensagem de sucesso após alguns segundos
         setTimeout(() => {
         }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
-      }
+      // }
     } catch (error) {
       console.error('Erro ao atualizar o protocolo:', error);
     }
@@ -125,7 +128,12 @@ function AnalisarProtocolos() {
   return (
     <>
       <div style={{ padding: 40, marginTop: -100 }}>
-        {successMessage && <div className="success-message">{successMessage}</div>}
+        {/* {successMessage && <div className="success-message">{successMessage}</div>} */}
+        
+        {/* // Renderização condicional da mensagem de sucesso */}
+      {redirected && (
+        <div className="success-message">{successMessage}</div>
+      )}
         <h1>Detalhes do Protocolo</h1>
 
         {/* Select para a secretaria */}
