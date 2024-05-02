@@ -51,9 +51,9 @@ function AnalisarProtocolos() {
 
       if (response.status.valueOf() === 200) {
         setSuccessMessage("Protocolo atualizado com sucesso.");
+
         // Limpa a mensagem de sucesso após alguns segundos
         setTimeout(() => {
-         
         }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
       }
     } catch (error) {
@@ -75,13 +75,17 @@ function AnalisarProtocolos() {
           secretaria: secretariaData
         });
 
-        //if (response2) {
+        if (response2.status.valueOf() === 200) {
           setSuccessMessage("Protocolo redirecionado com sucesso.");
+          
+          console.log("Entrou no if")
+          window.MessageEvent(successMessage)
           // Limpa a mensagem de sucesso após alguns segundos
           setTimeout(() => {
+            // setSuccessMessage("");
             window.location.href = `/protocolos`
           }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
-      //  }
+        }
       }
     } catch (error) {
       console.error('Erro ao atualizar o protocolo:', error);
