@@ -49,7 +49,7 @@ function AnalisarProtocolos() {
           window.location.href = `/protocolos`
         }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
       }
-  }
+  
 
   const updateProtocolo = async () => {
     try {
@@ -281,4 +281,5 @@ function AnalisarProtocolos() {
       </div >
     </>
   );
+        }
 export default AnalisarProtocolos
