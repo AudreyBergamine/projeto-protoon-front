@@ -73,10 +73,9 @@ function AnalisarProtocolos() {
             setTimeout(() => {
               navigate('/protocolo/'+id);
               
-              // Scroll para o topo da página após o redirecionamento
-              window.scrollTo({ top: 0, behavior: 'smooth' });
             }, 2000)
           }, 2000)
+          window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Erro ao atualizar o protocolo:', error);
     }
