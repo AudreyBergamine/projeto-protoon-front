@@ -54,16 +54,16 @@ function RecuperarSenhaForm() {
       });
 
       setRemoveLoading(false)
-      if (response) {
-        setTimeout(() => {
-          setRemoveLoading(true)
-          navigate('/atualizar-senha');
-        }, 3000)
-      } else {
+      if(response.data === "Email não encontrado!") {
         setTimeout(() => {
           setRemoveLoading(true)
           setMessage('Email não encontrado.')
           setType('error')
+        }, 3000)
+      } else {
+        setTimeout(() => {
+          setRemoveLoading(true)
+          navigate('/atualizar-senha');
         }, 3000)
       }
     } catch (error) {
