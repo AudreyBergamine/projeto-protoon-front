@@ -35,7 +35,7 @@ function CadastrarMunicipe() {
       tipo_endereco: "",
       num_cep: "",
       logradouro: "",
-      nome_endereco: "",
+      nome_endereco: null,
       num_endereco: "",
       complemento: "",
       bairro: "",
