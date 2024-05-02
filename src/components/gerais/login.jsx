@@ -65,7 +65,8 @@ const LoginForm = () => {
         email: email,
         senha: senha
       });
-
+      const token = response.data.access_token;
+      document.cookie = `token=${token}; path=/; Secure; SameSite=None`;
       setRemoveLoading(false)
  
       
