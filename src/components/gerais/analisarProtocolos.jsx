@@ -41,23 +41,32 @@ function AnalisarProtocolos() {
   const voltarAnterior = async () => {
     navigate(-1)
   }
+  const updateStatusSecretaria = async () => {
+    console.log("Deu certo")
+    setSuccessMessage("Protocolo redirecionado com sucesso.");
+   // Limpa a mensagem de sucesso após alguns segundos
+        setTimeout(() => {
+          window.location.href = `/protocolos`
+        }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
+      }
+  }
 
   const updateProtocolo = async () => {
     try {
       console.log("Novo status selecionado:", statusSelecionado); // Adicionando console.log para depurar
       console.log(idSecretariaSelecionada)
+      
+      setSuccessMessage("Protocolo atualizado com sucesso.");
       const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.numero_protocolo}`, {
         ...protocolo,
         status: statusSelecionado
       });
-
+      await updateStatusSecretaria()
       // if (response.status.valueOf() === 200) {
-        setSuccessMessage("Protocolo atualizado com sucesso.");
-        // Após o redirecionamento bem-sucedido
-        setRedirected(true);
+
         // Limpa a mensagem de sucesso após alguns segundos
-        setTimeout(() => {
-        }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
+        // setTimeout(() => {
+        // }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
       // }
     } catch (error) {
       console.error('Erro ao atualizar o protocolo:', error);
@@ -79,7 +88,7 @@ function AnalisarProtocolos() {
         });
 
         // if (response2.status.valueOf() === 200) {
-        setSuccessMessage("Protocolo redirecionado com sucesso.");
+        
 
         console.log("Entrou no if")
         window.MessageEvent(successMessage)
@@ -128,12 +137,7 @@ function AnalisarProtocolos() {
   return (
     <>
       <div style={{ padding: 40, marginTop: -100 }}>
-        {/* {successMessage && <div className="success-message">{successMessage}</div>} */}
-        
-        {/* // Renderização condicional da mensagem de sucesso */}
-      {redirected && (
-        <div className="success-message">{successMessage}</div>
-      )}
+        {successMessage && <div className="success-message">{successMessage}</div>}
         <h1>Detalhes do Protocolo</h1>
 
         {/* Select para a secretaria */}
@@ -277,5 +281,4 @@ function AnalisarProtocolos() {
       </div >
     </>
   );
-}
 export default AnalisarProtocolos
