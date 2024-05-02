@@ -120,8 +120,6 @@ function Header({ isAuthenticated, role }) {
                                     <ul>
                                         <div className="perfilMenu">
                                             <li><a onClick={sendToPerfilMunicipe} style={{ fontWeight: 'bold' }}>Perfil</a></li>
-                                            <li><a onClick={sendToConsultar} style={{ fontWeight: 'bold' }}>Reclamações</a></li>
-                                            <li><a href="" style={{ fontWeight: 'bold' }}>Suporte</a></li>
                                             <li><a onClick={handleLogout} style={{ fontWeight: 'bold' }}>Sair</a></li>
                                         </div>
                                     </ul>

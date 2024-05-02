@@ -11,6 +11,7 @@ function Consultar() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate()
+  const id = localStorage.getItem('id')
 
   const sendToIndex = async ()=>{
     navigate("/")
@@ -26,7 +27,7 @@ function Consultar() {
     setError(null);
 
     try {
-      const response = await axiosInstance.get(`/protoon/protocolo/meus-protocolos`);
+      const response = await axiosInstance.get(`/protoon/protocolo/meus-protocolos/${id}`);
       setProtocolos(response.data);
       setMostrarTabela(true);
     } catch (error) {
