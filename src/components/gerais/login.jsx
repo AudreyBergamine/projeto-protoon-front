@@ -18,7 +18,7 @@ const LoginForm = () => {
   const [senhaNull, setSenhaNull] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const axiosInstance = axios.create({
-    baseURL: URL + '/protoon/auth/', // Adjust the base URL as needed
+    baseURL: URL, // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
 
@@ -61,7 +61,7 @@ const LoginForm = () => {
     }
 
     try {
-      const response = await axiosInstance.post('authenticate', {
+      const response = await axiosInstance.post('/protoon/auth/authenticate', {
         email: email,
         senha: senha
       });
