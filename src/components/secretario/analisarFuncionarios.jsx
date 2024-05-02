@@ -38,7 +38,7 @@ function AnalisarFuncionarios() {
       tipo_endereco: "",
       num_cep: "",
       logradouro: "",
-      nome_endereco: "",
+      nome_endereco: null,
       num_endereco: "",
       complemento: "",
       bairro: "",
@@ -357,7 +357,7 @@ function AnalisarFuncionarios() {
           <div className="input-container">
 
             <div>
-              <label>Número do cep:</label><br></br>
+              <label>Número do CEP:</label><br></br>
               <SetCEP
                 onAlertChange={handleAlertChange}
                 onEnderecoChange={handleEnderecoChange}
@@ -366,7 +366,7 @@ function AnalisarFuncionarios() {
             </div>
 
             <div>
-              <label>Logradouro:</label><br></br>
+              <label>Endereço:</label><br></br>
               <input
                 type="text"
                 name="logradouro"
@@ -378,7 +378,7 @@ function AnalisarFuncionarios() {
                 className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
-            <div>
+            {/* <div>
               <label>Nome Endereço:</label><br></br>
               <input
                 type="text"
@@ -389,9 +389,9 @@ function AnalisarFuncionarios() {
                 required
                 minLength={3}
               />
-            </div>
+            </div> */}
             <div>
-              <label>Número do endereço:</label><br></br>
+              <label>Número:</label><br></br>
               <input
                 type="number"
                 name="num_endereco"
@@ -420,7 +420,7 @@ function AnalisarFuncionarios() {
           <div className="input-container">
 
             <div>
-              <label>Tipo de endereço:</label><br></br>
+              <label>Tipo de Endereço:</label><br></br>
               <input
                 type="text"
                 name="tipo_endereco"

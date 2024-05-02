@@ -29,7 +29,7 @@ function PerfilCoordenador() {
       tipo_endereco: "",
       num_cep: "",
       logradouro: "",
-      nome_endereco: "",
+      nome_endereco: null,
       num_endereco: "",
       complemento: "",
       bairro: "",
@@ -171,7 +171,7 @@ function PerfilCoordenador() {
           <div className="input-container">
 
             <div>
-              <label>Número do cep:</label><br></br>
+              <label>Número do CEP:</label><br></br>
               <input
                 type="text"
                 name="cep"
@@ -185,7 +185,7 @@ function PerfilCoordenador() {
             </div>
 
             <div>
-              <label>Logradouro:</label><br></br>
+              <label>Endereço:</label><br></br>
               <input
                 type="text"
                 name="logradouro"
@@ -197,7 +197,7 @@ function PerfilCoordenador() {
                 
               />
             </div>
-            <div>
+            {/* <div>
               <label>Nome Endereço:</label><br></br>
               <input
                 type="text"
@@ -209,7 +209,7 @@ function PerfilCoordenador() {
                 readOnly={alert === '' ? true : false}
                 className={alert === '' ? 'readonly-bg' : ""}
               />
-            </div>
+            </div> */}
             <div>
               <label>Número do endereço:</label><br></br>
               <input
