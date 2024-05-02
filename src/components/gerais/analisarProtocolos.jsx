@@ -46,7 +46,7 @@ function AnalisarProtocolos() {
     setSuccessMessage("Protocolo redirecionado com sucesso.");
    // Limpa a mensagem de sucesso após alguns segundos
         setTimeout(() => {
-          navigate("/protocolos")
+          navigate(`/protocolo/${id}`)
         }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
       }
   
@@ -78,7 +78,7 @@ function AnalisarProtocolos() {
       const response1 = await axiosInstance.get(`/protoon/secretaria/${idSecretariaSelecionada}`)
       console.log(response1.data)
       const secretariaData = response1.data;
-
+      
       // Exibe um alerta de confirmação antes de redirecionar o protocolo
       const confirmRedirect = window.confirm("Tem certeza que deseja redirecionar o protocolo?");
       if (confirmRedirect) {
@@ -86,14 +86,12 @@ function AnalisarProtocolos() {
           ...protocolo,
           secretaria: secretariaData
         });
-
-        // if (response2.status.valueOf() === 200) {
         
-
-        console.log("Entrou no if")
-        window.MessageEvent(successMessage)
-        // Limpa a mensagem de sucesso após alguns segundos
-        window.location.href = `/protocolos`
+      console.log("Entrou no if")
+      window.MessageEvent(successMessage)
+      window.location.href = `/protocolo/${id}`
+      
+        // if (response2.status.valueOf() === 200) {
         // setTimeout(() => {
         //   // setSuccessMessage("");
         // }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
