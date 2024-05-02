@@ -51,10 +51,9 @@ function AnalisarProtocolos() {
 
       if (response.status.valueOf() === 200) {
         setSuccessMessage("Protocolo atualizado com sucesso.");
-
         // Limpa a mensagem de sucesso após alguns segundos
         setTimeout(() => {
-          setSuccessMessage("");
+         
         }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
       }
     } catch (error) {
@@ -76,12 +75,10 @@ function AnalisarProtocolos() {
           secretaria: secretariaData
         });
 
-        if (response2.status.valueOf() === 200) {
+        if (response2) {
           setSuccessMessage("Protocolo redirecionado com sucesso.");
-
           // Limpa a mensagem de sucesso após alguns segundos
           setTimeout(() => {
-            setSuccessMessage("");
             window.location.href = `/protocolos`
           }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
         }
