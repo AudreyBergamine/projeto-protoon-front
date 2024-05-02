@@ -28,7 +28,7 @@ function Header({ isAuthenticated, role }) {
 
     const handleLogout = async () => {
         try {
-            await axiosInstance.post('logout');
+            await axiosInstance.post(`${URL}/protoon/logout`);
             localStorage.clear();
             window.location.href = '/'; // Redirecionar para a página inicial após o logout
         } catch (error) {
