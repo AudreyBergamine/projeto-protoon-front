@@ -38,7 +38,7 @@ function ListarProtocolosBySecretaria() {
   }, []);
 
   const handleClick = (id) => {
-    // Redirecionar para outra página com o ID do protocolo na URL usando navigater
+    //Redirecionar para outra página com o ID do protocolo na URL usando navigater
     navigate(`/protocolo/${id}`);
   };
   const voltarIndex = async() =>{
