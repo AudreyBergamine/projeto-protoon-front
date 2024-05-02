@@ -86,7 +86,7 @@ function Reclamar() {
 
     try {
       const currentDate = new Date(); // Obtém a data e hora atuais
-      const response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos/${formData.idSecretaria}/${id}`, {
+      const response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos/${id}/${formData.idSecretaria}`, {
         assunto: formData.assunto,
         descricao: formData.descricao,
         status: formData.status,
