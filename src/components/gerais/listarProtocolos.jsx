@@ -22,6 +22,7 @@ function ListarProtocolosBySecretaria() {
     async function fetchProtocolos() {
 
       try {
+        console.log(id)
         const response1 = await axiosInstance.get(`/protoon/funcionarios/${id}`);
         console.log(response1.data)
         console.log(response1.data.secretaria)
