@@ -12,6 +12,8 @@ function PerfilCoordenador() {
   const [type, setType] = useState()
   const [alert, setAlert] = useState('');
   const [removeLoading, setRemoveLoading] = useState(true)
+  const id = localStorage.getItem("id")
+  
 
   const axiosInstance = axios.create({
     baseURL: URL, // Adjust the base URL as needed
@@ -43,7 +45,7 @@ function PerfilCoordenador() {
   useEffect(() => {
     async function fetchFuncionario() {
       try {
-          const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
+          const response1 = await axiosInstance.get(`/protoon/funcionarios/${id}`);
           const data = response1.data;
           setFormData({
             endereco: {

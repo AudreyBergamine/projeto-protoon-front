@@ -70,6 +70,8 @@ const LoginForm = () => {
  
       
       localStorage.setItem("role", response.data.role);
+      localStorage.setItem("id", response.data.id);
+      
       setTimeout(() => {
         console.log('Authentication successful:', response.data);
         // If authentication is successful, you can handle the response as needed
@@ -104,8 +106,8 @@ const LoginForm = () => {
     <div>
       <h1>Login</h1>
       <div>
-        {senhaFocused && email.trim() === '' ? <span style={{ color: 'red' }}>Preencha o email<br></br></span> :
-          senhaFocused && !isValidEmail(email) && <span style={{ color: 'red' }}>Email inválido<br></br></span>}
+        {senhaFocused && email.trim() === '' ? <span style={{ color: 'red' }}>Preencha o Email<br></br></span> :
+          senhaFocused && !isValidEmail(email) && <span style={{ color: 'red' }}>Email Inválido<br></br></span>}
 
         <input
           type="email"

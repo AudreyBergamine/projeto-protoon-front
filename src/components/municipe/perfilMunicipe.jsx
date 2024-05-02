@@ -18,6 +18,8 @@ function PerfilMunicipe() {
   const [celularValue, setCelularValue] = useState('');
   const [alert, setAlert] = useState('');
   const [removeLoading, setRemoveLoading] = useState(true)
+  const id = localStorage.getItem("id")
+ 
 
   const axiosInstance = axios.create({
     baseURL: URL, // Adjust the base URL as needed
@@ -53,11 +55,14 @@ function PerfilMunicipe() {
     setEndereco('num_cep')
   }, []);
 
+
+
+
   useEffect(() => {
     const fetchData = async () => {
       console.log("Teste");
       try {
-        const response = await axiosInstance.get(`/protoon/municipe/municipes/bytoken`);
+        const response = await axiosInstance.get(`/protoon/municipe/municipes/${id}`);
         const data = response.data;
         console.log(data)
         setFormData(data);
@@ -156,7 +161,7 @@ function PerfilMunicipe() {
     }
 
     try {
-      const response = await axiosInstance.put(`/protoon/municipe/municipes/bytoken`, formData);
+      const response = await axiosInstance.put(`/protoon/municipe/municipes/${id}`, formData);
 
       setRemoveLoading(false)
 

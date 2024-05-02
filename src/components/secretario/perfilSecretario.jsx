@@ -16,6 +16,8 @@ function PerfilSecretario() {
   const [endereco, setEndereco] = useState();
   const [alert, setAlert] = useState('');
   const [removeLoading, setRemoveLoading] = useState(true)
+  const id = localStorage.getItem("id")
+
 
   const axiosInstance = axios.create({
     baseURL: URL, // Adjust the base URL as needed
@@ -56,7 +58,7 @@ function PerfilSecretario() {
     async function fetchFuncionario() {
       try {
         if (localStorage.getItem('role') === 'SECRETARIO') {
-          const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
+          const response1 = await axiosInstance.get(`/protoon/funcionarios/${id}`);
           const data = response1.data;
           setFormData({
             endereco: {
@@ -185,7 +187,7 @@ function PerfilSecretario() {
 
     try {
       console.log(formData)
-      const response = await axiosInstance.put(`/protoon/funcionarios/bytoken`,formData
+      const response = await axiosInstance.put(`/protoon/funcionarios/${id}`,formData
     );
 
       setRemoveLoading(false)
