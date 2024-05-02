@@ -46,7 +46,7 @@ function PerfilFuncionario() {
   useEffect(() => {
     async function fetchFuncionario() {
       try {
-          const response1 = await axiosInstance.get(`/protoon/funcionarios/${id}`);
+          const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
           const data = response1.data;
           setFormData({
             endereco: {

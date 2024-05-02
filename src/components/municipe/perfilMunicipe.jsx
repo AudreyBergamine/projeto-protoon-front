@@ -161,7 +161,7 @@ function PerfilMunicipe() {
     }
 
     try {
-      const response = await axiosInstance.put(`/protoon/municipe/municipes/${id}`, formData);
+      const response = await axiosInstance.put(`/protoon/municipe/municipes/bytoken`, formData);
 
       setRemoveLoading(false)
 

@@ -29,6 +29,8 @@ function Header({ isAuthenticated, role }) {
     const handleLogout = async () => {
         try {
             await axiosInstance.post(`${URL}/protoon/logout`);
+            // Remover o cookie definindo um novo cookie com o mesmo nome e um tempo de expiração passado
+            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             localStorage.clear();
             window.location.href = '/'; // Redirecionar para a página inicial após o logout
         } catch (error) {
