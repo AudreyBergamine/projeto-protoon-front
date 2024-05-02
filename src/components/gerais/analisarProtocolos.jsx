@@ -281,5 +281,6 @@ function AnalisarProtocolos() {
       </div >
     </>
   );
-        }
+}
+
 export default AnalisarProtocolos
