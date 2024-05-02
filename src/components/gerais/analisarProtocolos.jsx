@@ -97,7 +97,6 @@ function AnalisarProtocolos() {
         });
        
       console.log("Entrou no if")
-      window.MessageEvent(successMessage)
       window.location.href = `/protocolo/${id}`
      
         // if (response2.status.valueOf() === 200) {
