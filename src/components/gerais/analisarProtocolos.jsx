@@ -72,12 +72,16 @@ function AnalisarProtocolos() {
             setType('success')
             setTimeout(() => {
               navigate('/protocolo/'+id);
+              
+              // Scroll para o topo da página após o redirecionamento
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }, 2000)
           }, 2000)
     } catch (error) {
       console.error('Erro ao atualizar o protocolo:', error);
     }
   }
+
  
   const redirectProtocolo = async () => {
     try {
