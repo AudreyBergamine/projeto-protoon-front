@@ -62,6 +62,7 @@ function PerfilFuncionario() {
               Authorization: `Bearer ${token}` // enviar o token no cabeçalho Authorization
             }
           });
+          console.log(response1.data)
           const data = response1.data;
           setFormData({
             endereco: {
