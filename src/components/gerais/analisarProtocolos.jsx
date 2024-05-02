@@ -72,8 +72,8 @@ function AnalisarProtocolos() {
             setMessage('Protocolo atualizado com Sucesso!')
             setType('success')
             setTimeout(() => {
-              navigate('/listarProtocolos');
-            }, 2000)
+              navigate('/protocolo/'+id);
+            }, 3000)
           }, 2000)
     } catch (error) {
       console.error('Erro ao atualizar o protocolo:', error);
