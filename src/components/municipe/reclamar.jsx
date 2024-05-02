@@ -10,6 +10,7 @@ function Reclamar() {
   const [message, setMessage] = useState();
   const [type, setType] = useState();
   const [removeLoading, setRemoveLoading] = useState(true);
+  const id = localStorage.getItem("id")
   const [formData, setFormData] = useState({
     assunto: "",
     descricao: "",
@@ -85,7 +86,7 @@ function Reclamar() {
 
     try {
       const currentDate = new Date(); // Obtém a data e hora atuais
-      const response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos/${formData.idSecretaria}`, {
+      const response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos/${formData.idSecretaria}/${id}`, {
         assunto: formData.assunto,
         descricao: formData.descricao,
         status: formData.status,
