@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
-
+import URL from "../services/url";
 function ReclamacoesRetornadasMunicipe() {
   const [protocolos, setProtocolos] = useState([]);
 
@@ -11,7 +11,7 @@ function ReclamacoesRetornadasMunicipe() {
     async function fetchData() {
       try {
         const id = localStorage.getItem('idMunicipe');
-        const response = await axios.get(`http://localhost:8080/protoon/municipe/municipes/protocolos/${id}`);
+        const response = await axios.get(`${URL}/protoon/municipe/municipes/protocolos/${id}`);
         const protocolosDoMunicipe = response.data;
         const protocolosFiltrados = protocolosDoMunicipe.filter(protocolo => protocolo.status === "CIENCIA");
         setProtocolos(protocolosFiltrados);
