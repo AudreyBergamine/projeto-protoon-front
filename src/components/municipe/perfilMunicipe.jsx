@@ -62,7 +62,7 @@ function PerfilMunicipe() {
     const fetchData = async () => {
       console.log("Teste");
       try {
-        const response = await axiosInstance.get(`/protoon/municipe/municipes/bytoken`);
+        const response = await axiosInstance.get(`/protoon/municipe/municipes/${id}`);
         const data = response.data;
         console.log(data)
         setFormData(data);
