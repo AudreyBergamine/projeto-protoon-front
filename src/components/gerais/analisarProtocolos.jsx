@@ -71,7 +71,7 @@ function AnalisarProtocolos() {
             setMessage('Protocolo atualizado com Sucesso!')
             setType('success')
             setTimeout(() => {
-              navigate('/listarProtocolos');
+              navigate(`/protocolo/${id}`);
             }, 2000)
           }, 2000)
     } catch (error) {
