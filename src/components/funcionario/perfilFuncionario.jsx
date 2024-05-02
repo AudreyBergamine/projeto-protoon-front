@@ -46,7 +46,12 @@ function PerfilFuncionario() {
   useEffect(() => {
     async function fetchFuncionario() {
       try {
-          const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
+        const token = localStorage.getItem('token'); 
+          const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`, {
+            headers: {
+              Authorization: `Bearer ${token}` // enviar o token no cabeçalho Authorization
+            }
+          });
           const data = response1.data;
           setFormData({
             endereco: {
