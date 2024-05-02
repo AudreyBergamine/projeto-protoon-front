@@ -49,7 +49,7 @@ function AnalisarProtocolos() {
     setSuccessMessage("Protocolo redirecionado com sucesso.");
    // Limpa a mensagem de sucesso após alguns segundos
         setTimeout(() => {
-          navigate(`/protocolo/${id}`)
+          navigate('/protocolo/'+id);
         }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
       }  
  
