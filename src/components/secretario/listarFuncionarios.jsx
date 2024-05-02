@@ -86,7 +86,7 @@ function ListarFuncionarios() {
                 <td style={{ textAlign: 'center', minWidth: 300 }}>{funcionario.nome}</td>
                 <td style={{ textAlign: 'center', minWidth: 200 }}>{funcionario.email}</td>
                 <td style={{ textAlign: 'center', minWidth: 200 }}>{funcionario.role}</td>
-                <td style={{ textAlign: 'center', minWidth: 200 }}>{funcionario.numCPF}</td>
+                <td style={{ textAlign: 'center', minWidth: 200 }}>{funcionario.num_CPF}</td>
                 <td style={{ textAlign: 'center', minWidth: 200 }}>{formatarDataHora(funcionario.data_nascimento)}</td>
                 <td style={{ textAlign: 'center', minWidth: 200 }}>{funcionario.celular}</td>
                 <td style={{ textAlign: 'center', minWidth: 200 }}>{funcionario.numTelefoneFixo}</td>
