@@ -75,13 +75,13 @@ function AnalisarProtocolos() {
           secretaria: secretariaData
         });
 
-        if (response2) {
+        //if (response2) {
           setSuccessMessage("Protocolo redirecionado com sucesso.");
           // Limpa a mensagem de sucesso após alguns segundos
           setTimeout(() => {
             window.location.href = `/protocolos`
           }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
-        }
+      //  }
       }
     } catch (error) {
       console.error('Erro ao atualizar o protocolo:', error);
