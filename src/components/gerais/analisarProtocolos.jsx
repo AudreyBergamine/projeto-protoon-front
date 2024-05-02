@@ -46,7 +46,7 @@ function AnalisarProtocolos() {
     setSuccessMessage("Protocolo redirecionado com sucesso.");
    // Limpa a mensagem de sucesso após alguns segundos
         setTimeout(() => {
-          window.location.href = `/protocolos`
+          navigate("/protocolos")
         }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
       }
   
