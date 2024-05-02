@@ -41,12 +41,22 @@ function PerfilFuncionario() {
     }
   });
 
-  
+  const getCookieValue = (name) => {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName.trim() === name) {
+        return cookieValue;
+      }
+    }
+    return null;
+  };
 
   useEffect(() => {
     async function fetchFuncionario() {
       try {
-        const token = localStorage.getItem('token'); 
+        const token = getCookieValue("token")
+        console.log(token)
           const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`, {
             headers: {
               Authorization: `Bearer ${token}` // enviar o token no cabeçalho Authorization
