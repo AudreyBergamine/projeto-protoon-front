@@ -75,7 +75,7 @@ function AnalisarProtocolos() {
           secretaria: secretariaData
         });
 
-        if (response2.status.valueOf() === 200) {
+        // if (response2.status.valueOf() === 200) {
           setSuccessMessage("Protocolo redirecionado com sucesso.");
           
           console.log("Entrou no if")
@@ -85,7 +85,7 @@ function AnalisarProtocolos() {
             // setSuccessMessage("");
             window.location.href = `/protocolos`
           }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
-        }
+        // }
       }
     } catch (error) {
       console.error('Erro ao atualizar o protocolo:', error);
