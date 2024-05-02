@@ -1,11 +1,10 @@
-
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Loading from '../layouts/Loading';
 import Message from '../layouts/Message'
 import URL from '../services/url';
-
+ 
 function AnalisarProtocolos() {
   const navigate = useNavigate()
   const axiosInstance = axios.create({
@@ -21,10 +20,10 @@ function AnalisarProtocolos() {
   const [removeLoading, setRemoveLoading] = useState(true)
   const [successMessage, setSuccessMessage] = useState(""); // Estado para armazenar a mensagem de sucesso
   const [redirected, setRedirected] = useState(false);
-
+ 
   const { id } = useParams();
   const role = localStorage.getItem('role')
-
+ 
   useEffect(() => {
     async function fetchProtocolo() {
       try {
@@ -41,7 +40,7 @@ function AnalisarProtocolos() {
     }
     fetchProtocolo();
   }, [id]);
-
+ 
   const voltarAnterior = async () => {
     navigate(-1)
   }
@@ -53,12 +52,12 @@ function AnalisarProtocolos() {
           navigate(`/protocolo/${id}`)
         }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
       }  
-
+ 
   const updateProtocolo = async () => {
     try {
       console.log("Novo status selecionado:", statusSelecionado); // Adicionando console.log para depurar
       console.log(idSecretariaSelecionada)
-      
+     
       setSuccessMessage("Protocolo atualizado com sucesso.");
       const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.numero_protocolo}`, {
         ...protocolo,
@@ -79,13 +78,13 @@ function AnalisarProtocolos() {
       console.error('Erro ao atualizar o protocolo:', error);
     }
   }
-
+ 
   const redirectProtocolo = async () => {
     try {
       const response1 = await axiosInstance.get(`/protoon/secretaria/${idSecretariaSelecionada}`)
       console.log(response1.data)
       const secretariaData = response1.data;
-      
+     
       // Exibe um alerta de confirmação antes de redirecionar o protocolo
       const confirmRedirect = window.confirm("Tem certeza que deseja redirecionar o protocolo?");
       if (confirmRedirect) {
@@ -93,11 +92,11 @@ function AnalisarProtocolos() {
           ...protocolo,
           secretaria: secretariaData
         });
-        
+       
       console.log("Entrou no if")
       window.MessageEvent(successMessage)
       window.location.href = `/protocolo/${id}`
-      
+     
         // if (response2.status.valueOf() === 200) {
         // setTimeout(() => {
         //   // setSuccessMessage("");
@@ -108,7 +107,7 @@ function AnalisarProtocolos() {
       console.error('Erro ao atualizar o protocolo:', error);
     }
   }
-
+ 
   const formatarDataHora = (dataString) => {
     const data = new Date(dataString);
     const options = {
@@ -125,7 +124,7 @@ function AnalisarProtocolos() {
     const selectedSecretariaId = e.target.value;
     setIdSecretariaSelecionada(selectedSecretariaId);
   };
-
+ 
   const handleStatusChange = (e) => {
     const novoStatus = e.target.value;
     setStatusSelecionado(novoStatus); // Atualiza o estado com o novo status selecionado
@@ -134,17 +133,17 @@ function AnalisarProtocolos() {
       status: novoStatus // Atualiza o status do protocolo com o novo status selecionado
     }));
   };
-
+ 
   if (!protocolo) {
     return <Loading />;
   }
-
+ 
   return (
     <>
       <div style={{ padding: 40, marginTop: -100 }}>
         {successMessage && <div className="success-message">{successMessage}</div>}
         <h1>Detalhes do Protocolo</h1>
-
+ 
         {/* Select para a secretaria */}
         {role === "COORDENADOR" && (
           <div>
@@ -204,7 +203,7 @@ function AnalisarProtocolos() {
             </tbody>
           </table>
         </fieldset>
-
+ 
         {protocolo.secretaria ? (
           <>
             <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
@@ -280,7 +279,7 @@ function AnalisarProtocolos() {
             </tbody>
           </table>
         </fieldset>
-
+ 
         {message && <Message type={type} msg={message} />}
         {!removeLoading && <Loading />}
         {removeLoading &&(<><button onClick={updateProtocolo} className="btn-cad" style={{ marginRight: '100px' }}>Salvar Alterações</button>
@@ -289,5 +288,5 @@ function AnalisarProtocolos() {
     </>
   );
 }
-
+ 
 export default AnalisarProtocolos
