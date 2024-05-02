@@ -12,12 +12,12 @@ import URL from '../services/url';
 //Função de cadastro de municipe
 function CadastrarMunicipe() {
   const [message, setMessage] = useState()
+  const [type, setType] = useState()
+  const [removeLoading, setRemoveLoading] = useState(true)
   const [cpfValid, setCpfValid] = useState(false);
   const [endereco, setEndereco] = useState();
   const [alert, setAlert] = useState('');
-  const [type, setType] = useState()
   const navigate = useNavigate();
-  const [removeLoading, setRemoveLoading] = useState(true)
 
   const axiosInstance = axios.create({
     baseURL: URL, // Adjust the base URL as needed
@@ -155,8 +155,6 @@ function CadastrarMunicipe() {
       setType('error');
       return;
     }
-  
-
         try {
           const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
           const response = await axiosInstance.post('/protoon/auth/register/municipe', {

@@ -2,8 +2,9 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Loading from '../layouts/Loading';
+import Message from '../layouts/Message'
 import URL from '../services/url';
-
 
 function AnalisarProtocolos() {
   const navigate = useNavigate()
@@ -15,6 +16,9 @@ function AnalisarProtocolos() {
   const [statusSelecionado, setStatusSelecionado] = useState(""); // Estado para armazenar o status selecionado
   const [secretarias, setSecretarias] = useState([]);
   const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
+  const [message, setMessage] = useState()
+  const [type, setType] = useState()
+  const [removeLoading, setRemoveLoading] = useState(true)
   const [successMessage, setSuccessMessage] = useState(""); // Estado para armazenar a mensagem de sucesso
   const [redirected, setRedirected] = useState(false);
 
@@ -48,8 +52,7 @@ function AnalisarProtocolos() {
         setTimeout(() => {
           window.location.href = `/protocolos`
         }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
-      }
-  
+      }  
 
   const updateProtocolo = async () => {
     try {
@@ -62,12 +65,16 @@ function AnalisarProtocolos() {
         status: statusSelecionado
       });
       await updateStatusSecretaria()
-      // if (response.status.valueOf() === 200) {
-
-        // Limpa a mensagem de sucesso após alguns segundos
-        // setTimeout(() => {
-        // }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
-      // }
+      setRemoveLoading(false)
+          setTimeout(() => {
+            console.log(response.data);
+            setRemoveLoading(true)
+            setMessage('Protocolo atualizado com Sucesso!')
+            setType('success')
+            setTimeout(() => {
+              navigate('/listarProtocolos');
+            }, 2000)
+          }, 2000)
     } catch (error) {
       console.error('Erro ao atualizar o protocolo:', error);
     }
@@ -131,7 +138,7 @@ function AnalisarProtocolos() {
   };
 
   if (!protocolo) {
-    return <div>Carregando...</div>;
+    return <Loading />;
   }
 
   return (
@@ -276,8 +283,10 @@ function AnalisarProtocolos() {
           </table>
         </fieldset>
 
-        <button onClick={updateProtocolo} className="btn-cad" style={{ marginRight: '100px' }}>Salvar Alterações</button>
-        <button className="btn-log" onClick={voltarAnterior}>Voltar</button>
+        {message && <Message type={type} msg={message} />}
+        {!removeLoading && <Loading />}
+        {removeLoading &&(<><button onClick={updateProtocolo} className="btn-cad" style={{ marginRight: '100px' }}>Salvar Alterações</button>
+        <button className="btn-log" onClick={voltarAnterior}>Voltar</button></>)}
       </div >
     </>
   );
