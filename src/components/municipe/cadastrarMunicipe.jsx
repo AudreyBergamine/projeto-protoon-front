@@ -58,11 +58,12 @@ function CadastrarMunicipe() {
   }, []);
 
   const formatValue = (value) => {
-    // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem no sepaados da palavra
+    // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem separados da palavra
     return value.toLowerCase().replace(/( de | da | do | das | dos )/g, (match) => match.toLowerCase())
-      .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase());
+      .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase())
+      .replace(/(à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ)\w/g, (match) => match.toLowerCase())
   };
-
+  
 
   //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
   const handleChange = (e) => {
@@ -125,7 +126,7 @@ function CadastrarMunicipe() {
   };
 
   const handleChangeNome = (nome) => {
-    if (/^[a-zA-Z\s]*$/.test(nome)) {
+    if (/^[a-zA-ZÀ-ÖØ-öø-ÿ\s]*$/.test(nome)) {
       const formattedNome = formatValue(nome);
       setFormData({
         ...formData,
@@ -133,6 +134,7 @@ function CadastrarMunicipe() {
       });
     }
   };
+  
 
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
