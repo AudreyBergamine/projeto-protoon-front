@@ -58,7 +58,7 @@ function PerfilSecretario() {
     async function fetchFuncionario() {
       try {
         if (localStorage.getItem('role') === 'SECRETARIO') {
-          const response1 = await axiosInstance.get(`/protoon/funcionarios/${id}`);
+          const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
           const data = response1.data;
           setFormData({
             endereco: {
