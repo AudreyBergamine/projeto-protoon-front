@@ -296,36 +296,14 @@ function CadastrarMunicipe() {
                 }}
               />
             </div>
-            
-            {/* OPÇÃO 1 - TROCAR A PALAVRA LOGRADOURO POR ENDEREÇO E TIRAR:  Nome Endereço*/}
-
-            {/* OPÇÃO 2: FAZER LISTA SUSPENSA COM ESSES TIPOS DE LOGRADOUROS
-            
-                Tipos de Logradouros:
-                  Rua
-                  Avenida
-                  Travessa
-                  Alameda
-                  Estrada
-                  Rodovia
-                  Chácara
-                  Praça
-                  Viela
-                  Campo
-                  Beco
-                  Área
-                  Colônia
-                  Aeroporto
-          
-            */}
-
+        
             
             <div>
-              <label>Tipo de Logradouro:</label><br></br> 
+              <label>Endereço:</label><br></br> 
               <input
                 type="text"
                 name="logradouro"
-                placeholder="Ex.: Rua, Avenida, Alameda..." // Rua 23 de Maio / Avenida Mogi das Cruzes
+                placeholder="Ex.: Rua 23 de Maio" 
                 value={formData.endereco.logradouro}
                 onChange={handleChange}
                 required
@@ -334,7 +312,8 @@ function CadastrarMunicipe() {
               />
             </div>
             <div>
-              <label>Endereço:</label><br></br>
+              {/* TODO: Ocultar esse trecho para o usuário e deixar nullable */}
+              <label>Nome Endereço:</label><br></br> 
               <input
                 type="text"
                 name="nome_endereco"
