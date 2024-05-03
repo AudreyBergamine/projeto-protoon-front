@@ -9,6 +9,12 @@ function ListarFuncionarios() {
     withCredentials: true, // Set withCredentials to true
   });
 
+      // Recuperar o token do localStorage
+const token = localStorage.getItem('token');
+
+// Adicionar o token ao cabeçalho de autorização
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
   // const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
   const [funcionarios, setFuncionarios] = useState([]);
   const [pesquisarFun, setPesquisarFun] = useState(''); //Pesquisar funcionários

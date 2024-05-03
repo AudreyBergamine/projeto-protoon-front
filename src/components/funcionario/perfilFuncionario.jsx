@@ -19,6 +19,11 @@ function PerfilFuncionario() {
     baseURL: URL, // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
+  // Recuperar o token do localStorage
+const token = localStorage.getItem('token');
+
+// Adicionar o token ao cabeçalho de autorização
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
   const [formData, setFormData] = useState({
     nome: "",
@@ -46,7 +51,7 @@ function PerfilFuncionario() {
   useEffect(() => {
     async function fetchFuncionario() {
       try {
-          const response1 = await axiosInstance.get(`/protoon/funcionarios/${id}`);
+          const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
           const data = response1.data;
           setFormData({
             endereco: {

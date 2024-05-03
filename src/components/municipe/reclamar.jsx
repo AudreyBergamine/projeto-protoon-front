@@ -10,7 +10,6 @@ function Reclamar() {
   const [message, setMessage] = useState();
   const [type, setType] = useState();
   const [removeLoading, setRemoveLoading] = useState(true);
-  const id = localStorage.getItem("id")
   const [formData, setFormData] = useState({
     assunto: "",
     descricao: "",
@@ -23,6 +22,12 @@ function Reclamar() {
     baseURL: URL, // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
+
+    // Recuperar o token do localStorage
+const token = localStorage.getItem('token');
+
+// Adicionar o token ao cabeçalho de autorização
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   const [assuntos, setAssuntos] = useState([]);
 
   // Buscar os assuntos do banco de dados
@@ -86,7 +91,7 @@ function Reclamar() {
 
     try {
       const currentDate = new Date(); // Obtém a data e hora atuais
-      const response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos/${id}/${formData.idSecretaria}`, {
+      const response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos/${formData.idSecretaria}`, {
         assunto: formData.assunto,
         descricao: formData.descricao,
         status: formData.status,

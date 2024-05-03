@@ -14,15 +14,18 @@ function ListarProtocolosBySecretaria() {
   const [protocolos, setProtocolos] = useState([]);
   const [pesquisarProt, setPesquisarProt] = useState(''); //Pesquisar protocolos
   const navigate = useNavigate(); // Use o hook useNavigation para acessar a navegação
-  const id = localStorage.getItem("id")
-  
+  // Recuperar o token do localStorage
+const token = localStorage.getItem('token');
+
+// Adicionar o token ao cabeçalho de autorização
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
 
   useEffect(() => {
     async function fetchProtocolos() {
 
       try {
-        const response1 = await axiosInstance.get(`/protoon/funcionarios/`+id);
+        const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
         console.log(response1.data)
         console.log(response1.data.secretaria)
         const id_secretaria = response1.data.secretaria.id_secretaria;

@@ -21,13 +21,19 @@ function Consultar() {
     withCredentials: true,
   });
 
+  // Recuperar o token do localStorage
+const token = localStorage.getItem('token');
+
+// Adicionar o token ao cabeçalho de autorização
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      const response = await axiosInstance.get(`/protoon/protocolo/meus-protocolos/${id}`);
+      const response = await axiosInstance.get(`/protoon/protocolo/meus-protocolos/bytoken`);
       setProtocolos(response.data);
       setMostrarTabela(true);
     } catch (error) {

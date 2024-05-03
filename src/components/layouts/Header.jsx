@@ -18,6 +18,12 @@ function Header({ isAuthenticated, role }) {
         baseURL: URL,
         withCredentials: true
     });
+
+    // Recuperar o token do localStorage
+const token = localStorage.getItem('token');
+
+// Adicionar o token ao cabeçalho de autorização
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     useEffect(() => {
         document.addEventListener('click', notToggleMenu);
     
@@ -30,7 +36,6 @@ function Header({ isAuthenticated, role }) {
         try {
             await axiosInstance.post(`${URL}/protoon/logout`);
             // Remover o cookie definindo um novo cookie com o mesmo nome e um tempo de expiração passado
-            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             localStorage.clear();
             window.location.href = '/'; // Redirecionar para a página inicial após o logout
         } catch (error) {

@@ -24,7 +24,11 @@ function CadastrarFuncionario() {
     withCredentials: true, // Set withCredentials to true
   });
   
+    // Recuperar o token do localStorage
+    const token = localStorage.getItem('token');
 
+    // Adicionar o token ao cabeçalho de autorização
+    axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
   const [formData, setFormData] = useState({

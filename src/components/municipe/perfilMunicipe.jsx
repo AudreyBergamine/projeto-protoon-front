@@ -25,6 +25,13 @@ function PerfilMunicipe() {
     baseURL: URL, // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
+// Recuperar o token do localStorage
+const token = localStorage.getItem('token');
+
+// Adicionar o token ao cabeçalho de autorização
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
   const [formData, setFormData] = useState({
     nome: "",
@@ -62,7 +69,7 @@ function PerfilMunicipe() {
     const fetchData = async () => {
       console.log("Teste");
       try {
-        const response = await axiosInstance.get(`/protoon/municipe/municipes/${id}`);
+        const response = await axiosInstance.get(`/protoon/municipe/municipes/bytoken`);
         const data = response.data;
         console.log(data)
         setFormData(data);
@@ -161,7 +168,7 @@ function PerfilMunicipe() {
     }
 
     try {
-      const response = await axiosInstance.put(`/protoon/municipe/municipes/${id}`, formData);
+      const response = await axiosInstance.put(`/protoon/municipe/municipes/bytoken`, formData);
 
       setRemoveLoading(false)
 

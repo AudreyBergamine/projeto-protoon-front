@@ -7,11 +7,20 @@ function ReclamacoesRetornadasMunicipe() {
   const [protocolos, setProtocolos] = useState([]);
 
   const navigate = useNavigate()
+
+  const axiosInstance = axios.create({
+    baseURL: URL,
+    withCredentials: true,
+  });
+  // Recuperar o token do localStorage
+const token = localStorage.getItem('token');
+
+// Adicionar o token ao cabeçalho de autorização
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   useEffect(() => {
     async function fetchData() {
       try {
-        const id = localStorage.getItem('idMunicipe');
-        const response = await axios.get(`${URL}/protoon/municipe/municipes/protocolos/${id}`);
+        const response = await axiosInstance.get(`${URL}/protoon/municipe/municipes/protocolos/bytoken`);
         const protocolosDoMunicipe = response.data;
         const protocolosFiltrados = protocolosDoMunicipe.filter(protocolo => protocolo.status === "CIENCIA");
         setProtocolos(protocolosFiltrados);

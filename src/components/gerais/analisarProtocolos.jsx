@@ -11,6 +11,12 @@ function AnalisarProtocolos() {
     baseURL: URL,
     withCredentials: true,
   });
+  // Recuperar o token do localStorage
+const token = localStorage.getItem('token');
+
+// Adicionar o token ao cabeçalho de autorização
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
   const [protocolo, setProtocolo] = useState(null);
   const [statusSelecionado, setStatusSelecionado] = useState(""); // Estado para armazenar o status selecionado
   const [secretarias, setSecretarias] = useState([]);
@@ -99,11 +105,11 @@ function AnalisarProtocolos() {
       console.log("Entrou no if")
       window.location.href = `/protocolo/${id}`
      
-        // if (response2.status.valueOf() === 200) {
-        // setTimeout(() => {
-        //   // setSuccessMessage("");
-        // }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
-        // }
+        if (response2.status.valueOf() === 200) {
+        setTimeout(() => {
+          // setSuccessMessage("");
+        }, 3000); // Define o tempo em milissegundos antes de limpar a mensagem
+        }
       }
     } catch (error) {
       console.error('Erro ao atualizar o protocolo:', error);
