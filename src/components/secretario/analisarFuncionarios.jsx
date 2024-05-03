@@ -69,7 +69,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         if (localStorage.getItem('role') === 'SECRETARIO') {
           const response2 = await axiosInstance.get('/protoon/secretaria');
           setSecretarias(response2.data);
-          const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
+          const response1 = await axiosInstance.get(`/protoon/funcionarios/${id}`);
           const data = response1.data;
           setFormData({
             endereco: {
@@ -211,7 +211,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       console.log(id)
       console.log(idSecretariaSelecionada)
       console.log(formData)
-      const response = await axiosInstance.put(`/protoon/funcionarios/bytoken/${idSecretariaSelecionada}`,formData
+      const response = await axiosInstance.put(`/protoon/funcionarios/${id}/${idSecretariaSelecionada}`,formData
     );
 
       setRemoveLoading(false)
@@ -230,7 +230,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setTimeout(() => {
         setRemoveLoading(true)
         console.error('Erro ao enviar os dados:', error);
-        setMessage('Falha ao tentar fazer o Cadastro!')
+        setMessage('Falha ao tentar atualizar os dados de Cadastro!')
         setType('error')
       }, 3000)
     }
