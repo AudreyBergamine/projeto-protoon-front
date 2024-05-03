@@ -67,6 +67,8 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     async function fetchFuncionario() {
       try {
         if (localStorage.getItem('role') === 'SECRETARIO') {
+          const response2 = await axiosInstance.get('/protoon/secretaria');
+          setSecretarias(response2.data);
           const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
           const data = response1.data;
           setFormData({
@@ -94,8 +96,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           setIdSecretariaSelecionada(data.secretaria.id_secretaria)
           const celularDoFuncionario = response1.data.celular; // Obtém o valor do celular do funcionário
           setCelularValue(celularDoFuncionario); // Define o valor do celular no estado
-          const response2 = await axiosInstance.get('/protoon/secretaria');
-          setSecretarias(response2.data);
+      
         }
       } catch (error) {
         console.error('Erro ao buscar o protocolo:', error);
