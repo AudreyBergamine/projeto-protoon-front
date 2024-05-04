@@ -237,7 +237,11 @@ function CadastrarFuncionario() {
           setTimeout(() => {
             setRemoveLoading(true)
             console.error('Erro ao enviar os dados:', error);
-            setMessage('Falha ao tentar fazer o Cadastro!')
+            if (error.response && error.response.data && error.response.data.message) {
+              setMessage(error.response.data.message); // Exibir a mensagem de erro do servidor
+            } else {
+              setMessage('Falha ao tentar fazer o Cadastro!'); // Se não houver mensagem de erro específica, exibir uma mensagem genérica
+            }
             setType('error')
           }, 3000)
         }
