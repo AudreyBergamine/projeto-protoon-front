@@ -102,7 +102,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                   </div>
                 </td>
                 <td style={{ textAlign: 'center', minWidth: 200 }}>{protocolo.status}</td>
-                <td style={{ textAlign: 'center', minWidth: 100 }}>R$ {protocolo.valor}</td>
+                <td style={{ textAlign: 'center', minWidth: 100 }}>R$ {'R$ ' + protocolo.valor.toFixed(2)}</td>
               </tr>
               {index !== filteredProtocolos.length - 1 && <tr><td colSpan="6"><hr style={{ margin: 0 }} /></td></tr>}
             </React.Fragment>

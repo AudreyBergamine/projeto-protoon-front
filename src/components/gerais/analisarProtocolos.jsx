@@ -204,7 +204,7 @@ function AnalisarProtocolos() {
                     <option value="CONCLUIDO">CONCLUÍDO</option>
                   </select>
                 </td>
-                <td style={{ textAlign: 'center', minWidth: 100 }}>R$ {protocolo.valor}</td>
+                <td style={{ textAlign: 'center', minWidth: 100 }}>R$ {'R$ ' + protocolo.valor.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
