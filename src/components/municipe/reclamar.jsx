@@ -154,7 +154,7 @@ function Reclamar() {
                   <input
                     type="text"
                     name="valor"
-                    value={formData.valor}
+                    value={"R$ " + formData.valor}
                     onChange={handleChange}
                     readOnly
                   />
