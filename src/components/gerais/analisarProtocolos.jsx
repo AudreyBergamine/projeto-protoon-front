@@ -167,6 +167,10 @@ function AnalisarProtocolos() {
               ))}
             </select>
             <button className="btn-log" onClick={redirectProtocolo}>Redirecionar Protocolo</button>
+
+            {message && <Message type={type} msg={message} />}
+            {!removeLoading && <Loading />}
+
           </div>
         )}
         <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
@@ -286,8 +290,8 @@ function AnalisarProtocolos() {
           </table>
         </fieldset>
 
-        {message && <Message type={type} msg={message} />}
-        {!removeLoading && <Loading />}
+        {/* {message && <Message type={type} msg={message} />} */}
+        {/* {!removeLoading && <Loading />} */}
         {removeLoading && (<><button onClick={updateProtocolo} className="btn-cad" style={{ marginRight: '100px' }}>Salvar Alterações</button>
           <button className="btn-log" onClick={voltarAnterior}>Voltar</button></>)}
       </div >
