@@ -26,6 +26,12 @@ function AnalisarFuncionarios() {
     baseURL: URL, // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
+
+      // Recuperar o token do localStorage
+const token = localStorage.getItem('token');
+
+// Adicionar o token ao cabeçalho de autorização
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
   const [formData, setFormData] = useState({
     nome: "",
@@ -61,6 +67,8 @@ function AnalisarFuncionarios() {
     async function fetchFuncionario() {
       try {
         if (localStorage.getItem('role') === 'SECRETARIO') {
+          const response2 = await axiosInstance.get('/protoon/secretaria');
+          setSecretarias(response2.data);
           const response1 = await axiosInstance.get(`/protoon/funcionarios/${id}`);
           const data = response1.data;
           setFormData({
@@ -88,8 +96,7 @@ function AnalisarFuncionarios() {
           setIdSecretariaSelecionada(data.secretaria.id_secretaria)
           const celularDoFuncionario = response1.data.celular; // Obtém o valor do celular do funcionário
           setCelularValue(celularDoFuncionario); // Define o valor do celular no estado
-          const response2 = await axiosInstance.get('/protoon/secretaria');
-          setSecretarias(response2.data);
+      
         }
       } catch (error) {
         console.error('Erro ao buscar o protocolo:', error);
@@ -223,7 +230,7 @@ function AnalisarFuncionarios() {
       setTimeout(() => {
         setRemoveLoading(true)
         console.error('Erro ao enviar os dados:', error);
-        setMessage('Falha ao tentar fazer o Cadastro!')
+        setMessage('Falha ao tentar atualizar os dados de Cadastro!')
         setType('error')
       }, 3000)
     }

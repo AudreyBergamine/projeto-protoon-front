@@ -13,6 +13,17 @@ function RecuperarSenhaForm() {
   const [removeLoading, setRemoveLoading] = useState(true)
   const navigate = useNavigate();
 
+
+  const axiosInstance = axios.create({
+    baseURL: URL, // Adjust the base URL as needed
+    withCredentials: true, // Set withCredentials to true
+  });
+    // Recuperar o token do localStorage
+const token = localStorage.getItem('token');
+
+// Adicionar o token ao cabeçalho de autorização
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
   const [email, setEmail] = useState('');
   const [formData, setFormData] = useState({
     email: ""
@@ -49,7 +60,7 @@ function RecuperarSenhaForm() {
     }
 
     try {
-      const response = await axios.post(URL + '/protoon/municipe/municipes/recuperarSenha/', {        
+      const response = await axiosInstance.post(URL + '/protoon/municipe/municipes/recuperarSenha/', {        
           email: email        
       });
 

@@ -23,6 +23,12 @@ function PerfilSecretario() {
     baseURL: URL, // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
+
+  // Recuperar o token do localStorage
+const token = localStorage.getItem('token');
+
+// Adicionar o token ao cabeçalho de autorização
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
   const [formData, setFormData] = useState({
     nome: "",
@@ -58,7 +64,7 @@ function PerfilSecretario() {
     async function fetchFuncionario() {
       try {
         if (localStorage.getItem('role') === 'SECRETARIO') {
-          const response1 = await axiosInstance.get(`/protoon/funcionarios/${id}`);
+          const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
           const data = response1.data;
           setFormData({
             endereco: {
@@ -187,7 +193,7 @@ function PerfilSecretario() {
 
     try {
       console.log(formData)
-      const response = await axiosInstance.put(`/protoon/funcionarios/${id}`,formData
+      const response = await axiosInstance.put(`/protoon/funcionarios/bytoken`,formData
     );
 
       setRemoveLoading(false)
