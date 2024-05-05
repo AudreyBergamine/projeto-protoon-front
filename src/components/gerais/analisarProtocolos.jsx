@@ -198,7 +198,7 @@ function AnalisarProtocolos() {
                     value={statusSelecionado}
                     onChange={handleStatusChange}
                   >
-                    <option value="EM_ANDAMENTO">EM ANDAMENTO</option>
+                    <option value="PAGAMENTO_PENDENTE">PAGAMENTO PENDENTE</option>
                     <option value="CIENCIA">CIÊNCIA</option>
                     <option value="CIENCIA_ENTREGA">CIÊNCIA ENTREGA</option>
                     <option value="CONCLUIDO">CONCLUÍDO</option>
