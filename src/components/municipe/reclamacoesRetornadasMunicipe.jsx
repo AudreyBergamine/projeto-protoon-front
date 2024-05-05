@@ -65,7 +65,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 </td>
                 <td style={{ textAlign: 'center', minWidth: 200 }}>{protocolo.secretaria.nome_secretaria}</td>
                 <td style={{ textAlign: 'center', minWidth: 100 }}>{protocolo.status}</td>
-                <td style={{ textAlign: 'center', minWidth: 100 }}>{protocolo.valor}</td>
+                <td style={{ textAlign: 'center', minWidth: 100 }}>{'R$ ' + protocolo.valor.toFixed(2)}</td>
                 <td style={{ textAlign: 'center', minWidth: 100 }}>{format(new Date(protocolo.data_protocolo), 'dd/MM/yyyy HH:mm')}</td>
               </tr>
               {index < protocolos.length - 1 && <tr><td colSpan="7"><hr /></td></tr>}
