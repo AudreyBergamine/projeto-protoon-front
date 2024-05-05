@@ -159,7 +159,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                   <input
                     type="text"
                     name="valor"
-                    value={"R$ " + formData.valor}
+                    value={"R$ " + formData.valor.toFixed(2)}
                     onChange={handleChange}
                     readOnly
                   />
