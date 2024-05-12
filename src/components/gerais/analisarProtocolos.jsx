@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Loading from '../layouts/Loading';
 import Message from '../layouts/Message'
 import URL from '../services/url';
+import TodasDevolutivas from "./todasDevolutivas";
 
 function AnalisarProtocolos() {
   const navigate = useNavigate()
@@ -17,6 +18,7 @@ function AnalisarProtocolos() {
   // Adicionar o token ao cabeçalho de autorização
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
+  const [devolutiva, setDevolutiva] = useState('');
   const [protocolo, setProtocolo] = useState(null);
   const [statusSelecionado, setStatusSelecionado] = useState(""); // Estado para armazenar o status selecionado
   const [secretarias, setSecretarias] = useState([]);
@@ -26,9 +28,16 @@ function AnalisarProtocolos() {
   const [removeLoading, setRemoveLoading] = useState(true)
   const [successMessage, setSuccessMessage] = useState(""); // Estado para armazenar a mensagem de sucesso
   const [redirected, setRedirected] = useState(false);
+  const [devolutivaMaisRecente, setDevolutivaMaisRecente] = useState(null); // Estado para armazenar a devolutiva mais recente
+  const [mensagem, setMensagem] = useState('Sucesso');
 
   const { id } = useParams();
   const role = localStorage.getItem('role')
+
+  const HistoricoDevolutivas = () => {
+    //navigate(`/todas-devolutivas/${id}`); // Na mesma pagina 
+    window.open(`/todas-devolutivas/${id}`, '_blank'); // Abre outra pagina, achei melhor...
+  };
 
   useEffect(() => {
     async function fetchProtocolo() {
@@ -40,6 +49,21 @@ function AnalisarProtocolos() {
         const response2 = await axiosInstance.get(`/protoon/protocolo/pesquisar-id/${id}`);
         setProtocolo(response2.data);
         setStatusSelecionado(response2.data.status);
+        const devolutivasResponse = await axiosInstance.get(`/protoon/devolutiva/devolutiva-protocolo/${id}`);
+        const devolutivas = devolutivasResponse.data;
+
+        if (devolutivas.length > 0) {
+          // Ordenar as devolutivas por momento_devolutiva (do mais recente para o mais antigo)
+          devolutivas.sort((a, b) => {
+            // Comparar as datas de momento_devolutiva, ordena de forma "alfabetica", ja q data é uma String, igual a atividade da prof carla para organizar os nomes pelo valor de cada carctere
+            return b.momento_devolutiva.localeCompare(a.momento_devolutiva);
+          });
+
+          // Pegar a devolutiva mais recente
+          setDevolutivaMaisRecente(devolutivas[0]);
+          console.log("Devolutiva mais recente:", devolutivas[0]);
+        }
+
       } catch (error) {
         console.error('Erro ao buscar o protocolo:', error);
       }
@@ -51,6 +75,28 @@ function AnalisarProtocolos() {
     navigate(-1)
   }
 
+
+  const enviarDevolutiva = (event) => {
+    setDevolutiva(event.target.value);
+  };
+
+  const novaDevolutiva = async () => {
+    // Verifica se o campo de descrição está vazio ou nulo
+    if (!devolutiva || devolutiva.trim() === '') {
+      console.error('Campo de descrição vazio ou nulo. Não é possível enviar a devolutiva.');
+      return; // Retorna sem fazer a requisição
+    }
+
+    try {
+      const response = await axiosInstance.post(`/protoon/devolutiva/criar-devolutiva/${id}`, { devolutiva });
+      // Define a mensagem de sucesso com base na resposta da requisição
+      setMensagem(response.data.message);
+      setDevolutiva('');
+    } catch (error) {
+      console.error('Erro ao enviar a devolutiva:', error);
+      alert('Erro ao enviar a devolutiva. Por favor, tente novamente mais tarde.');
+    }
+  };
 
   const updateProtocolo = async () => {
     try {
@@ -144,6 +190,11 @@ function AnalisarProtocolos() {
     return <Loading />;
   }
 
+  const salvarAlteracoes = async () => { // SALVA TUDO
+    await updateProtocolo();
+    await novaDevolutiva();
+  }
+
   return (
     <>
       <div style={{ padding: 40, marginTop: -100 }}>
@@ -213,6 +264,32 @@ function AnalisarProtocolos() {
             </tbody>
           </table>
         </fieldset>
+
+        {devolutivaMaisRecente && (
+          <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
+            <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Devolutiva Mais Recente</legend>
+            <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
+              <thead>
+                <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Data e Hora</p></td>
+                <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Funcionário</p></td>
+                <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Secretaria</p></td>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style={{ width: 100 }}>{devolutivaMaisRecente.momento_devolutiva ? devolutivaMaisRecente.momento_devolutiva : 'N/A'}</td>
+                  <td style={{ width: 100 }}>{devolutivaMaisRecente.id_funcionario && devolutivaMaisRecente.id_funcionario.nome ? devolutivaMaisRecente.id_funcionario.nome : 'N/A'}</td>
+                  <td style={{ width: 100 }}>{devolutivaMaisRecente.id_funcionario && devolutivaMaisRecente.id_funcionario.secretaria.nome_secretaria ? devolutivaMaisRecente.id_funcionario.secretaria.nome_secretaria : 'N/A'}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div style={{ backgroundColor: '#f5f5f5', padding: 20, borderRadius: 5, marginTop: 20 }}>
+              <p style={{ textAlign: 'justify' }}>
+                {devolutivaMaisRecente.devolutiva ? devolutivaMaisRecente.devolutiva : 'N/A'}
+              </p>
+            </div>
+            <button onClick={HistoricoDevolutivas} style={{ marginTop: 20 }}>Historico de devolutivas</button>
+          </fieldset>
+        )}
 
         {protocolo.secretaria ? (
           <>
@@ -290,9 +367,23 @@ function AnalisarProtocolos() {
           </table>
         </fieldset>
 
-        {/* {message && <Message type={type} msg={message} />} */}
-        {/* {!removeLoading && <Loading />} */}
-        {removeLoading && (<><button onClick={updateProtocolo} className="btn-cad" style={{ marginRight: '100px' }}>Salvar Alterações</button>
+        <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
+          <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Escreva sua devolutiva</legend>
+          <div style={{ backgroundColor: '#f5f5f5', padding: 20, borderRadius: 5, marginTop: 20 }}>
+            <textarea
+              value={devolutiva}
+              onChange={enviarDevolutiva}
+              placeholder="Digite sua devolutiva..."
+              style={{ width: '100%', minHeight: 100, padding: 10 }}
+            />
+          </div>
+          <button onClick={novaDevolutiva} style={{ marginTop: 20 }}>Enviar Somente Devolutiva</button>
+          {mensagem && <p>{mensagem}</p>} 
+        </fieldset>
+
+        {/*Coloquei no botão de salvar alteração para salvar tanto protocolo quanto devolutivas*/}
+        {/*{removeLoading && (<><button onClick={updateProtocolo} className="btn-cad" style={{ marginRight: '100px' }}>Salvar Alterações</button> */}
+        {removeLoading && (<><button onClick={salvarAlteracoes} className="btn-cad" style={{ marginRight: '100px' }}>Salvar Alterações</button>
           <button className="btn-log" onClick={voltarAnterior}>Voltar</button></>)}
       </div >
     </>
