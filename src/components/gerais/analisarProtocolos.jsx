@@ -92,8 +92,6 @@ function AnalisarProtocolos() {
       // Define a mensagem de sucesso com base na resposta da requisição
       setMessage("Devolutiva Enviada com Sucesso!")
       setType('success')
-      console.log("mensagem")
-      setType('success')
       setTimeout(() => {
         setMessage('')
         setDevolutiva('');
