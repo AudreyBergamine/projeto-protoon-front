@@ -113,7 +113,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
  
 
   const formatValue = (value) => {
-    // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem no sepaados da palavra
+    // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem no separados da palavra
     return value.toLowerCase().replace(/( de | da | do | das | dos )/g, (match) => match.toLowerCase())
       .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase());
   };
