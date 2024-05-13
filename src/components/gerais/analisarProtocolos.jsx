@@ -13,6 +13,7 @@ function AnalisarProtocolos() {
   });
   // Recuperar o token do localStorage
   const token = localStorage.getItem('token');
+  console.log(token)
 
   // Adicionar o token ao cabeçalho de autorização
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -50,7 +51,6 @@ function AnalisarProtocolos() {
   const voltarAnterior = async () => {
     navigate(-1)
   }
-
 
   const updateProtocolo = async () => {
     try {

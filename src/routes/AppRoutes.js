@@ -17,6 +17,7 @@ import ReclamacoesRetornadasMunicipe from '../components/municipe/reclamacoesRet
 
 import CadastrarFuncionario from '../components/secretario/cadastrarFuncionarios';
 import ListarFuncionarios from '../components/secretario/listarFuncionarios';
+import Logs from '../components/coordenador/logs';
 import ListarProtocolosBySecretaria from '../components/gerais/listarProtocolos';
 import AnalisarProtocolos from '../components/gerais/analisarProtocolos';
 import AnalisarFuncionarios from '../components/secretario/analisarFuncionarios';
@@ -53,6 +54,7 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/" element={<Home isAuthenticated={isAuthenticated} role={role} />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/protocolos" element={<ListarProtocolosBySecretaria />} />
+            <Route path="/logs" element={<Logs />} />
             <Route path="/protocolo/:id" element={<AnalisarProtocolos />} />
             {/* MUNICIPE */}  
             <Route path="/cadastrar-municipe" element={<CadastrarMunicipe />} />

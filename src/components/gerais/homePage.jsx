@@ -15,7 +15,6 @@ function Home({ isAuthenticated, role }) {
         navigate("/login")
     }
 
-
     if (isAuthenticated && role === "MUNICIPE") {
         return (<div>
             <PaginaInicial />
