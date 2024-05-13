@@ -17,13 +17,13 @@ import ReclamacoesRetornadasMunicipe from '../components/municipe/reclamacoesRet
 
 import CadastrarFuncionario from '../components/secretario/cadastrarFuncionarios';
 import ListarFuncionarios from '../components/secretario/listarFuncionarios';
-import Logs from '../components/coordenador/logs';
 import ListarProtocolosBySecretaria from '../components/gerais/listarProtocolos';
 import AnalisarProtocolos from '../components/gerais/analisarProtocolos';
 import AnalisarFuncionarios from '../components/secretario/analisarFuncionarios';
 import PerfilSecretario from '../components/secretario/perfilSecretario';
 import PerfilCoordenador from '../components/coordenador/perfilCoord';
 import PerfilFuncionario from '../components/funcionario/perfilFuncionario';
+import Logs from '../components/coordenador/logs';
 
 // Defina um conjunto de rotas privadas
 const privateRoutes = ['/protocolos', '/protocolo/', '/retornadas', '/reclamar', '/consultar', '/perfil',
@@ -54,7 +54,6 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/" element={<Home isAuthenticated={isAuthenticated} role={role} />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/protocolos" element={<ListarProtocolosBySecretaria />} />
-            <Route path="/logs" element={<Logs />} />
             <Route path="/protocolo/:id" element={<AnalisarProtocolos />} />
             {/* MUNICIPE */}  
             <Route path="/cadastrar-municipe" element={<CadastrarMunicipe />} />
@@ -67,6 +66,7 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/contato" element={<Contato />} />
             <Route path="/retornadas" element={<ReclamacoesRetornadasMunicipe />} />
             <Route path="/perfil" element={<PerfilMunicipe />} />
+            <Route path="/logs" element={<Logs />} />
             
             {/* SECRETARIO */}
             <Route path="/cadastrar-funcionarios" element={<CadastrarFuncionario />} />
