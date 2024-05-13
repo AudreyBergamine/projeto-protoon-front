@@ -72,7 +72,7 @@ function AnalisarProtocolos() {
   }, [id]);
 
   const voltarAnterior = async () => {
-    navigate(-1)
+    navigate('/protocolos')
   }
 
 
