@@ -14,7 +14,7 @@ import SobreNos from '../components/municipe/sobreNos';
 import Contato from '../components/municipe/contato';
 import PerfilMunicipe from '../components/municipe/perfilMunicipe';
 import ReclamacoesRetornadasMunicipe from '../components/municipe/reclamacoesRetornadasMunicipe';
-
+import TodasDevolutivas from '../components/gerais/todasDevolutivas';
 import CadastrarFuncionario from '../components/secretario/cadastrarFuncionarios';
 import ListarFuncionarios from '../components/secretario/listarFuncionarios';
 import ListarProtocolosBySecretaria from '../components/gerais/listarProtocolos';
@@ -51,6 +51,7 @@ function AppRoutes({ isAuthenticated, role }) {
     return (
         <Routes>
             {/* GERAIS (Rotas onde 3 ou mais entidades usam) */} 
+            <Route path="/todas-devolutivas/:id" element={<TodasDevolutivas />} />
             <Route path="/" element={<Home isAuthenticated={isAuthenticated} role={role} />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/protocolos" element={<ListarProtocolosBySecretaria />} />
