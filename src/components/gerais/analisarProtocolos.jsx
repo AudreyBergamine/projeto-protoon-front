@@ -5,6 +5,7 @@ import Loading from '../layouts/Loading';
 import Message from '../layouts/Message'
 import URL from '../services/url';
 import TodasDevolutivas from "./todasDevolutivas";
+import ConfirmationDialog from '../layouts/ConfirmationDialog';
 
 function AnalisarProtocolos() {
   const navigate = useNavigate()
@@ -30,6 +31,7 @@ function AnalisarProtocolos() {
   const [redirected, setRedirected] = useState(false);
   const [devolutivaMaisRecente, setDevolutivaMaisRecente] = useState(null); // Estado para armazenar a devolutiva mais recente
   const [mensagem, setMensagem] = useState('Sucesso');
+  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
 
   const { id } = useParams();
   const role = localStorage.getItem('role')
@@ -137,14 +139,19 @@ function AnalisarProtocolos() {
   }
 
   const redirectProtocolo = async () => {
-    try {
-      const response1 = await axiosInstance.get(`/protoon/secretaria/${idSecretariaSelecionada}`)
-      console.log(response1.data)
-      const secretariaData = response1.data;
+    setShowConfirmationDialog(true);
+  }
 
-      // Exibe um alerta de confirmação antes de redirecionar o protocolo
-      const confirmRedirect = window.confirm("Tem certeza que deseja redirecionar o protocolo?");
-      if (confirmRedirect) {
+  const handleRedirectConfirmation = async () => {
+    if (ConfirmationDialog) {
+      setShowConfirmationDialog(false)
+      try {
+        const response1 = await axiosInstance.get(`/protoon/secretaria/${idSecretariaSelecionada}`)
+        console.log(response1.data)
+        const secretariaData = response1.data;
+
+        // Exibe um alerta de confirmação antes de redirecionar o protocolo
+
         const response2 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.numero_protocolo}`, {
           ...protocolo,
           secretaria: secretariaData
@@ -163,9 +170,9 @@ function AnalisarProtocolos() {
           }, 2000)
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+      } catch (error) {
+        console.error('Erro ao atualizar o protocolo:', error);
       }
-    } catch (error) {
-      console.error('Erro ao atualizar o protocolo:', error);
     }
   }
 
@@ -204,6 +211,10 @@ function AnalisarProtocolos() {
     await novaDevolutiva();
   }
 
+  const handleCancelRedirect = () => {
+    setShowConfirmationDialog(false);
+  }
+
   return (
     <>
       <div style={{ padding: 40, marginTop: -100 }}>
@@ -231,6 +242,11 @@ function AnalisarProtocolos() {
             {message && <Message type={type} msg={message} />}
             {!removeLoading && <Loading />}
 
+            {showConfirmationDialog && (<ConfirmationDialog
+              message="Tem certeza que deseja redirecionar o protocolo?"
+              onConfirm={handleRedirectConfirmation}
+              onCancel={handleCancelRedirect}
+            />)}
           </div>
         )}
         <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
