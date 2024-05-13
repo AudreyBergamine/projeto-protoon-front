@@ -90,8 +90,15 @@ function AnalisarProtocolos() {
     try {
       const response = await axiosInstance.post(`/protoon/devolutiva/criar-devolutiva/${id}`, { devolutiva });
       // Define a mensagem de sucesso com base na resposta da requisição
-      setMensagem(response.data.message);
-      setDevolutiva('');
+      setMessage("Devolutiva Enviada com Sucesso!")
+      setType('success')
+      console.log("mensagem")
+      setType('success')
+      setTimeout(() => {
+        setMessage('')
+        setDevolutiva('');
+        navigate('/protocolo/' + id);
+      }, 3000)
     } catch (error) {
       console.error('Erro ao enviar a devolutiva:', error);
       alert('Erro ao enviar a devolutiva. Por favor, tente novamente mais tarde.');
@@ -125,7 +132,6 @@ function AnalisarProtocolos() {
       console.error('Erro ao atualizar o protocolo:', error);
     }
   }
-
 
   const redirectProtocolo = async () => {
     try {
@@ -378,7 +384,7 @@ function AnalisarProtocolos() {
             />
           </div>
           <button onClick={novaDevolutiva} style={{ marginTop: 20 }}>Enviar Somente Devolutiva</button>
-          {mensagem && <p>{mensagem}</p>} 
+          {message && <Message type={type} msg={message} />}
         </fieldset>
 
         {/*Coloquei no botão de salvar alteração para salvar tanto protocolo quanto devolutivas*/}
