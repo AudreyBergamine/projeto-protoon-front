@@ -13,17 +13,16 @@ function PerfilFuncionario() {
   const [alert, setAlert] = useState('');
   const [removeLoading, setRemoveLoading] = useState(true)
   const id = localStorage.getItem("id")
-  
 
   const axiosInstance = axios.create({
     baseURL: URL, // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
   // Recuperar o token do localStorage
-const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
 
-// Adicionar o token ao cabeçalho de autorização
-axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  // Adicionar o token ao cabeçalho de autorização
+  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
   const [formData, setFormData] = useState({
     nome: "",
@@ -46,36 +45,34 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
   });
 
-  
-
   useEffect(() => {
     async function fetchFuncionario() {
       try {
-          const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
-          const data = response1.data;
-          setFormData({
-            endereco: {
-              tipo_endereco: data.endereco.tipo_endereco,
-              num_cep: data.endereco.num_cep,
-              logradouro: data.endereco.logradouro,
-              nome_endereco: data.endereco.nome_endereco,
-              num_endereco: data.endereco.num_endereco,
-              complemento: data.endereco.complemento,
-              bairro: data.endereco.bairro,
-              cidade: data.endereco.cidade,
-              estado: data.endereco.estado,
-              pais: data.endereco.pais
-            },
-            nome: data.nome,
-            email: data.email,
-            role: data.role,
-            num_CPF: data.num_CPF,
-            data_nascimento: data.data_nascimento,
-            celular: data.celular,
-            numTelefoneFixo: data.numTelefoneFixo
-          });
-          const celularDoFuncionario = response1.data.celular; // Obtém o valor do celular do funcionário
-        
+        const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
+        const data = response1.data;
+        setFormData({
+          endereco: {
+            tipo_endereco: data.endereco.tipo_endereco,
+            num_cep: data.endereco.num_cep,
+            logradouro: data.endereco.logradouro,
+            nome_endereco: data.endereco.nome_endereco,
+            num_endereco: data.endereco.num_endereco,
+            complemento: data.endereco.complemento,
+            bairro: data.endereco.bairro,
+            cidade: data.endereco.cidade,
+            estado: data.endereco.estado,
+            pais: data.endereco.pais
+          },
+          nome: data.nome,
+          email: data.email,
+          role: data.role,
+          num_CPF: data.num_CPF,
+          data_nascimento: data.data_nascimento,
+          celular: data.celular,
+          numTelefoneFixo: data.numTelefoneFixo
+        });
+        const celularDoFuncionario = response1.data.celular; // Obtém o valor do celular do funcionário
+
       } catch (error) {
         console.error('Erro ao buscar o protocolo:', error);
       }
@@ -83,16 +80,10 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     fetchFuncionario();
   }, []);
 
-  
- 
-  const voltarIndex = async() =>{
+  const voltarIndex = async () => {
     navigate("/")
   }
-  
 
-  
-
- 
   //Por fim é retornado o html para ser exibido no front end, junto com as funções acima.
   return (
 
@@ -154,7 +145,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 readOnly={alert === '' ? true : false}
                 className={alert === '' ? 'readonly-bg' : ""}
               />
-                
+
             </div>
 
             <div>
@@ -167,17 +158,13 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 className='readonly-bg'
               />
             </div>
-
           </div>
-         
         </div>
-          
-          
+
         <hr></hr>
         <h3>Endereço</h3>
         <div className="register-form">
           <div className="input-container">
-
             <div>
               <label>Número do CEP:</label><br></br>
               <input
@@ -188,10 +175,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 readOnly={alert === '' ? true : false}
                 className={alert === '' ? 'readonly-bg' : ""}
               />
-
-              
             </div>
-
             <div>
               <label>Endereço:</label><br></br>
               <input
@@ -202,22 +186,8 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 required
                 readOnly={alert === '' ? true : false}
                 className={alert === '' ? 'readonly-bg' : ""}
-                
               />
             </div>
-            {/* <div>
-              <label>Nome Endereço:</label><br></br>
-              <input
-                type="text"
-                name="nome_endereco"
-                placeholder="Ex.: Casa"
-                value={formData.endereco.nome_endereco}
-                required
-                minLength={3}
-                readOnly={alert === '' ? true : false}
-                className={alert === '' ? 'readonly-bg' : ""}
-              />
-            </div> */}
             <div>
               <label>Número:</label><br></br>
               <input
@@ -242,7 +212,6 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
-
           </div>
         </div>
 
@@ -262,7 +231,6 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 required
               />
             </div>
-
             <div>
               <label>Bairro:</label><br></br>
               <input
@@ -276,7 +244,6 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
-
             <div>
               <label>Cidade:</label><br></br>
               <input
@@ -290,7 +257,6 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
-
             <div>
               <label>Estado:</label><br></br>
               <input
@@ -304,7 +270,6 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
-
             <div>
               <label>País:</label><br></br>
               <input

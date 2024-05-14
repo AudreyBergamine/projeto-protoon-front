@@ -155,7 +155,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             <div className="register-form">
               <div className="input-container">
                 <div>
-                  <label>Valor:</label><br />
+                  <label style={{ marginLeft: 30 }}>Valor do Serviço</label><br />
                   <input
                     type="text"
                     name="valor"

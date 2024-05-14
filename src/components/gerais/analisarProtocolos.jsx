@@ -25,6 +25,7 @@ function AnalisarProtocolos() {
   const [secretarias, setSecretarias] = useState([]);
   const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
   const [message, setMessage] = useState()
+  const [message2, setMessage2] = useState()
   const [type, setType] = useState()
   const [removeLoading, setRemoveLoading] = useState(true)
   const [successMessage, setSuccessMessage] = useState(""); // Estado para armazenar a mensagem de sucesso
@@ -85,10 +86,10 @@ function AnalisarProtocolos() {
   const novaDevolutiva = async () => {
     // Verifica se o campo de descrição está vazio ou nulo
     if (!devolutiva || devolutiva.trim() === '') {
-      setMessage("Campo de descrição vazio ou nulo. Não é possível enviar a devolutiva.")
+      setMessage2("Campo de descrição vazio ou nulo. Não é possível enviar a devolutiva.")
       setType('error')
       setTimeout(() => {
-        setMessage('')
+        setMessage2('')
       }, 3000)
       console.error('Campo de descrição vazio ou nulo. Não é possível enviar a devolutiva.');
       return; // Retorna sem fazer a requisição
@@ -97,16 +98,20 @@ function AnalisarProtocolos() {
     try {
       const response = await axiosInstance.post(`/protoon/devolutiva/criar-devolutiva/${id}`, { devolutiva });
       // Define a mensagem de sucesso com base na resposta da requisição
-      setMessage("Devolutiva Enviada com Sucesso!")
+      setMessage2("Devolutiva Enviada com Sucesso!")
       setType('success')
       setTimeout(() => {
-        setMessage('')
+        setMessage2('')
         setDevolutiva('');
         navigate('/protocolo/' + id);
       }, 3000)
     } catch (error) {
+      setMessage2("Erro ao enviar a devolutiva. Por favor, tente novamente mais tarde.")
+      setType('error')
+      setTimeout(() => {
+        setMessage2('')
+      }, 3000)
       console.error('Erro ao enviar a devolutiva:', error);
-      alert('Erro ao enviar a devolutiva. Por favor, tente novamente mais tarde.');
     }
   };
 
@@ -115,7 +120,7 @@ function AnalisarProtocolos() {
       console.log("Novo status selecionado:", statusSelecionado); // Adicionando console.log para depurar
       console.log(idSecretariaSelecionada)
 
-      const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.numero_protocolo}`, {
+      const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/status/${protocolo.numero_protocolo}`, {
         ...protocolo,
         status: statusSelecionado
       });
@@ -127,8 +132,8 @@ function AnalisarProtocolos() {
           setMessage('Protocolo atualizado com Sucesso!')
           setType('success')
           setTimeout(() => {
+            setMessage('')
             navigate('/protocolo/' + id);
-
           }, 2000)
         }, 2000)
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -152,7 +157,7 @@ function AnalisarProtocolos() {
 
         // Exibe um alerta de confirmação antes de redirecionar o protocolo
 
-        const response2 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/${protocolo.numero_protocolo}`, {
+        const response2 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/departamento/${protocolo.numero_protocolo}`, {
           ...protocolo,
           secretaria: secretariaData
         });
@@ -164,8 +169,8 @@ function AnalisarProtocolos() {
             setMessage('Protocolo redirecionado com Sucesso!')
             setType('success')
             setTimeout(() => {
+              setMessage('')
               navigate('/protocolos');
-
             }, 2000)
           }, 2000)
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -403,7 +408,7 @@ function AnalisarProtocolos() {
             />
           </div>
           <button onClick={novaDevolutiva} style={{ marginTop: 20 }}>Enviar Somente Devolutiva</button>
-          {message && <Message type={type} msg={message} />}
+          {message2 && <Message type={type} msg={message2} />}
         </fieldset>
 
         {/*Coloquei no botão de salvar alteração para salvar tanto protocolo quanto devolutivas*/}

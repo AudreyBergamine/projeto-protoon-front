@@ -19,17 +19,17 @@ function PerfilMunicipe() {
   const [alert, setAlert] = useState('');
   const [removeLoading, setRemoveLoading] = useState(true)
   const id = localStorage.getItem("id")
- 
+
 
   const axiosInstance = axios.create({
     baseURL: URL, // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
-// Recuperar o token do localStorage
-const token = localStorage.getItem('token');
+  // Recuperar o token do localStorage
+  const token = localStorage.getItem('token');
 
-// Adicionar o token ao cabeçalho de autorização
-axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  // Adicionar o token ao cabeçalho de autorização
+  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
 
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
@@ -55,7 +55,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   });
 
   const handleAlertChange = (newAlert) => {
-    setAlert(newAlert);    
+    setAlert(newAlert);
   };
 
   useEffect(() => {
@@ -80,7 +80,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         console.error('Erro ao obter dados do perfil:', error);
       }
     };
-  
+
     fetchData();
   }, []);
 
@@ -89,7 +89,6 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     return value.toLowerCase().replace(/( de | da | do | das | dos )/g, (match) => match.toLowerCase())
       .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase());
   };
-
 
   //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
   const handleChange = (e) => {
@@ -149,7 +148,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.celular.length < 15) {
+    if (formData.celular.length < 14) {
       setMessage('Número de celular inválido')
       setType('error')
       setTimeout(() => {
@@ -178,7 +177,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         setMessage('Atualização dos Dados feita com Sucesso! Redirecionando...')
         setType('success')
         setTimeout(() => {
-          navigate(-1);
+          navigate("/");
         }, 3000)
       }, 3000)
     } catch (error) {
@@ -186,11 +185,10 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setTimeout(() => {
         setRemoveLoading(true)
         console.error('Erro ao enviar os dados:', error);
-        setMessage('Falha ao tentar fazer o Cadastro!')
+        setMessage('Falha ao tentar Atualizar os Dados!')
         setType('error')
       }, 3000)
     }
-
   };
 
   const handleChangeCEP = (formattedCEP) => {
@@ -216,7 +214,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     <form onSubmit={handleSubmit}>
       <div style={{ paddingBottom: '50px' }}>
 
-        <h3 style={{ marginTop: '-50px' }}>Dados Pessoais</h3>
+        <h3 style={{ marginTop: '-40px' }}>Dados Pessoais</h3>
         <div className="register-form">
           <div className="input-container">
 

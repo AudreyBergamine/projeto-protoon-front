@@ -62,7 +62,6 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     setEndereco('num_cep')
   }, []);
 
-
   useEffect(() => {
     async function fetchFuncionario() {
       try {
@@ -95,8 +94,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           setCelularValue(data.celular);
           setIdSecretariaSelecionada(data.secretaria.id_secretaria)
           const celularDoFuncionario = response1.data.celular; // Obtém o valor do celular do funcionário
-          setCelularValue(celularDoFuncionario); // Define o valor do celular no estado
-      
+          setCelularValue(celularDoFuncionario); // Define o valor do celular no estado      
         }
       } catch (error) {
         console.error('Erro ao buscar o protocolo:', error);
@@ -108,16 +106,13 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   const handleSecretariaChange = (e) => {
     const selectedSecretariaId = e.target.value;
     setIdSecretariaSelecionada(selectedSecretariaId);
-  };
-
- 
+  }; 
 
   const formatValue = (value) => {
     // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem no separados da palavra
     return value.toLowerCase().replace(/( de | da | do | das | dos )/g, (match) => match.toLowerCase())
       .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase());
   };
-
 
   //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
   const handleChange = (e) => {
@@ -180,7 +175,6 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       });
     }
   };
-
  
   const voltarAnterior = async() =>{
     navigate(-1)
@@ -211,8 +205,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       console.log(id)
       console.log(idSecretariaSelecionada)
       console.log(formData)
-      const response = await axiosInstance.put(`/protoon/funcionarios/${id}/${idSecretariaSelecionada}`,formData
-    );
+      const response = await axiosInstance.put(`/protoon/funcionarios/${id}/${idSecretariaSelecionada}`,formData);
 
       setRemoveLoading(false)
 
@@ -385,18 +378,6 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
-            {/* <div>
-              <label>Nome Endereço:</label><br></br>
-              <input
-                type="text"
-                name="nome_endereco"
-                placeholder="Ex.: Casa"
-                value={formData.endereco.nome_endereco}
-                onChange={handleChange}
-                required
-                minLength={3}
-              />
-            </div> */}
             <div>
               <label>Número:</label><br></br>
               <input
