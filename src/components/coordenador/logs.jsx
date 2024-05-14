@@ -34,7 +34,7 @@ function Logs() {
 
   return (
     <>
-      <div style={{ paddingInline: 150 }}>
+      <div style={{ paddingInline: 100 }}>
         <h1>Logs</h1>
         <input
           type="text"
