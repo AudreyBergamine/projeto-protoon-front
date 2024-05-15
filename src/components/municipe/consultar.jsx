@@ -13,7 +13,7 @@ function Consultar() {
   const navigate = useNavigate()
   const id = localStorage.getItem('id')
 
-  const sendToIndex = async ()=>{
+  const sendToIndex = async () => {
     navigate("/")
   }
   const axiosInstance = axios.create({
@@ -21,11 +21,19 @@ function Consultar() {
     withCredentials: true,
   });
 
-  // Recuperar o token do localStorage
-const token = localStorage.getItem('token');
+  const handleClick = (id) => {
+    // Redirecionar para outra página com o ID do protocolo na URL usando navigater
+    window.open(`/todas-devolutivas/${id}`, '_blank');
+  };
+  const voltarIndex = async () => {
+    navigate("/")
+  }
 
-// Adicionar o token ao cabeçalho de autorização
-axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  // Recuperar o token do localStorage
+  const token = localStorage.getItem('token');
+
+  // Adicionar o token ao cabeçalho de autorização
+  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,7 +79,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           <tbody>
             {protocolos.map((protocolo, index) => (
               <React.Fragment key={protocolo.id}>
-                <tr>
+                <tr onClick={() => handleClick(protocolo.id_protocolo)} className="rowTable">
                   <td style={{ padding: 10, textAlign: 'center', fontSize: 14 }}>{protocolo.assunto}</td>
                   <td style={{ padding: 10, textAlign: 'center', fontSize: 14 }}>
                     <div style={{ maxHeight: '50px', overflowY: 'auto' }}>

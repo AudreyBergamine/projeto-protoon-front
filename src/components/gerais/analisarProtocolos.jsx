@@ -87,9 +87,11 @@ function AnalisarProtocolos() {
 
   const novaDevolutiva = async () => {
     // Verifica se o campo de descrição está vazio ou nulo
-    if ((!devolutiva || devolutiva.trim() === '') && (!message1)) {
-      setMessage2("Campo de descrição vazio ou nulo. Não é possível enviar a devolutiva.")
-      setType('error')
+    if (!devolutiva || devolutiva.trim() === '') {
+      if (!message1) {
+        setMessage2("Campo de descrição vazio ou nulo. Não é possível enviar a devolutiva.")
+        setType('error')
+      }
       setTimeout(() => {
         setMessage2('')
       }, 3000)

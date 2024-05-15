@@ -28,7 +28,7 @@ function TodasDevolutivas() {
     }
 
     fetchDevolutivas();
-  }, [axiosInstance, id]);
+  }, [id]);
 
   return (
     <>
