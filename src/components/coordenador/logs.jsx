@@ -15,6 +15,12 @@ function Logs() {
   const [logs, setLogs] = useState([]);
   const [pesquisarFun, setPesquisarFun] = useState('');
 
+  const role = localStorage.getItem('role')
+
+  if (localStorage.getItem('role') !== 'COORDENADOR') {
+    navigate('/')
+  }
+
   useEffect(() => {
     async function fetchLogs() {
       try {
