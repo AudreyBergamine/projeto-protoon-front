@@ -37,6 +37,8 @@ function AnalisarProtocolos() {
   const { id } = useParams();
   const role = localStorage.getItem('role')
 
+  let message1 = false
+
   const HistoricoDevolutivas = () => {
     //navigate(`/todas-devolutivas/${id}`); // Na mesma pagina 
     window.open(`/todas-devolutivas/${id}`, '_blank'); // Abre outra pagina, achei melhor...
@@ -85,7 +87,7 @@ function AnalisarProtocolos() {
 
   const novaDevolutiva = async () => {
     // Verifica se o campo de descrição está vazio ou nulo
-    if (!devolutiva || devolutiva.trim() === '') {
+    if ((!devolutiva || devolutiva.trim() === '') && (!message1)) {
       setMessage2("Campo de descrição vazio ou nulo. Não é possível enviar a devolutiva.")
       setType('error')
       setTimeout(() => {
@@ -98,8 +100,10 @@ function AnalisarProtocolos() {
     try {
       const response = await axiosInstance.post(`/protoon/devolutiva/criar-devolutiva/${id}`, { devolutiva });
       // Define a mensagem de sucesso com base na resposta da requisição
-      setMessage2("Devolutiva Enviada com Sucesso!")
-      setType('success')
+      if (!message1) {
+        setMessage2("Devolutiva Enviada com Sucesso!")
+        setType('success')
+      }
       setTimeout(() => {
         setMessage2('')
         setDevolutiva('');
@@ -212,6 +216,7 @@ function AnalisarProtocolos() {
   }
 
   const salvarAlteracoes = async () => { // SALVA TUDO
+    message1 = true
     await updateProtocolo();
     await novaDevolutiva();
   }
