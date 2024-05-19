@@ -49,7 +49,7 @@ function AnalisarProtocolos() {
   useEffect(() => {
     async function fetchProtocolo() {
       try {
-        if (localStorage.getItem('role') === 'COORDENADOR') {
+        if (localStorage.getItem('role') === 'FUNCIONARIO') {
           const response1 = await axiosInstance.get('/protoon/secretaria');
           setSecretarias(response1.data);
         }
@@ -176,18 +176,23 @@ function AnalisarProtocolos() {
         console.log(response1.data)
         const secretariaData = response1.data;
 
+        const response2 = await axiosInstance.post(`/protoon/redirecionamento/${id}`,
+        {novaSecretaria: secretariaData.nome_secretaria}
+        )
+        console.log(response2.data)
+
         // Exibe um alerta de confirmação antes de redirecionar o protocolo
 
-        const response2 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/departamento/${protocolo.numero_protocolo}`, {
-          ...protocolo,
-          secretaria: secretariaData
-        });
+        // const response3 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/departamento/${protocolo.numero_protocolo}`, {
+        //   ...protocolo,
+        //   secretaria: secretariaData
+        // });
 
-        if (response2.status.valueOf() === 200) {
+        if (response2.status.valueOf() === 201) {
           setRemoveLoading(false)
           setTimeout(() => {
             setRemoveLoading(true)
-            setMessage('Protocolo redirecionado com Sucesso!')
+            setMessage('Solicitação de redirecionamento feita com Sucesso!')
             setType('success')
             setTimeout(() => {
               setMessage('')
@@ -197,7 +202,16 @@ function AnalisarProtocolos() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       } catch (error) {
-        console.error('Erro ao atualizar o protocolo:', error);
+       
+    // TODO: ATUALIZAR MENSAGEM QUANDO DER ERRO PERSONALIZADA NO REDIRECIONAMENTO DE PROTOCOLO
+    if (error.response && error.response.data && error.response.data.message) {
+      setMessage(error.response.data.message);
+      
+      console.log(error.response.data.message);
+    } else {
+      setMessage('Erro desconhecido ocorreu.');
+      console.log('Erro desconhecido ocorreu.');
+    }
       }
     }
   }
@@ -260,7 +274,7 @@ function AnalisarProtocolos() {
         <h1>Detalhes do Protocolo</h1>
 
         {/* Select para a secretaria */}
-        {role === "COORDENADOR" && (
+        {role === "FUNCIONARIO" && (
           <div>
             <h3 style={{ marginLeft: -180, marginBottom: -30 }}>Secretaria</h3>
             <select

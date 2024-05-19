@@ -22,6 +22,9 @@ function PaginaInicialCoordenador() {
         <button className="btn-log" onClick={() => (navigate('/protocolos'))}>
           Listar Protocolos
         </button>
+        <button className="btn-log" onClick={() => (navigate('/redirecionamentos'))}>
+          Aprovar Redirecionamentos
+        </button>
         <button className="btn-log" onClick={() => (navigate('/logs'))}>
           Logs
         </button>
