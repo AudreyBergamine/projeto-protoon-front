@@ -31,8 +31,10 @@ function AnalisarProtocolos() {
   const [successMessage, setSuccessMessage] = useState(""); // Estado para armazenar a mensagem de sucesso
   const [redirected, setRedirected] = useState(false);
   const [devolutivaMaisRecente, setDevolutivaMaisRecente] = useState(null); // Estado para armazenar a devolutiva mais recente
-  const [mensagem, setMensagem] = useState('Sucesso');
+  const [mensagem, setMensagem] = useState('');
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+  const [enviandoDevolutiva, setEnviandoDevolutiva] = useState(false);
+  const [mensagemAtiva, setMensagemAtiva] = useState(false);
 
   const { id } = useParams();
   const role = localStorage.getItem('role')
@@ -88,38 +90,51 @@ function AnalisarProtocolos() {
   const novaDevolutiva = async () => {
     // Verifica se o campo de descrição está vazio ou nulo
     if (!devolutiva || devolutiva.trim() === '') {
-      if (!message1) {
-        setMessage2("Campo de descrição vazio ou nulo. Não é possível enviar a devolutiva.")
-        setType('error')
+      if (exibirMensagem) {
+        exibirMensagem("Campo de descrição vazio ou nulo. Não é possível enviar a devolutiva.", 'error');
+        return; // Retorna sem fazer a requisição
       }
-      setTimeout(() => {
-        setMessage2('')
-      }, 3000)
-      console.error('Campo de descrição vazio ou nulo. Não é possível enviar a devolutiva.');
-      return; // Retorna sem fazer a requisição
     }
 
     try {
+      setEnviandoDevolutiva(true);
+
       const response = await axiosInstance.post(`/protoon/devolutiva/criar-devolutiva/${id}`, { devolutiva });
-      // Define a mensagem de sucesso com base na resposta da requisição
-      if (!message1) {
-        setMessage2("Devolutiva Enviada com Sucesso!")
-        setType('success')
-      }
+
+      exibirMensagem("Devolutiva Enviada com Sucesso!", 'success');
+
       setTimeout(() => {
-        setMessage2('')
         setDevolutiva('');
-        navigate('/protocolo/' + id);
-      }, 3000)
+        navigate(`/protocolo/${id}`);
+      }, 3000);
     } catch (error) {
-      setMessage2("Erro ao enviar a devolutiva. Por favor, tente novamente mais tarde.")
-      setType('error')
-      setTimeout(() => {
-        setMessage2('')
-      }, 3000)
+      exibirMensagem("Erro ao enviar a devolutiva. Por favor, tente novamente mais tarde.", 'error');
       console.error('Erro ao enviar a devolutiva:', error);
+    } finally {
+      setEnviandoDevolutiva(false);
     }
   };
+
+  const exibirMensagem = (msg, tipo) => {
+    setMessage(msg);
+    setType(tipo);
+    setMensagemAtiva(true);
+
+    setTimeout(() => {
+      setMessage('');
+      setType('');
+      setMensagemAtiva(false);
+    }, 3000);
+  };
+
+  useEffect(() => {
+    // Habilita o botão quando a mensagem estiver inativa
+    const timer = setTimeout(() => {
+      setMensagemAtiva(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [mensagemAtiva]);
 
   const updateProtocolo = async () => {
     try {
@@ -217,11 +232,22 @@ function AnalisarProtocolos() {
     return <Loading />;
   }
 
-  const salvarAlteracoes = async () => { // SALVA TUDO
-    message1 = true
-    await updateProtocolo();
-    await novaDevolutiva();
-  }
+  const salvarAlteracoes = async () => {
+    // Evita múltiplos cliques e varias chamadas da função
+    if (enviandoDevolutiva || mensagemAtiva) {
+      return;
+    }
+    setMensagemAtiva(true);
+    try {
+      await updateProtocolo();
+      exibirMensagem("Protocolo Atualizado com sucesso!", 'success');
+    } catch (error) {
+      console.error('Erro ao salvar alterações:', error);
+    } finally {
+      setMensagemAtiva(false);
+    }
+  };
+
 
   const handleCancelRedirect = () => {
     setShowConfirmationDialog(false);
@@ -242,7 +268,7 @@ function AnalisarProtocolos() {
               value={idSecretariaSelecionada} // Aqui se precisa usar idSecretariaSelecionada em vez de selectedSecretaria
               onChange={handleSecretariaChange}
             >
-              <option value="">Selecione a secretaria que o funcionário trabalhará</option>
+              <option value="">Selecione a secretaria</option>
               {secretarias.map(secretaria => (
                 <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
                   {secretaria.nome_secretaria}
@@ -261,30 +287,26 @@ function AnalisarProtocolos() {
             />)}
           </div>
         )}
+
         <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
           <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Protocolo</legend>
           <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '100%', padding: 30 }}>
             <thead>
-              <div style={{ marginTop: 30 }}></div>
               <tr>
-                <th>Assunto</th>
-                <th>Número</th>
-                <th>Data</th>
-                <th>Descrição</th>
+                <th style={{ minWidth: 150 }}>Assunto</th>
+                <th style={{ minWidth: 100 }}>Número</th>
+                <th style={{ minWidth: 150 }}>Data</th>
+                <th style={{ minWidth: 100 }}>Valor</th>
                 <th>Status</th>
-                <th>Valor</th>
+                <th style={{ minWidth: 100 }}>Alterar Status</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style={{ textAlign: 'center', minWidth: 300 }}>{protocolo.assunto}</td>
+                <td style={{ textAlign: 'center' }}>{protocolo.assunto}</td>
                 <td>{protocolo.numero_protocolo}</td>
-                <td style={{ textAlign: 'center', minWidth: 200 }}>{formatarDataHora(protocolo.data_protocolo)}</td>
-                <td style={{ textAlign: 'center', minWidth: 150, maxWidth: 450, wordWrap: 'break-word' }}>
-                  <div style={{ maxHeight: '50px', overflowY: 'auto' }}>
-                    {protocolo.descricao}
-                  </div>
-                </td>
+                <td style={{ textAlign: 'center' }}>{formatarDataHora(protocolo.data_protocolo)}</td>
+                <td style={{ textAlign: 'center' }}>R$ {protocolo.valor.toFixed(2)}</td>
                 <td>
                   <select
                     value={statusSelecionado}
@@ -296,11 +318,27 @@ function AnalisarProtocolos() {
                     <option value="CONCLUIDO">CONCLUÍDO</option>
                   </select>
                 </td>
-                <td style={{ textAlign: 'center', minWidth: 100 }}>R$ {'R$ ' + protocolo.valor.toFixed(2)}</td>
+                <td style={{ minWidth: 100, textAlign: 'center' }}>
+                  <button onClick={salvarAlteracoes} disabled={mensagemAtiva} style={{ opacity: mensagemAtiva ? 0.5 : 1, fontSize: '0.7em' }}>
+                    Salvar
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
         </fieldset>
+
+        <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
+          <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Descrição do problema</legend>
+          <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '100%', padding: 30 }}>
+            <div style={{ backgroundColor: '#f5f5f5', padding: 20, borderRadius: 5 }}>
+              <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                {protocolo.descricao}
+              </div>
+            </div>
+          </table>
+        </fieldset>
+
 
         {devolutivaMaisRecente && (
           <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
@@ -353,6 +391,8 @@ function AnalisarProtocolos() {
         ) : (
           <li>Carregando...</li>
         )}
+
+        
         <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
           <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Municipe</legend>
           <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
@@ -376,6 +416,8 @@ function AnalisarProtocolos() {
             </tbody>
           </table>
         </fieldset>
+
+        
         <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
           <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Endereço do Protocolo</legend>
           <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
@@ -414,14 +456,23 @@ function AnalisarProtocolos() {
               style={{ width: '100%', minHeight: 100, padding: 10 }}
             />
           </div>
-          <button onClick={novaDevolutiva} style={{ marginTop: 20 }}>Enviar Somente Devolutiva</button>
-          {message2 && <Message type={type} msg={message2} />}
+          <button onClick={novaDevolutiva} disabled={enviandoDevolutiva || mensagemAtiva} style={{ marginTop: 20 }}>
+            {enviandoDevolutiva ? 'Enviando...' : 'Enviar Somente Devolutiva'}
+          </button>
+          {message && <Message type={type} msg={message} />}
         </fieldset>
 
         {/*Coloquei no botão de salvar alteração para salvar tanto protocolo quanto devolutivas*/}
         {/*{removeLoading && (<><button onClick={updateProtocolo} className="btn-cad" style={{ marginRight: '100px' }}>Salvar Alterações</button> */}
-        {removeLoading && (<><button onClick={salvarAlteracoes} className="btn-cad" style={{ marginRight: '100px' }}>Salvar Alterações</button>
-          <button className="btn-log" onClick={voltarAnterior}>Voltar</button></>)}
+        {removeLoading && (
+          <>
+            {/*<button onClick={salvarAlteracoes} disabled={mensagemAtiva} className="btn-cad" style={{ marginRight: '100px', opacity: mensagemAtiva ? 0.6 : 1 }}>
+              Salvar Alterações
+            </button>*/}
+            <button className="btn-log" onClick={voltarAnterior} style={{ opacity: mensagemAtiva ? 0.6 : 1 }}>Voltar</button>
+          </>
+        )}
+
       </div >
     </>
   );
