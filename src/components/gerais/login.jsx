@@ -18,12 +18,12 @@ const LoginForm = () => {
   const [senhaNull, setSenhaNull] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const axiosInstance = axios.create({
-    baseURL: URL, // Adjust the base URL as needed
-    withCredentials: true, // Set withCredentials to true
+    baseURL: URL, 
+    withCredentials: true, 
   });
 
-  const sendToCadastrar = async () =>{
-    navigate("/cadastrar-municipe"); // Redirecionar após login
+  const sendToCadastrar = async () => {
+    navigate("/cadastrar-municipe"); 
 }
 
   const handleLogin = async () => {

@@ -2,6 +2,93 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import URL from '../services/url';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  padding: 20px;
+`;
+
+const Header = styled.div`
+  margin-bottom: 20px;
+`;
+
+const StatusSelect = styled.select`
+  padding: 5px;
+  font-size: 14px;
+  border-radius: 5px;
+`;
+
+const DateHeader = styled.div`
+  cursor: pointer;
+  background: #f0f0f0;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+`;
+
+const RedirectionList = styled.ul`
+  list-style: none;
+  padding: 0;
+`;
+
+const RedirectionItem = styled.li`
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+`;
+
+const Checkbox = styled.input`
+  margin-right: 25px;
+  width: 15px; 
+  height: 15px; 
+`;
+
+const Select = styled.select`
+  padding: 10px;
+  margin-right: 20px;
+  font-size: 14px;
+  border-radius: 5px;
+`;
+
+const Button = styled.button`
+  --clr-font-main: hsla(0 0% 20% / 100);
+  --btn-bg-1: #9AD0C2;
+  --btn-bg-2: #2D9596;
+  --btn-bg-color: hsla(360 100% 100% / 1);
+  --radii: 0.5em;
+  cursor: pointer;
+  padding: 0.9em 1.4em;
+  min-width: 120px;
+  min-height: 44px;
+  font-family: "Encode Sans Expanded", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  transition: 0.8s;
+  background-size: 280% auto;
+  background-image: linear-gradient(325deg, var(--btn-bg-2) 0%, var(--btn-bg-1) 55%, var(--btn-bg-2) 90%);
+  border: none;
+  border-radius: var(--radii);
+  color: var(--btn-bg-color);
+  box-shadow: 0px 0px 20px rgb(38 175 114 / 50%), 0px 5px 5px -1px rgb(7 56 4 / 25%), inset 4px 4px 8px rgb(89 188 177 / 50%), inset -4px -4px 8px rgba(19, 95, 216, 0.35);
+  
+  &:hover {
+    background-position: right top;
+  }
+
+  &:focus, &:focus-visible, &:active {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--btn-bg-color), 0 0 0 6px var(--btn-bg-2);
+  }
+`;
+
+const SecretariaSelect = styled.select`
+  padding: 10px;
+  margin-top: 10px;
+  margin-left:20px;
+  font-size: 14px;
+  border-radius: 5px;
+`;
 
 const Redirecionamentos = () => {
   const [redirecionamentos, setRedirecionamentos] = useState({});
@@ -11,16 +98,12 @@ const Redirecionamentos = () => {
   const [secretarias, setSecretarias] = useState([]);
   const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
 
-
   const axiosInstance = axios.create({
-    baseURL: URL, // Adjust the base URL as needed
-    withCredentials: true, // Set withCredentials to true
+    baseURL: URL,
+    withCredentials: true,
   });
 
-  // Recuperar o token do localStorage
   const token = localStorage.getItem('token');
-
-  // Adicionar o token ao cabeçalho de autorização
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
   useEffect(() => {
@@ -40,8 +123,7 @@ const Redirecionamentos = () => {
   }, []);
 
   const handleSecretariaChange = (e) => {
-    const selectedSecretariaId = e.target.value;
-    setIdSecretariaSelecionada(selectedSecretariaId);
+    setIdSecretariaSelecionada(e.target.value);
   };
 
   const groupByStatusAndDate = (redirecionamentos) => {
@@ -69,7 +151,7 @@ const Redirecionamentos = () => {
   const handleCheckboxChange = (id, checked) => {
     setSelectedRedirecionamentos((prevSelected) => {
       if (checked) {
-        return { ...prevSelected, [id]: '' }; // Initialize with an empty status
+        return { ...prevSelected, [id]: '' };
       } else {
         const updatedSelected = { ...prevSelected };
         delete updatedSelected[id];
@@ -84,26 +166,25 @@ const Redirecionamentos = () => {
       [id]: status,
     }));
   };
+
   const handleUpdateStatus = async (id) => {
     try {
       const status = selectedRedirecionamentos[id];
       if (status) {
         const response1 = await axiosInstance.put(`/protoon/redirecionamento/by-coordenador/${id}`, {
-          statusRedirecionamento: status
+          statusRedirecionamento: status,
         });
         alert('Status atualizado com sucesso!');
-        if(response1.data.statusRedirecionamento === "APROVADO"){
-            const protocolo = response1.data.protocolo
-            const response2 = await axiosInstance.get(`/protoon/secretaria/${idSecretariaSelecionada}`)
-            const secretariaData = response2.data;
-            const response3 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/departamento/${response1.data.protocolo.numero_protocolo}`, {
-          ...protocolo,
-          secretaria: secretariaData
-        });
+        if (response1.data.statusRedirecionamento === "APROVADO") {
+          const protocolo = response1.data.protocolo;
+          const response2 = await axiosInstance.get(`/protoon/secretaria/${idSecretariaSelecionada}`);
+          const secretariaData = response2.data;
+          await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/departamento/${response1.data.protocolo.numero_protocolo}`, {
+            ...protocolo,
+            secretaria: secretariaData,
+          });
         }
-       
 
-        // Atualiza a lista os redirecionamentos depois de atualizar o status
         const response4 = await axiosInstance.get(`/protoon/redirecionamento`);
         const groupedData = groupByStatusAndDate(response4.data);
         setRedirecionamentos(groupedData);
@@ -117,72 +198,64 @@ const Redirecionamentos = () => {
   };
 
   return (
-    <div>
-      <div>
-        <label htmlFor="status">Selecionar Status: </label>
+    <Container>
+      <Header>
+        <label htmlFor="status" >Selecionar Status</label>
         <br />
-        <select id="status" value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)}>
+        <StatusSelect id="status" value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)}>
           <option value="ANDAMENTO">ANDAMENTO</option>
           <option value="APROVADO">APROVADO</option>
-          <option value="RECUSADO ">RECUSADO</option>
-        </select>
-      </div>
+          <option value="RECUSADO">RECUSADO</option>
+        </StatusSelect>
+      </Header>
 
       {redirecionamentos[selectedStatus] && Object.keys(redirecionamentos[selectedStatus]).map((date) => (
         <div key={date}>
-          <div onClick={() => toggleExpand(date)} style={{ cursor: 'pointer', background: '#f0f0f0', padding: '10px', margin: '10px 0' }}>
+          <DateHeader onClick={() => toggleExpand(date)}>
             <strong>{date}</strong>
-          </div>
+          </DateHeader>
           {expandedDates[date] && (
-            <ul>
+            <RedirectionList>
               {redirecionamentos[selectedStatus][date].map((redirecionamento) => (
-                <li key={redirecionamento.id} style={{ border: '1px solid #ddd', padding: '10px', margin: '5px 0' }}>
-                  {selectedStatus === 'ANDAMENTO' && (
-                    <div>
-                      <input
-                        type="checkbox"
-                        onChange={(e) => handleCheckboxChange(redirecionamento.id, e.target.checked)}
-                      />
-                      {selectedRedirecionamentos[redirecionamento.id] !== undefined && (
-                        <>
-                          <select
-                            value={selectedRedirecionamentos[redirecionamento.id]}
-                            onChange={(e) => handleStatusChange(redirecionamento.id, e.target.value)}
-                          >
-                            <option value="">Selecione</option>
-                            <option value="APROVADO">APROVADO</option>
-                            <option value="RECUSADO">RECUSADO</option>
-                          </select>
-                          <button onClick={() => handleUpdateStatus(redirecionamento.id)}>Atualizar Status</button>
-
-                          <select
-              style={{ fontSize: 10, marginRight: 10, padding: 10, borderRadius: 10, textAlign: "center" }}
-              value={idSecretariaSelecionada} // Aqui se precisa usar idSecretariaSelecionada em vez de selectedSecretaria
-              onChange={handleSecretariaChange}
-            >
-              <option value="">Selecione a secretaria</option>
-              {secretarias.map(secretaria => (
-                <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
-                  {secretaria.nome_secretaria}
-                </option>
-              ))}
-            </select>
-                        </>
-                      )}
-                    </div>
-                  )}
+                <RedirectionItem key={redirecionamento.id}>
+                  <div>
+                    <Checkbox
+                      type="checkbox"
+                      onChange={(e) => handleCheckboxChange(redirecionamento.id, e.target.checked)}
+                    />
+                    <Select
+                      value={selectedRedirecionamentos[redirecionamento.id] || ""}
+                      onChange={(e) => handleStatusChange(redirecionamento.id, e.target.value)}
+                    >
+                      <option value="">Selecione</option>
+                      <option value="APROVADO">APROVADO</option>
+                      <option value="RECUSADO">RECUSADO</option>
+                    </Select>
+                    <Button onClick={() => handleUpdateStatus(redirecionamento.id)}>Atualizar Status</Button>
+                    <SecretariaSelect
+                      value={idSecretariaSelecionada}
+                      onChange={handleSecretariaChange}
+                    >
+                      <option value="">Selecione a secretaria</option>
+                      {secretarias.map(secretaria => (
+                        <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
+                          {secretaria.nome_secretaria}
+                        </option>
+                      ))}
+                    </SecretariaSelect>
+                  </div>
                   <p><strong>Status:</strong> {redirecionamento.statusRedirecionamento}</p>
                   <p><strong>Descrição:</strong> {redirecionamento.descricao}</p>
                   <p><strong>Nova Secretaria:</strong> {redirecionamento.novaSecretaria || 'N/A'}</p>
                   <p><strong>Data de Solicitação:</strong> {new Date(redirecionamento.dtSolicitacao).toLocaleString()}</p>
                   {redirecionamento.dtConfirmacao && <p><strong>Data de Confirmação:</strong> {new Date(redirecionamento.dtConfirmacao).toLocaleString()}</p>}
-                </li>
+                </RedirectionItem>
               ))}
-            </ul>
+            </RedirectionList>
           )}
         </div>
       ))}
-    </div>
+    </Container>
   );
 };
 
