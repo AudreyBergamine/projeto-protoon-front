@@ -22,6 +22,9 @@ function PaginaInicialFuncionario() {
         <button className="btn-log" onClick={() => (navigate('/protocolos'))}>
           Listar Protocolos
         </button>
+        <button className="btn-log" onClick={() => (navigate('/redirecionamentos-funcionario'))}>
+          Status Redirecionamentos
+        </button>
       </div>
     </>
   );

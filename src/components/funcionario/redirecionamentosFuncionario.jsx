@@ -90,13 +90,11 @@ const SecretariaSelect = styled.select`
   border-radius: 5px;
 `;
 
-const RedirecionamentosCoordenador = () => {
+const RedirecionamentosFuncionario = () => {
   const [redirecionamentos, setRedirecionamentos] = useState({});
   const [expandedDates, setExpandedDates] = useState({});
   const [selectedStatus, setSelectedStatus] = useState('ANDAMENTO');
   const [selectedRedirecionamentos, setSelectedRedirecionamentos] = useState({});
-  const [secretarias, setSecretarias] = useState([]);
-  const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
 
   const axiosInstance = axios.create({
     baseURL: URL,
@@ -109,10 +107,8 @@ const RedirecionamentosCoordenador = () => {
   useEffect(() => {
     async function fetchRedirecionamentos() {
       try {
-        const response1 = await axiosInstance.get('/protoon/secretaria');
-        setSecretarias(response1.data);
 
-        const response2 = await axiosInstance.get(`/protoon/redirecionamento`);
+        const response2 = await axiosInstance.get(`/protoon/redirecionamento/funcionario`);
         const groupedData = groupByStatusAndDate(response2.data);
         setRedirecionamentos(groupedData);
       } catch (error) {
@@ -122,9 +118,6 @@ const RedirecionamentosCoordenador = () => {
     fetchRedirecionamentos();
   }, []);
 
-  const handleSecretariaChange = (e) => {
-    setIdSecretariaSelecionada(e.target.value);
-  };
 
   const groupByStatusAndDate = (redirecionamentos) => {
     return redirecionamentos.reduce((groups, redirecionamento) => {
@@ -169,30 +162,12 @@ const RedirecionamentosCoordenador = () => {
 
   const handleUpdateStatus = async (id) => {
     try {
-      const status = selectedRedirecionamentos[id];
-      if (status) {
-        const response1 = await axiosInstance.put(`/protoon/redirecionamento/by-coordenador/${id}`, {
-          statusRedirecionamento: status,
-        });
-        alert('Status atualizado com sucesso!');
-        if (response1.data.statusRedirecionamento === "APROVADO") {
-          const protocolo = response1.data.protocolo;
-          const response2 = await axiosInstance.get(`/protoon/secretaria/${idSecretariaSelecionada}`);
-          const secretariaData = response2.data;
-          await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/departamento/${response1.data.protocolo.numero_protocolo}`, {
-            ...protocolo,
-            secretaria: secretariaData,
-          });
-        }
-
+  
         const response4 = await axiosInstance.get(`/protoon/redirecionamento`);
         const groupedData = groupByStatusAndDate(response4.data);
         setRedirecionamentos(groupedData);
-      } else {
-        alert('Selecione um status para atualizar.');
-      }
     } catch (error) {
-      console.error('Erro ao atualizar o redirecionamento:', error.response ? error.response.data : error);
+      console.error('Erro ao buscar os redirecionamentos:', error.response ? error.response.data : error);
       alert(error.response ? error.response.data.message : 'Erro ao atualizar o redirecionamento');
     }
   };
@@ -218,34 +193,7 @@ const RedirecionamentosCoordenador = () => {
       <RedirectionList>
         {redirecionamentos[selectedStatus][date].map((redirecionamento) => (
           <RedirectionItem key={redirecionamento.id}>
-            {redirecionamento.statusRedirecionamento === "ANDAMENTO" && (
-              <div>
-                <Checkbox
-                  type="checkbox"
-                  onChange={(e) => handleCheckboxChange(redirecionamento.id, e.target.checked)}
-                />
-                <Select
-                  value={selectedRedirecionamentos[redirecionamento.id] || ""}
-                  onChange={(e) => handleStatusChange(redirecionamento.id, e.target.value)}
-                >
-                  <option value="">Selecione</option>
-                  <option value="APROVADO">APROVADO</option>
-                  <option value="RECUSADO">RECUSADO</option>
-                </Select>
-                <Button onClick={() => handleUpdateStatus(redirecionamento.id)}>Atualizar Status</Button>
-                <SecretariaSelect
-                  value={idSecretariaSelecionada}
-                  onChange={handleSecretariaChange}
-                >
-                  <option value="">Selecione a secretaria</option>
-                  {secretarias.map(secretaria => (
-                    <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
-                      {secretaria.nome_secretaria}
-                    </option>
-                  ))}
-                </SecretariaSelect>
-              </div>
-            )}
+         
             <p><strong>Status:</strong> {redirecionamento.statusRedirecionamento}</p>
             <p><strong>Descrição:</strong> {redirecionamento.descricao}</p>
             <p><strong>Nova Secretaria:</strong> {redirecionamento.novaSecretaria || 'N/A'}</p>
@@ -261,4 +209,4 @@ const RedirecionamentosCoordenador = () => {
   );
 };
 
-export default RedirecionamentosCoordenador;
+export default RedirecionamentosFuncionario;

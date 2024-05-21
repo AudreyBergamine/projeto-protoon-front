@@ -24,7 +24,8 @@ import PerfilSecretario from '../components/secretario/perfilSecretario';
 import PerfilCoordenador from '../components/coordenador/perfilCoord';
 import PerfilFuncionario from '../components/funcionario/perfilFuncionario';
 import Logs from '../components/coordenador/logs';
-import Redirecionamentos from '../components/gerais/redirecionamentos';
+import RedirecionamentosCoordenador from '../components/gerais/redirecionamentos';
+import RedirecionamentosFuncionario from '../components/funcionario/redirecionamentosFuncionario';
 
 // Defina um conjunto de rotas privadas
 const privateRoutes = ['/protocolos', '/protocolo/', '/retornadas', '/reclamar', '/consultar', '/perfil',
@@ -57,7 +58,7 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/login" element={<LoginForm />} />
             <Route path="/protocolos" element={<ListarProtocolosBySecretaria />} />
             <Route path="/protocolo/:id" element={<AnalisarProtocolos />} />
-            <Route path="/redirecionamentos" element={<Redirecionamentos />} />
+            <Route path="/redirecionamentos-coordenador" element={<RedirecionamentosCoordenador />} />
 
             {/* MUNICIPE */}  
             <Route path="/cadastrar-municipe" element={<CadastrarMunicipe />} />
@@ -83,6 +84,7 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/perfil-coordenador" element={<PerfilCoordenador />} />
             {/* FUNCIONARIO */}
             <Route path="/perfil-funcionario" element={<PerfilFuncionario />} />
+            <Route path="/redirecionamentos-funcionario" element={<RedirecionamentosFuncionario />} />
 
             <Route path="*" element={<Navigate to="/" />} />
         </Routes>
