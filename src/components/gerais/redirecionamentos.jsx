@@ -210,50 +210,52 @@ const Redirecionamentos = () => {
       </Header>
 
       {redirecionamentos[selectedStatus] && Object.keys(redirecionamentos[selectedStatus]).map((date) => (
-        <div key={date}>
-          <DateHeader onClick={() => toggleExpand(date)}>
-            <strong>{date}</strong>
-          </DateHeader>
-          {expandedDates[date] && (
-            <RedirectionList>
-              {redirecionamentos[selectedStatus][date].map((redirecionamento) => (
-                <RedirectionItem key={redirecionamento.id}>
-                  <div>
-                    <Checkbox
-                      type="checkbox"
-                      onChange={(e) => handleCheckboxChange(redirecionamento.id, e.target.checked)}
-                    />
-                    <Select
-                      value={selectedRedirecionamentos[redirecionamento.id] || ""}
-                      onChange={(e) => handleStatusChange(redirecionamento.id, e.target.value)}
-                    >
-                      <option value="">Selecione</option>
-                      <option value="APROVADO">APROVADO</option>
-                      <option value="RECUSADO">RECUSADO</option>
-                    </Select>
-                    <Button onClick={() => handleUpdateStatus(redirecionamento.id)}>Atualizar Status</Button>
-                    <SecretariaSelect
-                      value={idSecretariaSelecionada}
-                      onChange={handleSecretariaChange}
-                    >
-                      <option value="">Selecione a secretaria</option>
-                      {secretarias.map(secretaria => (
-                        <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
-                          {secretaria.nome_secretaria}
-                        </option>
-                      ))}
-                    </SecretariaSelect>
-                  </div>
-                  <p><strong>Status:</strong> {redirecionamento.statusRedirecionamento}</p>
-                  <p><strong>Descrição:</strong> {redirecionamento.descricao}</p>
-                  <p><strong>Nova Secretaria:</strong> {redirecionamento.novaSecretaria || 'N/A'}</p>
-                  <p><strong>Data de Solicitação:</strong> {new Date(redirecionamento.dtSolicitacao).toLocaleString()}</p>
-                  {redirecionamento.dtConfirmacao && <p><strong>Data de Confirmação:</strong> {new Date(redirecionamento.dtConfirmacao).toLocaleString()}</p>}
-                </RedirectionItem>
-              ))}
-            </RedirectionList>
-          )}
-        </div>
+  <div key={date}>
+    <DateHeader onClick={() => toggleExpand(date)}>
+      <strong>{date}</strong>
+    </DateHeader>
+    {expandedDates[date] && (
+      <RedirectionList>
+        {redirecionamentos[selectedStatus][date].map((redirecionamento) => (
+          <RedirectionItem key={redirecionamento.id}>
+            {redirecionamento.statusRedirecionamento === "ANDAMENTO" && (
+              <div>
+                <Checkbox
+                  type="checkbox"
+                  onChange={(e) => handleCheckboxChange(redirecionamento.id, e.target.checked)}
+                />
+                <Select
+                  value={selectedRedirecionamentos[redirecionamento.id] || ""}
+                  onChange={(e) => handleStatusChange(redirecionamento.id, e.target.value)}
+                >
+                  <option value="">Selecione</option>
+                  <option value="APROVADO">APROVADO</option>
+                  <option value="RECUSADO">RECUSADO</option>
+                </Select>
+                <Button onClick={() => handleUpdateStatus(redirecionamento.id)}>Atualizar Status</Button>
+                <SecretariaSelect
+                  value={idSecretariaSelecionada}
+                  onChange={handleSecretariaChange}
+                >
+                  <option value="">Selecione a secretaria</option>
+                  {secretarias.map(secretaria => (
+                    <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
+                      {secretaria.nome_secretaria}
+                    </option>
+                  ))}
+                </SecretariaSelect>
+              </div>
+            )}
+            <p><strong>Status:</strong> {redirecionamento.statusRedirecionamento}</p>
+            <p><strong>Descrição:</strong> {redirecionamento.descricao}</p>
+            <p><strong>Nova Secretaria:</strong> {redirecionamento.novaSecretaria || 'N/A'}</p>
+            <p><strong>Data de Solicitação:</strong> {new Date(redirecionamento.dtSolicitacao).toLocaleString()}</p>
+            {redirecionamento.dtConfirmacao && <p><strong>Data de Confirmação:</strong> {new Date(redirecionamento.dtConfirmacao).toLocaleString()}</p>}
+          </RedirectionItem>
+        ))}
+      </RedirectionList>
+    )}
+  </div>
       ))}
     </Container>
   );
