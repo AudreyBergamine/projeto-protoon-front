@@ -4,6 +4,8 @@ import './style/home.css';
 import './style/login.css';
 import './style/cadastro.css';
 import './style/menuLogin.css';
+//import './scripts/toast'
+//import './style/toast.css'
 import AppRoutes from './routes/AppRoutes';
 import Header from './components/layouts/Header';
 import Footer from './components/layouts/Footer';
