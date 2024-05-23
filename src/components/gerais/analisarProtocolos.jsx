@@ -342,6 +342,8 @@ function AnalisarProtocolos() {
           </table>
         </fieldset>
 
+        {message && (<Message type={type} msg={message} />)}
+
         <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
           <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Descrição do problema</legend>
           <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '100%', padding: 30 }}>
@@ -352,8 +354,7 @@ function AnalisarProtocolos() {
             </div>
           </table>
         </fieldset>
-
-
+        
         {devolutivaMaisRecente && (
           <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
             <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Devolutiva Mais Recente</legend>
