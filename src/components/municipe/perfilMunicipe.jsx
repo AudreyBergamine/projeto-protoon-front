@@ -310,18 +310,6 @@ function PerfilMunicipe() {
                 className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
-            {/* <div>
-              <label>Nome Endereço:</label><br></br>
-              <input
-                type="text"
-                name="nome_endereco"
-                placeholder="Ex.: Casa"
-                value={formData.endereco.nome_endereco}
-                onChange={handleChange}
-                required
-                minLength={3}
-              />
-            </div> */}
             <div>
               <label>Número:</label><br></br>
               <input

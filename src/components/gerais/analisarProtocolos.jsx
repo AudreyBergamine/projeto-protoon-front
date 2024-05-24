@@ -25,13 +25,9 @@ function AnalisarProtocolos() {
   const [secretarias, setSecretarias] = useState([]);
   const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
   const [message, setMessage] = useState()
-  const [message2, setMessage2] = useState()
   const [type, setType] = useState()
   const [removeLoading, setRemoveLoading] = useState(true)
-  const [successMessage, setSuccessMessage] = useState(""); // Estado para armazenar a mensagem de sucesso
-  const [redirected, setRedirected] = useState(false);
   const [devolutivaMaisRecente, setDevolutivaMaisRecente] = useState(null); // Estado para armazenar a devolutiva mais recente
-  const [mensagem, setMensagem] = useState('');
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [enviandoDevolutiva, setEnviandoDevolutiva] = useState(false);
   const [mensagemAtiva, setMensagemAtiva] = useState(false);
@@ -49,7 +45,7 @@ function AnalisarProtocolos() {
   useEffect(() => {
     async function fetchProtocolo() {
       try {
-        if (localStorage.getItem('role') === 'FUNCIONARIO') {
+        if (localStorage.getItem('role') === 'FUNCIONARIO' || localStorage.getItem('role') === 'COORDENADOR') {
           const response1 = await axiosInstance.get('/protoon/secretaria');
           setSecretarias(response1.data);
         }
@@ -91,15 +87,17 @@ function AnalisarProtocolos() {
     // Verifica se o campo de descrição está vazio ou nulo
     if (!devolutiva || devolutiva.trim() === '') {
       if (exibirMensagem) {
-        exibirMensagem("Campo de descrição vazio ou nulo. Não é possível enviar a devolutiva.", 'error');
+        exibirMensagem("Campo de descrição vazio. Não é possível enviar a devolutiva.", 'error');
         return; // Retorna sem fazer a requisição
-      }      
+      }
     }
 
     try {
       setEnviandoDevolutiva(true);
 
       const response = await axiosInstance.post(`/protoon/devolutiva/criar-devolutiva/${id}`, { devolutiva });
+
+      salvarAlteracoes()
 
       exibirMensagem("Devolutiva Enviada com Sucesso!", 'success');
 
@@ -124,7 +122,7 @@ function AnalisarProtocolos() {
       setMessage('');
       setType('');
       setMensagemAtiva(false);
-    }, 3000);    
+    }, 3000);
   };
 
   useEffect(() => {
@@ -140,6 +138,13 @@ function AnalisarProtocolos() {
     try {
       console.log("Novo status selecionado:", statusSelecionado); // Adicionando console.log para depurar
       console.log(idSecretariaSelecionada)
+
+      if (!devolutiva || devolutiva.trim() === '') {
+        if (exibirMensagem) {
+          exibirMensagem("Campo de descrição de Devolutiva vazio. Não é possível atualizar status.", 'error');
+          return; // Retorna sem fazer a requisição
+        }
+      }
 
       const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/status/${protocolo.numero_protocolo}`, {
         ...protocolo,
@@ -168,7 +173,54 @@ function AnalisarProtocolos() {
     setShowConfirmationDialog(true);
   }
 
-  const handleRedirectConfirmation = async () => {
+  const solicitarRedirecionar = async () => {
+
+    try {
+      const response1 = await axiosInstance.get(`/protoon/secretaria/${idSecretariaSelecionada}`)
+      console.log(response1.data)
+      const secretariaData = response1.data;
+
+      const response2 = await axiosInstance.post(`/protoon/redirecionamento/${id}`,
+        { novaSecretaria: secretariaData.nome_secretaria }
+      )
+      console.log(response2.data)
+
+      // Exibe um alerta de confirmação antes de redirecionar o protocolo
+
+      // const response3 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/departamento/${protocolo.numero_protocolo}`, {
+      //   ...protocolo,
+      //   secretaria: secretariaData
+      // });
+
+      if (response2.status.valueOf() === 201) {
+        setRemoveLoading(false)
+        setTimeout(() => {
+          setRemoveLoading(true)
+          setMessage('Solicitação de redirecionamento feita com Sucesso!')
+          setType('success')
+          setTimeout(() => {
+            setMessage('')
+            navigate('/protocolos');
+          }, 2000)
+        }, 2000)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    } catch (error) {
+
+      // TODO: ATUALIZAR MENSAGEM QUANDO DER ERRO PERSONALIZADA NO REDIRECIONAMENTO DE PROTOCOLO
+      if (error.response && error.response.data && error.response.data.message) {
+        setMessage(error.response.data.message);
+
+        console.log(error.response.data.message);
+      } else {
+        setMessage('Erro desconhecido ocorreu.');
+        console.log('Erro desconhecido ocorreu.');
+      }
+    }
+  }
+
+
+  const redirecionar = async () => {
     if (ConfirmationDialog) {
       setShowConfirmationDialog(false)
       try {
@@ -183,16 +235,16 @@ function AnalisarProtocolos() {
 
         // Exibe um alerta de confirmação antes de redirecionar o protocolo
 
-        // const response3 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/departamento/${protocolo.numero_protocolo}`, {
-        //   ...protocolo,
-        //   secretaria: secretariaData
-        // });
+        const response3 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/departamento/${protocolo.numero_protocolo}`, {
+          ...protocolo,
+          secretaria: secretariaData
+        });
 
-        if (response2.status.valueOf() === 201) {
+        if (response3) {
           setRemoveLoading(false)
           setTimeout(() => {
             setRemoveLoading(true)
-            setMessage('Solicitação de redirecionamento feita com Sucesso!')
+            setMessage('Redirecionamento feito com Sucesso!')
             setType('success')
             setTimeout(() => {
               setMessage('')
@@ -230,8 +282,7 @@ function AnalisarProtocolos() {
   };
   const handleSecretariaChange = (e) => {
     const selectedSecretariaId = e.target.value;
-    setIdSecretariaSelecionada(selectedSecretariaId);
-  };
+    setIdSecretariaSelecionada(selectedSecretariaId);  };
 
   const handleStatusChange = (e) => {
     const novoStatus = e.target.value;
@@ -239,12 +290,10 @@ function AnalisarProtocolos() {
     setProtocolo(prevProtocolo => ({
       ...prevProtocolo,
       status: novoStatus // Atualiza o status do protocolo com o novo status selecionado
-    }));
-  };
+    }));  };
 
   if (!protocolo) {
-    return <Loading />;
-  }
+    return <Loading />;  }
 
   const salvarAlteracoes = async () => {
     // Evita múltiplos cliques e varias chamadas da função
@@ -254,7 +303,7 @@ function AnalisarProtocolos() {
     setMensagemAtiva(true);
     try {
       await updateProtocolo();
-      exibirMensagem("Protocolo Atualizado com sucesso!", 'success');
+      exibirMensagem("Protocolo atualizado com Sucesso!", 'success');
     } catch (error) {
       console.error('Erro ao salvar alterações:', error);
     } finally {
@@ -275,7 +324,7 @@ function AnalisarProtocolos() {
           <h1>Detalhes do Protocolo</h1>
 
           {/* Select para a secretaria */}
-          {role === "FUNCIONARIO" && (
+          {(role === "COORDENADOR" || role === "FUNCIONARIO") && (
             <div>
               <h3 style={{ marginLeft: -180, marginBottom: -30 }}>Secretaria</h3>
               <select
@@ -290,14 +339,19 @@ function AnalisarProtocolos() {
                   </option>
                 ))}
               </select>
-              <button className="btn-log" onClick={redirectProtocolo}>Redirecionar Protocolo</button>
+              {role === "FUNCIONARIO" ? (
+                <button className="btn-log" onClick={solicitarRedirecionar}>Solicitar Redirecionamento Protocolo</button>
+              ) : (
+                <button className="btn-log" onClick={redirectProtocolo}>Redirecionar Protocolo</button>
+              )}
+
 
               {/* {message && <Message type={type} msg={message} />} */}
               {!removeLoading && <Loading />}
 
               {showConfirmationDialog && (<ConfirmationDialog
                 message="Tem certeza que deseja redirecionar o protocolo?"
-                onConfirm={handleRedirectConfirmation}
+                onConfirm={redirecionar}
                 onCancel={handleCancelRedirect}
               />)}
             </div>
@@ -312,8 +366,8 @@ function AnalisarProtocolos() {
                   <th style={{ minWidth: 100 }}>Número</th>
                   <th style={{ minWidth: 150 }}>Data</th>
                   <th style={{ minWidth: 100 }}>Valor</th>
-                  <th>Status</th>
-                  <th style={{ minWidth: 100 }}>Alterar Status</th>
+                  <th>Alterar Status</th>
+                  {/* <th style={{ minWidth: 100 }}>Alterar Status</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -334,9 +388,9 @@ function AnalisarProtocolos() {
                     </select>
                   </td>
                   <td style={{ minWidth: 100, textAlign: 'center' }}>
-                    <button onClick={salvarAlteracoes} disabled={mensagemAtiva} style={{ opacity: mensagemAtiva ? 0.5 : 1, fontSize: '0.7em' }}>
+                    {/* <button onClick={salvarAlteracoes} disabled={mensagemAtiva} style={{ opacity: mensagemAtiva ? 0.5 : 1, fontSize: '0.7em' }}>
                       Salvar
-                    </button>
+                    </button> */}
                   </td>
                 </tr>
               </tbody>
@@ -468,12 +522,12 @@ function AnalisarProtocolos() {
               <textarea
                 value={devolutiva}
                 onChange={enviarDevolutiva}
-                placeholder="Digite sua devolutiva..."
+                placeholder="Digite sua devolutiva para poder enviar as alterações..."
                 style={{ width: '100%', minHeight: 100, padding: 10 }}
               />
             </div>
-            {!devolutiva || devolutiva.trim() !== '' &&<button onClick={novaDevolutiva} disabled={enviandoDevolutiva || mensagemAtiva} style={{ marginTop: 20 }}>
-              {enviandoDevolutiva ? 'Enviando...' : 'Enviar Somente Devolutiva'}
+            {!devolutiva || devolutiva.trim() !== '' && <button onClick={novaDevolutiva} disabled={enviandoDevolutiva || mensagemAtiva} style={{ marginTop: 20 }}>
+              {enviandoDevolutiva ? 'Enviando...' : 'Enviar Devolutiva'}
             </button>}
             {/* {message && <Message type={type} msg={message} />} */}
           </fieldset>

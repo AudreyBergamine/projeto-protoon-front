@@ -19,7 +19,7 @@ function PaginaInicialMunicipe() {
       <div style={{ display: 'flex', flexDirection: 'column', width: 200, alignItems: 'center', margin: 'auto', justifyContent: 'space-between', height: '40vh', padding: 100 }}>
         <button className="btn-log" onClick={sendToReclamar}>Abrir uma Reclamação</button>
         <button className="btn-log" onClick={sendToConsultar}>Consultar Reclamações</button>
-        <button className="btn-log" onClick={sendToRetornadas}>Reclamações Retornadas</button>
+        {/* <button className="btn-log" onClick={sendToRetornadas}>Reclamações Retornadas</button> */}
       </div>
     </>
   );
