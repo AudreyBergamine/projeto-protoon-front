@@ -53,7 +53,7 @@ function Consultar() {
         setProtocolos(response.data);
         setMostrarTabela(true)
         if (response.data.length === 0) {
-          setMessage('Não há nenhuma Devolutiva até o momento');
+          setMessage('Não há nenhum Protocolo até o momento');
           setType('error');
           setTimeout(() => {
             setMessage('');

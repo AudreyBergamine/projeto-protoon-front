@@ -48,7 +48,7 @@ function Logs() {
           value={pesquisarFun}
           onChange={(e) => setPesquisarFun(e.target.value)}
         />
-        <div style={{ padding: 20, borderRadius: 20, border: '1px solid #ccc', backgroundColor: '#f9f9f9', marginBottom: 10, maxHeight: '200px', overflowY: 'auto' }}>
+        <div style={{ padding: 20, borderRadius: 20, border: '1px solid #ccc', backgroundColor: '#f9f9f9', marginBottom: 10, maxHeight: '150px', overflowY: 'auto' }}>
           <ul>
             {filteredLogs.reverse().map((log, index) => (
               <li key={index}>{log.mensagem}</li>
