@@ -17,6 +17,7 @@ function Reclamar() {
     status: 0,
     valor: 0
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const axiosInstance = axios.create({
     baseURL: URL, // Adjust the base URL as needed
@@ -65,6 +66,10 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   };
 
   const handleSubmit = async (e) => {
+    if (isSubmitting) {
+      console.log("Duplo Click detectado!")
+      return; // Impede chamadas 
+    }
     e.preventDefault();
     // const idMunicipe = localStorage.getItem('idMunicipe');
     // if (!idMunicipe) {
@@ -108,6 +113,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         setTimeout(() => {
           navigate('/');
         }, 3000);
+        setIsSubmitting(false) // Reativa função do botão após 3s
       }, 3000);
     } catch (error) {
       console.error('Erro ao enviar os dados:', error);

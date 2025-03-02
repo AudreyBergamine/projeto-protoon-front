@@ -31,6 +31,7 @@ function AnalisarProtocolos() {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [enviandoDevolutiva, setEnviandoDevolutiva] = useState(false);
   const [mensagemAtiva, setMensagemAtiva] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { id } = useParams();
   const role = localStorage.getItem('role')
@@ -99,11 +100,11 @@ function AnalisarProtocolos() {
 
       salvarAlteracoes()
 
-      exibirMensagem("Devolutiva Enviada com Sucesso!", 'success');
-
+      
       setTimeout(() => {
         setDevolutiva('');
         navigate(`/protocolo/${id}`);
+        exibirMensagem("Devolutiva Enviada com Sucesso!", 'success');
       }, 3000);
     } catch (error) {
       exibirMensagem("Erro ao enviar a devolutiva. Por favor, tente novamente mais tarde.", 'error');
@@ -155,8 +156,6 @@ function AnalisarProtocolos() {
         setTimeout(() => {
           console.log(response.data);
           setRemoveLoading(true)
-          setMessage('Protocolo atualizado com Sucesso!')
-          setType('success')
           setTimeout(() => {
             setMessage('')
             navigate('/protocolo/' + id);
@@ -282,7 +281,8 @@ function AnalisarProtocolos() {
   };
   const handleSecretariaChange = (e) => {
     const selectedSecretariaId = e.target.value;
-    setIdSecretariaSelecionada(selectedSecretariaId);  };
+    setIdSecretariaSelecionada(selectedSecretariaId);
+  };
 
   const handleStatusChange = (e) => {
     const novoStatus = e.target.value;
@@ -290,10 +290,12 @@ function AnalisarProtocolos() {
     setProtocolo(prevProtocolo => ({
       ...prevProtocolo,
       status: novoStatus // Atualiza o status do protocolo com o novo status selecionado
-    }));  };
+    }));
+  };
 
   if (!protocolo) {
-    return <Loading />;  }
+    return <Loading />;
+  }
 
   const salvarAlteracoes = async () => {
     // Evita múltiplos cliques e varias chamadas da função
@@ -302,8 +304,19 @@ function AnalisarProtocolos() {
     }
     setMensagemAtiva(true);
     try {
-      await updateProtocolo();
-      exibirMensagem("Protocolo atualizado com Sucesso!", 'success');
+      if (isSubmitting) {
+        console.log("Duplo Click detectado!")
+        return; // Impede chamadas 
+      }
+      setTimeout(() => {
+        setRemoveLoading(true)
+        updateProtocolo();
+        window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola para o topo com efeito suave
+        exibirMensagem("Protocolo atualizado com Sucesso!", 'success');
+      }, 3000)
+      setIsSubmitting(false)
+      setRemoveLoading(false)
+
     } catch (error) {
       console.error('Erro ao salvar alterações:', error);
     } finally {
@@ -526,9 +539,10 @@ function AnalisarProtocolos() {
                 style={{ width: '100%', minHeight: 100, padding: 10 }}
               />
             </div>
-            {!devolutiva || devolutiva.trim() !== '' && <button onClick={novaDevolutiva} disabled={enviandoDevolutiva || mensagemAtiva} style={{ marginTop: 20 }}>
+            {!devolutiva || devolutiva.trim() !== '' && removeLoading && (<button onClick={novaDevolutiva} disabled={enviandoDevolutiva || mensagemAtiva} style={{ marginTop: 20 }}>
               {enviandoDevolutiva ? 'Enviando...' : 'Enviar Devolutiva'}
-            </button>}
+            </button>)}
+            {!removeLoading && <Loading />}
             {/* {message && <Message type={type} msg={message} />} */}
           </fieldset>
 

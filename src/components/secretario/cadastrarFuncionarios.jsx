@@ -18,17 +18,18 @@ function CadastrarFuncionario() {
   const [type, setType] = useState()
   const navigate = useNavigate();
   const [removeLoading, setRemoveLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const axiosInstance = axios.create({
     baseURL: URL, // Adjust the base URL as needed
     withCredentials: true, // Set withCredentials to true
   });
-  
-    // Recuperar o token do localStorage
-    const token = localStorage.getItem('token');
 
-    // Adicionar o token ao cabeçalho de autorização
-    axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  // Recuperar o token do localStorage
+  const token = localStorage.getItem('token');
+
+  // Adicionar o token ao cabeçalho de autorização
+  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
   const [formData, setFormData] = useState({
@@ -57,7 +58,7 @@ function CadastrarFuncionario() {
   const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
   // Estado para controlar o tipo de funcionário selecionado
 
-// Estado para controlar a secretaria selecionada
+  // Estado para controlar a secretaria selecionada
 
 
   useEffect(() => {
@@ -71,13 +72,13 @@ function CadastrarFuncionario() {
     }
     fetchSecretarias();
   }, []);
-  
+
 
   const handleAlertChange = (newAlert) => {
     setAlert(newAlert);
   };
- 
-  
+
+
 
   const handleCpfValidChange = (isCpfValid) => {
     setCpfValid(isCpfValid);
@@ -91,7 +92,7 @@ function CadastrarFuncionario() {
     // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem separados da palavra
     return value.toLowerCase().replace(/( de | da | do | das | dos )/g, (match) => match.toLowerCase())
       .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase())
-      .replace(/(à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ)\w/g, (match) => match.toLowerCase())      
+      .replace(/(à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ)\w/g, (match) => match.toLowerCase())
   };
 
 
@@ -104,7 +105,7 @@ function CadastrarFuncionario() {
 
     let formattedValue = formatValue(value);
 
-    
+
 
     if (enderecoFields.includes(name)) {//Caso em um formulário contenha algum nome da lista, então será alterado o valor do objeto endereco
       setFormData({
@@ -140,7 +141,7 @@ function CadastrarFuncionario() {
       [name]: value
     });
   };
-  
+
 
 
   const handleEnderecoChange = (logradouro, bairro, cidade, estado, pais) => {
@@ -182,8 +183,13 @@ function CadastrarFuncionario() {
 
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
+    if (isSubmitting) {
+      console.log("Duplo Click detectado!")
+      return; // Impede chamadas 
+    }
+    setIsSubmitting(true); // Desativa o botão
     e.preventDefault();
-    if(!cpfValid) {
+    if (!cpfValid) {
       setMessage('Cpf Inválido')
       return
     }
@@ -191,13 +197,13 @@ function CadastrarFuncionario() {
     setMessage('')
 
     if (formData.role === "") {
-        setMessage('Selecione o tipo de funcionário');
-        setType('error')
-        setTimeout(() => {
-          setMessage('');
-        }, 3000);
-        return;
-      }
+      setMessage('Selecione o tipo de funcionário');
+      setType('error')
+      setTimeout(() => {
+        setMessage('');
+      }, 3000);
+      return;
+    }
     // Verifica se a data de nascimento é menos de 5 anos da data atual
     const birthDate = moment(formData.data_nascimento);
     const currentDate = moment();
@@ -208,48 +214,46 @@ function CadastrarFuncionario() {
       return;
     }
 
-    
+    try {
+      const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
+      const response = await axiosInstance.post('protoon/auth/register/funcionario/' + idSecretariaSelecionada, {
+        ...formData, // Inclua todos os dados do formData
+        role: formData.role.toUpperCase(),
+        data_nascimento: formattedDate, // Substitua o campo data_nascimento formatado
 
-        
-        
-        try {
-          const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
-          const response = await axiosInstance.post('protoon/auth/register/funcionario/'+idSecretariaSelecionada, {
-            ...formData, // Inclua todos os dados do formData
-            role: formData.role.toUpperCase(),
-            data_nascimento: formattedDate, // Substitua o campo data_nascimento formatado
+      });
 
-          });
+      setRemoveLoading(false)
 
-          setRemoveLoading(false)
-
-          setTimeout(() => {
-            console.log(response.data);
-            setRemoveLoading(true)
-            setMessage('Cadastro feito com Sucesso! Redirecionando...')
-            setType('success')
-            setTimeout(() => {
-              navigate('/login');
-            }, 3000)
-          }, 3000)
-        } catch (error) {
-          setRemoveLoading(false)
-          setTimeout(() => {
-            setRemoveLoading(true)
-            console.error('Erro ao enviar os dados:', error);
-            if (error.response && error.response.data && error.response.data.message) {
-              setMessage(error.response.data.message); // Exibir a mensagem de erro do servidor
-            } else {
-              setMessage('Falha ao tentar fazer o Cadastro!'); // Se não houver mensagem de erro específica, exibir uma mensagem genérica
-            }
-            setType('error')
-          }, 3000)
+      setTimeout(() => {
+        console.log(response.data);
+        setRemoveLoading(true)
+        setMessage('Cadastro feito com Sucesso! Redirecionando...')
+        setType('success')
+        setTimeout(() => {
+          navigate('/login');
+        }, 3000)
+      }, 3000)
+    } catch (error) {
+      setRemoveLoading(false)
+      setTimeout(() => {
+        setRemoveLoading(true)
+        console.error('Erro ao enviar os dados:', error);
+        if (error.response && error.response.data && error.response.data.message) {
+          setMessage(error.response.data.message); // Exibir a mensagem de erro do servidor
+        } else {
+          setMessage('Falha ao tentar fazer o Cadastro!'); // Se não houver mensagem de erro específica, exibir uma mensagem genérica
         }
-      }
-    
-      const sendToLogin = async()=>{
-        navigate("/login")
+        setType('error')
+      }, 3000)
+    } finally {
+      setTimeout(() => setIsSubmitting(false), 1000); // Reativa após 1s
     }
+  }
+
+  const sendToLogin = async () => {
+    navigate("/login")
+  }
 
   //Por fim é retornado o html para ser exibido no front end, junto com as funções acima.
   return (
@@ -304,7 +308,7 @@ function CadastrarFuncionario() {
             <div>
               <label>Número do CPF:</label><br></br>
               <SetCPF
-                cpfValido={handleCpfValidChange }
+                cpfValido={handleCpfValidChange}
                 onCPFChange={(formattedCPF) => {
                   setFormData({ ...formData, num_CPF: formattedCPF })
                 }}
@@ -330,36 +334,36 @@ function CadastrarFuncionario() {
               />
             </div>
             <div>
-  <label>Tipo Funcionário:</label><br />
-  <select
-  style={{ fontSize: 11, padding: 10, borderRadius: 10, textAlign: "center" }}
-  name="role"
-  value={formData.role} // Alterado de selectedRole para formData.role
-  onChange={handleRoleChange} // Mantido o mesmo handler
->
-  <option value="">Selecione um tipo de funcionário</option>
-  {roles.map(role => (
-    <option key={role} value={role}>{role}</option>
-  ))}
-</select>
-</div>
+              <label>Tipo Funcionário:</label><br />
+              <select
+                style={{ fontSize: 11, padding: 10, borderRadius: 10, textAlign: "center" }}
+                name="role"
+                value={formData.role} // Alterado de selectedRole para formData.role
+                onChange={handleRoleChange} // Mantido o mesmo handler
+              >
+                <option value="">Selecione um tipo de funcionário</option>
+                {roles.map(role => (
+                  <option key={role} value={role}>{role}</option>
+                ))}
+              </select>
+            </div>
 
-{/* Select para a secretaria */}
-<div>
-  <label>Secretaria:</label><br />
-  <select
-    style={{ fontSize: 11, padding: 10, borderRadius: 10, textAlign: "center" }}
-    value={idSecretariaSelecionada} // Aqui se precisa usar idSecretariaSelecionada em vez de selectedSecretaria
-    onChange={handleSecretariaChange}
-  >
-    <option value="">Selecione a secretaria que o funcionário trabalhará</option>
-    {secretarias.map(secretaria => (
-      <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
-        {secretaria.nome_secretaria}
-      </option>
-    ))}
-  </select>
-</div>
+            {/* Select para a secretaria */}
+            <div>
+              <label>Secretaria:</label><br />
+              <select
+                style={{ fontSize: 11, padding: 10, borderRadius: 10, textAlign: "center" }}
+                value={idSecretariaSelecionada} // Aqui se precisa usar idSecretariaSelecionada em vez de selectedSecretaria
+                onChange={handleSecretariaChange}
+              >
+                <option value="">Selecione a secretaria que o funcionário trabalhará</option>
+                {secretarias.map(secretaria => (
+                  <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
+                    {secretaria.nome_secretaria}
+                  </option>
+                ))}
+              </select>
+            </div>
 
           </div>
         </div>
