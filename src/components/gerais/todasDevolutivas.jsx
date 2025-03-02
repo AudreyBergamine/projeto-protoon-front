@@ -23,6 +23,9 @@ function TodasDevolutivas() {
         setLoading(false);
         setAllDevolutivasLoaded(true);
       } catch (error) {
+        setTimeout(() => {
+          setLoading(false)
+        }, 3000)
         console.error('Erro ao buscar as devolutivas:', error);
       }
     }
@@ -52,10 +55,10 @@ function TodasDevolutivas() {
               </div>
             </div>
           ))}
-          {allDevolutivasLoaded && <p style={{ textAlign: 'center' }}>Todas as devolutivas foram carregadas.</p>}
+          {allDevolutivasLoaded && <p style={{ textAlign: 'center', marginBottom: '50px', fontSize: '25px' }}>Estas são todas devolutivas até o momento para este Protocolo.</p>}
+          {devolutivas.length === 0 && <p style={{ textAlign: 'center', fontSize: '30px', marginTop: '150px' }}>Não há devolutivas para este Protocolo até o momento</p>}
         </div>
       )}
-
     </>
   );
 }
