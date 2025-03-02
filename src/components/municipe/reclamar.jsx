@@ -24,11 +24,11 @@ function Reclamar() {
     withCredentials: true, // Set withCredentials to true
   });
 
-    // Recuperar o token do localStorage
-const token = localStorage.getItem('token');
+  // Recuperar o token do localStorage
+  const token = localStorage.getItem('token');
 
-// Adicionar o token ao cabeçalho de autorização
-axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  // Adicionar o token ao cabeçalho de autorização
+  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   const [assuntos, setAssuntos] = useState([]);
 
   // Buscar os assuntos do banco de dados
@@ -95,6 +95,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
 
     try {
+      setIsSubmitting(true)
       const currentDate = new Date(); // Obtém a data e hora atuais
       const response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos/${formData.idSecretaria}`, {
         assunto: formData.assunto,
@@ -174,8 +175,8 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             </div> */}
           </div>
           {removeLoading && <div style={{ marginTop: -30 }}>
-          {message && <Message type={type} msg={message} />}
-          <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Confirmar</button>
+            {message && <Message type={type} msg={message} />}
+            <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Confirmar</button>
             <button className="btn-log" onClick={() => navigate('/paginaInicial')}>Voltar</button>
           </div>}
           {!removeLoading && <Loading />}
