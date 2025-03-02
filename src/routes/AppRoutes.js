@@ -9,6 +9,7 @@ import RecuperarSenhaForm from '../components/municipe/recuperarSenha';
 import AtualizarForm from '../components/municipe/atualizarSenha';
 import PaginaInicalMunicipe from '../components/municipe/paginaInicalMunicipe';
 import Reclamar from '../components/municipe/reclamar';
+import SolicitarServico from '../components/municipe/solicitarServico';
 import Consultar from '../components/municipe/consultar';
 import SobreNos from '../components/municipe/sobreNos';
 import Contato from '../components/municipe/contato';
@@ -66,6 +67,7 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/atualizar-senha" element={<AtualizarForm />} />
             <Route path="/pagina-inicial" element={<PaginaInicalMunicipe />} />
             <Route path="/reclamar" element={<Reclamar />} />
+            <Route path="/solicitarServico" element={<SolicitarServico />} />
             <Route path="/consultar" element={<Consultar />} />
             <Route path="/sobre-nos" element={<SobreNos />} />
             <Route path="/contato" element={<Contato />} />

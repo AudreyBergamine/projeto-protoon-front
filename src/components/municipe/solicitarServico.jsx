@@ -5,7 +5,7 @@ import Loading from '../layouts/Loading';
 import Message from '../layouts/Message';
 import URL from '../services/url';
 
-function Reclamar() {
+function SolicitarServico() {
   const navigate = useNavigate();
   const [message, setMessage] = useState();
   const [type, setType] = useState();
@@ -125,7 +125,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       <div style={{ paddingBottom: '100px' }}>
         <form onSubmit={handleSubmit}>
           <div>
-            <h3>Reclame Aqui</h3>
+            <h3>Solicitação de Serviço</h3>
             <div className="register-form">
               <div className="input-container">
                 <div>
@@ -158,7 +158,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 </div>
               </div>
             </div>
-            {/* <div className="register-form">
+            <div className="register-form">
               <div className="input-container">
                 <div>
                   <label style={{ marginLeft: 30, marginTop: 20 }}>Valor do Serviço</label><br />
@@ -171,7 +171,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                   />
                 </div>
               </div>
-            </div> */}
+            </div>
           </div>
           {removeLoading && <div style={{ marginTop: -30 }}>
           {message && <Message type={type} msg={message} />}
@@ -185,4 +185,4 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   );
 }
 
-export default Reclamar;
+export default SolicitarServico;
