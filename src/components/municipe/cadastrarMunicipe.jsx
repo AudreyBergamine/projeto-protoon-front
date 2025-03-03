@@ -64,7 +64,7 @@ function CadastrarMunicipe() {
       .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase())
       .replace(/(à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ)\w/g, (match) => match.toLowerCase())
   };
-  
+
 
   //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
   const handleChange = (e) => {
@@ -135,7 +135,7 @@ function CadastrarMunicipe() {
       });
     }
   };
-  
+
 
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
@@ -143,8 +143,10 @@ function CadastrarMunicipe() {
       console.log("Duplo Click detectado!")
       return; // Impede chamadas 
     }
+    setIsSubmitting(true)
+    setTimeout(() => setIsSubmitting(false), 1000); // Reativa após 1s
     e.preventDefault();
-    if(!cpfValid) {
+    if (!cpfValid) {
       setMessage('Cpf Inválido')
       return
     }
@@ -160,45 +162,44 @@ function CadastrarMunicipe() {
       setType('error');
       return;
     }
-        try {
-          const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
-          const response = await axiosInstance.post('/protoon/auth/register/municipe', {
-            ...formData, // Inclua todos os dados do formData
-            data_nascimento: formattedDate, // Substitua o campo data_nascimento formatado
+    try {
+      const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
+      const response = await axiosInstance.post('/protoon/auth/register/municipe', {
+        ...formData, // Inclua todos os dados do formData
+        data_nascimento: formattedDate, // Substitua o campo data_nascimento formatado
 
-          });
+      });
 
-          setRemoveLoading(false)
-          setTimeout(() => {
-            console.log(response.data);
-            setRemoveLoading(true)
-            setMessage('Cadastro feito com Sucesso! Redirecionando...')
-            setType('success')
-            setTimeout(() => {
-              navigate('/login');
-            }, 3000)
-            setIsSubmitting(false)
-          }, 3000)
-        } catch (error) {
-          setRemoveLoading(false)
-          setTimeout(() => {
-            setRemoveLoading(true)
-            console.error('Erro ao enviar os dados:', error);
-            if (error.response && error.response.data && error.response.data.message) {
-              setMessage(error.response.data.message); // Exibir a mensagem de erro do servidor
-            } else {
-              setMessage('Falha ao tentar fazer o Cadastro!'); // Se não houver mensagem de erro específica, exibir uma mensagem genérica
-            }
-            setType('error')
-          }, 3000)
+      setRemoveLoading(false)
+      setTimeout(() => {
+        console.log(response.data);
+        setRemoveLoading(true)
+        setMessage('Cadastro feito com Sucesso! Redirecionando...')
+        setType('success')
+        setTimeout(() => {
+          navigate('/login');
+        }, 3000)
+      }, 3000)
+    } catch (error) {
+      setRemoveLoading(false)
+      setTimeout(() => {
+        setRemoveLoading(true)
+        console.error('Erro ao enviar os dados:', error);
+        if (error.response && error.response.data && error.response.data.message) {
+          setMessage(error.response.data.message); // Exibir a mensagem de erro do servidor
+        } else {
+          setMessage('Falha ao tentar fazer o Cadastro!'); // Se não houver mensagem de erro específica, exibir uma mensagem genérica
         }
-      }
+        setType('error')
+      }, 3000)
+    }    
+  }
 
-      const sendToLogin = async()=>{
-        navigate("/login")
-    }
-    
-  
+  const sendToLogin = async () => {
+    navigate("/login")
+  }
+
+
 
   //Por fim é retornado o html para ser exibido no front end, junto com as funções acima.
   return (
@@ -253,7 +254,7 @@ function CadastrarMunicipe() {
             <div>
               <label>Número do CPF:</label><br></br>
               <SetCPF
-                cpfValido={handleCpfValidChange }
+                cpfValido={handleCpfValidChange}
                 onCPFChange={(formattedCPF) => {
                   setFormData({ ...formData, num_CPF: formattedCPF })
                 }}
@@ -302,14 +303,12 @@ function CadastrarMunicipe() {
                 }}
               />
             </div>
-        
-            
             <div>
-              <label>Endereço:</label><br></br> 
+              <label>Endereço:</label><br></br>
               <input
                 type="text"
                 name="logradouro"
-                placeholder="Ex.: Rua 23 de Maio" 
+                placeholder="Ex.: Rua 23 de Maio"
                 value={formData.endereco.logradouro}
                 onChange={handleChange}
                 required
@@ -318,8 +317,8 @@ function CadastrarMunicipe() {
               />
             </div>
             {/* <div> */}
-              {/* TODO: Ocultar esse trecho para o usuário e deixar nullable */}
-              {/* <label>Nome Endereço:</label><br></br> 
+            {/* TODO: Ocultar esse trecho para o usuário e deixar nullable */}
+            {/* <label>Nome Endereço:</label><br></br> 
               <input
                 type="text"
                 name="nome_endereco"
@@ -352,13 +351,11 @@ function CadastrarMunicipe() {
                 onChange={handleChange}
               />
             </div>
-
           </div>
         </div>
 
         <div className="register-form">
           <div className="input-container">
-
             <div>
               <label>Tipo de Endereço:</label><br></br>
               <input

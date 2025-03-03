@@ -70,6 +70,8 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       console.log("Duplo Click detectado!")
       return; // Impede chamadas 
     }
+    setIsSubmitting(true)
+    setTimeout(() => setIsSubmitting(false), 1000); // Reativa após 1s
     e.preventDefault();
     // const idMunicipe = localStorage.getItem('idMunicipe');
     // if (!idMunicipe) {
@@ -103,7 +105,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         valor: formData.valor,
         data_protocolo: currentDate // Envia a data e hora atuais para data_protocolo
       });
-
+      
       setRemoveLoading(false);
       setTimeout(() => {
         console.log(response.data);
@@ -113,7 +115,6 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         setTimeout(() => {
           navigate('/');
         }, 3000);
-        setIsSubmitting(false) // Reativa função do botão após 3s
       }, 3000);
     } catch (error) {
       console.error('Erro ao enviar os dados:', error);

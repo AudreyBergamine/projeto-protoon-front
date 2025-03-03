@@ -299,22 +299,23 @@ function AnalisarProtocolos() {
 
   const salvarAlteracoes = async () => {
     // Evita múltiplos cliques e varias chamadas da função
+    if (isSubmitting) {
+      console.log("Duplo Click detectado!")
+      return; // Impede chamadas 
+    }
+    setIsSubmitting(true)
+    setTimeout(() => setIsSubmitting(false), 1000); // Reativa após 1s
     if (enviandoDevolutiva || mensagemAtiva) {
       return;
     }
-    setMensagemAtiva(true);
+    setMensagemAtiva(true);    
     try {
-      if (isSubmitting) {
-        console.log("Duplo Click detectado!")
-        return; // Impede chamadas 
-      }
       setTimeout(() => {
         setRemoveLoading(true)
         updateProtocolo();
         window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola para o topo com efeito suave
         exibirMensagem("Protocolo atualizado com Sucesso!", 'success');
       }, 3000)
-      setIsSubmitting(false)
       setRemoveLoading(false)
 
     } catch (error) {

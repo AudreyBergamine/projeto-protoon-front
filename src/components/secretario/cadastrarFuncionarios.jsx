@@ -187,7 +187,8 @@ function CadastrarFuncionario() {
       console.log("Duplo Click detectado!")
       return; // Impede chamadas 
     }
-    setIsSubmitting(true); // Desativa o botão
+    setIsSubmitting(true)
+    setTimeout(() => setIsSubmitting(false), 1000); // Reativa após 1s
     e.preventDefault();
     if (!cpfValid) {
       setMessage('Cpf Inválido')
@@ -246,8 +247,6 @@ function CadastrarFuncionario() {
         }
         setType('error')
       }, 3000)
-    } finally {
-      setTimeout(() => setIsSubmitting(false), 1000); // Reativa após 1s
     }
   }
 
