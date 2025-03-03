@@ -27,7 +27,7 @@ function PaginaInicialCoordenador() {
         const response2 = await axiosInstance.get(`/protoon/secretaria/protocolos/` + id_secretaria);
         setProtocolos(response2.data);
 
-        // Verifica se há protocolos com prazo menor que 5 dias
+        // Verifica se há protocolos com prazo menor que 7 dias
         const alerta = response2.data.some(
           (protocolo) => protocolo.prazoConclusao !== null && protocolo.prazoConclusao < 7
         );
