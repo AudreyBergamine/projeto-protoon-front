@@ -18,12 +18,12 @@ const LoginForm = () => {
   const [senhaNull, setSenhaNull] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const axiosInstance = axios.create({
-    baseURL: URL, 
-    withCredentials: true, 
+    baseURL: URL, // Adjust the base URL as needed
+    withCredentials: true, // Set withCredentials to true
   });
 
-  const sendToCadastrar = async () => {
-    navigate("/cadastrar-municipe"); 
+  const sendToCadastrar = async () =>{
+    navigate("/cadastrar-municipe"); // Redirecionar após login
 }
 
   const handleLogin = async () => {
@@ -65,6 +65,11 @@ const LoginForm = () => {
         email: email,
         senha: senha
       });
+      if(response.data.role !== 'MUNICIPE'){
+        const response2 = await axiosInstance.get(`/protoon/funcionarios/${response.data.id}`);
+        localStorage.setItem("nome_secretaria", response2.data.secretaria.nome_secretaria);
+
+      }
 
       setRemoveLoading(false)
  

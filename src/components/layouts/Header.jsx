@@ -22,6 +22,9 @@ function Header({ isAuthenticated, role }) {
     // Recuperar o token do localStorage
 const token = localStorage.getItem('token');
 
+const secretaria = localStorage.getItem('nome_secretaria');
+
+
 // Adicionar o token ao cabeçalho de autorização
 axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     useEffect(() => {
@@ -30,6 +33,19 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         return () => {
             document.removeEventListener('click', notToggleMenu);
         };
+
+        async function fetchFuncionario() {
+            try {
+                const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
+                const nome_secretaria = response1.data.secretaria.nome_secretaria; // Obtém o valor do celular do funcionário
+                localStorage.setItem("nome_secretaria", nome_secretaria);
+      
+            } catch (error) {
+              console.error('Erro ao buscar o protocolo:', error);
+            }
+          }
+      
+          fetchFuncionario();
     }, [menuOpen]);
 
     const handleLogout = async () => {
@@ -84,7 +100,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         navigate("/perfil-funcionario"); // Redirecionar para protocolo
         toggleMenu(e)
     }
-    
+    //lixo
     
 
     return (
@@ -98,6 +114,9 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 <nav>
                     <div style={{ marginLeft: 800 }}>
                         <ul className="nav-links">
+                        <li>
+                                <a href = "$">{secretaria}</a>
+                            </li>
                             <li>
                                 <a href="#">Serviços</a>
                                 <ul className='submenu'>
@@ -112,6 +131,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                                     <li><a href="./sobreNos">Sobre nós</a></li>
                                 </ul>
                             </li>
+                     
                         </ul>
                     </div>
                 </nav>
