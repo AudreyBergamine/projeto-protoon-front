@@ -45,7 +45,7 @@ function ListarProtocolosBySecretaria() {
 
             const diferencaDias = (Date.now() - dataProtocolo.getTime()) / (1000 * 60 * 60 * 24);
 
-            if (diferencaDias <= 4) {
+            if (diferencaDias >= 4) {
               // Faz o update do status para "CANCELADO"
               const response = axiosInstance.put(`/protoon/protocolo/alterar-protocolos/status/${protocolo.numero_protocolo}`, {
                 ...protocolo,
