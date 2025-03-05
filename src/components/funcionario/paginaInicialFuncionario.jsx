@@ -62,6 +62,7 @@ function PaginaInicialFuncionario() {
               position: "absolute",
               top: 10,
               right: 10,
+              cursor: 'pointer',
               fontSize: 30,
               color: protocolos.some(protocolo =>
                 protocolo.prazoConclusao !== null &&

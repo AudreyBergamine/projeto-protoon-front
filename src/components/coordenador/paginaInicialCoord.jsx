@@ -85,6 +85,7 @@ function PaginaInicialCoordenador() {
               top: 10,
               right: 10,
               fontSize: 30,
+              cursor: 'pointer',
               color: protocolos.some(protocolo =>
                 protocolo.prazoConclusao !== null &&
                 protocolo.prazoConclusao < 7 &&
