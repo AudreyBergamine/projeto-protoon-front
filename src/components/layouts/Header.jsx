@@ -116,7 +116,7 @@ function Header({ isAuthenticated, role }) {
                 </div>
                 <div>
                     <select
-                        style={{ fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center" }}
+                        style={{ fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center", appearance: "none", }}
                         name="Cidade"
                         value={cidade} // Estado que controla a cidade selecionada
                         onChange={handleChange}

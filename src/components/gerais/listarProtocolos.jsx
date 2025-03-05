@@ -37,8 +37,38 @@ function ListarProtocolosBySecretaria() {
         const novosPrazoConclusao = {};
 
         response2.data.forEach(protocolo => {
-          if (protocolo.status === "CONCLUIDO") {
+          if (protocolo.status === "CONCLUIDO" || protocolo.status === "CANCELADO") {
             novosPrazoConclusao[protocolo.id_protocolo] = null; // Se estiver concluído, define como null
+          } else if (protocolo.status === "PAGAMENTO_PENDENTE") {
+            // Verifica se passaram 4 dias
+            const dataProtocolo = new Date(protocolo.data_protocolo); // Converter string para Date
+
+            const diferencaDias = (Date.now() - dataProtocolo.getTime()) / (1000 * 60 * 60 * 24);
+
+            if (diferencaDias <= 4) {
+              // Faz o update do status para "CANCELADO"
+              const response = axiosInstance.put(`/protoon/protocolo/alterar-protocolos/status/${protocolo.numero_protocolo}`, {
+                ...protocolo,
+                status: "CANCELADO"
+              });
+              let isRequesting = false;
+
+              if (!isRequesting) {
+                isRequesting = true;
+                try {
+                  const response1 = axiosInstance.post(
+                    `/protoon/devolutiva/criar-devolutiva-boleto`,
+                    protocolo
+                  );
+                  console.log("Devolutiva enviada com sucesso!");
+                } catch (error) {
+                  console.error("Erro ao enviar a devolutiva", error);
+                } finally {
+                  isRequesting = false;
+                }
+              }
+              novosPrazoConclusao[protocolo.id_protocolo] = null;
+            }
           } else {
             // Converte data_protocolo para um objeto Date
             const dataProtocolo = new Date(protocolo.data_protocolo);
@@ -56,9 +86,7 @@ function ListarProtocolosBySecretaria() {
             novosPrazoConclusao[protocolo.id_protocolo] = tempoRestante;
           }
         });
-
         setPrazoConclusaoSimulado(novosPrazoConclusao);
-
 
       } catch (error) {
         console.error('Erro ao buscar as secretarias:', error);
@@ -98,20 +126,6 @@ function ListarProtocolosBySecretaria() {
       return { backgroundColor: 'yellow', color: 'black' };
     }
     return {}; // Cor normal
-  };
-
-  const calcularPrazoRestante = (prazoEmSegundos) => {
-    if (prazoEmSegundos > 0) {
-      return `${prazoEmSegundos} segundos restantes`;
-    } else {
-      // Se o prazo for negativo, exibe o tempo que passou
-      const tempoPassado = Math.abs(prazoEmSegundos); // Valor absoluto do tempo negativo
-      const dias = Math.floor(tempoPassado / (24 * 60 * 60)); // Calcula dias
-      const horas = Math.floor((tempoPassado % (24 * 60 * 60)) / (60 * 60)); // Calcula horas
-      const minutos = Math.floor((tempoPassado % (60 * 60)) / 60); // Calcula minutos
-
-      return `Venceu há ${dias} dia(s)`;
-    }
   };
 
   const handleClick = (id) => {
@@ -193,7 +207,7 @@ function ListarProtocolosBySecretaria() {
               .map((protocolo, index) => {
                 const prazoEmSegundos = prazoConclusaoSimulado[protocolo.id_protocolo] || 0; // Converte o prazo em dias para segundos
                 const prazo = protocolo.prazoConclusao; // Usa o prazo real ou o simulado
-                const prazoStyle = protocolo.status === 'CONCLUIDO' ? {} : prazoCor(prazoEmSegundos);
+                const prazoStyle = protocolo.status === 'CONCLUIDO' || protocolo.status === 'CANCELADO' ? {} : prazoCor(prazoEmSegundos);
                 return (
                   <React.Fragment key={protocolo.id_protocolo}>
                     <tr onClick={() => handleClick(protocolo.id_protocolo)} className="rowTable" style={prazoStyle}>
@@ -207,7 +221,7 @@ function ListarProtocolosBySecretaria() {
                       </td>
                       <td style={{ textAlign: 'center', minWidth: 200 }}>{protocolo.status}</td>
                       <td style={{ textAlign: 'center', minWidth: 100 }}>{'R$ ' + protocolo.valor.toFixed(2)}</td>
-                      {protocolo.status !== 'CONCLUIDO' && (
+                      {protocolo.status !== 'CONCLUIDO' && protocolo.status !== 'CANCELADO' && (
                         <>
                           <td style={{ textAlign: 'center', minWidth: 100 }}>{prazo} dia(s)</td>
                           {/* <td style={{ textAlign: 'center', minWidth: 100 }}>

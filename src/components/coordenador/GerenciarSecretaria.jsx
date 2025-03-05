@@ -13,6 +13,7 @@ function GerenciarSecretaria() {
   const [removeLoading, setRemoveLoading] = useState(true)
   const [endereco, setEndereco] = useState();
   const [alert, setAlert] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const axiosInstance = axios.create({
@@ -129,6 +130,12 @@ function GerenciarSecretaria() {
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) {
+      console.log("Duplo Click detectado!")
+      return; // Impede chamadas 
+    }
+    setIsSubmitting(true)
+    setTimeout(() => setIsSubmitting(false), 1000); // Reativa após 1s
 
     console.log("Dados enviados:", formData); // Depuração
 

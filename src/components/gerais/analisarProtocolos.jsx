@@ -99,7 +99,6 @@ function AnalisarProtocolos() {
       const response = await axiosInstance.post(`/protoon/devolutiva/criar-devolutiva/${id}`, { devolutiva });
 
       salvarAlteracoes()
-
       
       setTimeout(() => {
         setDevolutiva('');
@@ -218,7 +217,6 @@ function AnalisarProtocolos() {
     }
   }
 
-
   const redirecionar = async () => {
     if (ConfirmationDialog) {
       setShowConfirmationDialog(false)
@@ -279,6 +277,7 @@ function AnalisarProtocolos() {
     };
     return data.toLocaleString("pt-BR", options);
   };
+
   const handleSecretariaChange = (e) => {
     const selectedSecretariaId = e.target.value;
     setIdSecretariaSelecionada(selectedSecretariaId);
@@ -324,7 +323,6 @@ function AnalisarProtocolos() {
       setMensagemAtiva(false);
     }
   };
-
 
   const handleCancelRedirect = () => {
     setShowConfirmationDialog(false);
@@ -399,6 +397,7 @@ function AnalisarProtocolos() {
                       <option value="CIENCIA">CIÊNCIA</option>
                       <option value="CIENCIA_ENTREGA">CIÊNCIA ENTREGA</option>
                       <option value="CONCLUIDO">CONCLUÍDO</option>
+                      <option value="CANCELADO">CANCELADO</option>
                     </select>
                   </td>
                   <td style={{ minWidth: 100, textAlign: 'center' }}>
