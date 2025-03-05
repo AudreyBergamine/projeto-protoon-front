@@ -26,7 +26,7 @@ function PaginaInicialFuncionario() {
         const response2 = await axiosInstance.get(`/protoon/secretaria/protocolos/` + id_secretaria);
         setProtocolos(response2.data);
 
-        // Verifica se há protocolos com prazo menor que 5 dias
+        // Verifica se há protocolos com prazo menor que 7 dias
         const alerta = response2.data.some(
           (protocolo) => protocolo.prazoConclusao !== null &&
             protocolo.prazoConclusao < 7 &&
@@ -68,8 +68,8 @@ function PaginaInicialFuncionario() {
                 protocolo.prazoConclusao < 7 &&
                 protocolo.status !== "CONCLUIDO"
               )
-                ? (protocolos.some(protocolo => protocolo.prazoConclusao < 3 && protocolo.status !== "CONCLUIDO")
-                  ? "red" // Vermelho se for menor que 3 dias
+                ? (protocolos.some(protocolo => protocolo.prazoConclusao < 4 && protocolo.status !== "CONCLUIDO")
+                  ? "red" // Vermelho se for menor que 4 dias
                   : "yellow") // Amarelo se for menor que 7 dias
                 : "transparent" // Oculto caso não haja alertas
             }}

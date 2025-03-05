@@ -20,16 +20,16 @@ function Header({ isAuthenticated, role }) {
     });
 
     // Recuperar o token do localStorage
-const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
-const secretaria = localStorage.getItem('nome_secretaria');
+    const secretaria = localStorage.getItem('nome_secretaria');
 
 
-// Adicionar o token ao cabeçalho de autorização
-axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    // Adicionar o token ao cabeçalho de autorização
+    axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     useEffect(() => {
         document.addEventListener('click', notToggleMenu);
-    
+
         return () => {
             document.removeEventListener('click', notToggleMenu);
         };
@@ -39,13 +39,13 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
                 const nome_secretaria = response1.data.secretaria.nome_secretaria; // Obtém o valor do celular do funcionário
                 localStorage.setItem("nome_secretaria", nome_secretaria);
-      
+
             } catch (error) {
-              console.error('Erro ao buscar o protocolo:', error);
+                console.error('Erro ao buscar o protocolo:', error);
             }
-          }
-      
-          fetchFuncionario();
+        }
+
+        fetchFuncionario();
     }, [menuOpen]);
 
     const handleLogout = async () => {
@@ -101,7 +101,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         toggleMenu(e)
     }
     //lixo
-    
+
 
     return (
         <div>
@@ -112,12 +112,21 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                     </a>
                 </div>
                 <nav>
-                    <div style={{ marginLeft: 800 }}>
+                    <div style={{ marginLeft: '30%', textAlign: 'right' }}>
                         <ul className="nav-links">
-                        <li>
-                                <a href = "$">{secretaria}</a>
+                            <li  style={{ minWidth: 200, marginRight: 150 }}>
+                            <a 
+  href="$" 
+  style={{ 
+    cursor: "default", 
+    textDecoration: "none", // Remove sublinhado
+    pointerEvents: "none",  // Impede interações com o link
+  }}
+>
+  {secretaria}
+</a>
                             </li>
-                            <li>
+                            <li style={{ marginLeft: 80, textAlign: 'right' }}>
                                 <a href="#">Serviços</a>
                                 <ul className='submenu'>
                                     <li><a href="./reclamar">Abrir reclamação</a></li>
@@ -131,7 +140,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                                     <li><a href="./sobreNos">Sobre nós</a></li>
                                 </ul>
                             </li>
-                     
+
                         </ul>
                     </div>
                 </nav>
@@ -140,7 +149,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                         {isAuthenticated && role === "MUNICIPE" && (
                             <div className="avatar-container">
                                 <div className="avatar" id="avatar">
-                                <img className="cidadao" src={cidadaoImg} alt="Foto do Usuário" onClick={toggleMenu} />
+                                    <img className="cidadao" src={cidadaoImg} alt="Foto do Usuário" onClick={toggleMenu} />
 
                                 </div>
                                 <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
@@ -157,7 +166,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                             <div>
                                 <div className="avatar-container">
                                     <div className="avatar" id="avatar">
-                                        <img className="cidadao"  src={funcionarioImg} alt="Foto do Usuário" onClick={toggleMenu} />
+                                        <img className="cidadao" src={funcionarioImg} alt="Foto do Usuário" onClick={toggleMenu} />
                                     </div>
                                     <div className="menu" id="menu" style={{ display: menuOpen ? 'block' : 'none' }}>
                                         <ul>

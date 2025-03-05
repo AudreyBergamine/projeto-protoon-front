@@ -26,24 +26,41 @@ function PaginaInicialCoordenador() {
       try {
         const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
         const id_secretaria = response1.data.secretaria.id_secretaria;
-
+  
         const response2 = await axiosInstance.get(`/protoon/secretaria/protocolos/` + id_secretaria);
-        setProtocolos(response2.data);
-
-        // Verifica se há protocolos com prazo menor que 7 dias
-        const alerta = response2.data.some(
-          (protocolo) => protocolo.prazoConclusao !== null &&
-            protocolo.prazoConclusao < 7 &&
+        
+        const protocolosAtualizados = response2.data.map(protocolo => {
+          if (protocolo.data_protocolo && protocolo.prazoConclusao !== null) {
+            const dataProtocolo = new Date(protocolo.data_protocolo); // Converter para Date
+            const prazoEmMilissegundos = protocolo.prazoConclusao * 24 * 60 * 60 * 1000; // Converter dias para ms
+            const dataLimite = new Date(dataProtocolo.getTime() + prazoEmMilissegundos); // Data final do prazo
+            
+            const agora = new Date();
+            const prazoRestante = Math.ceil((dataLimite - agora) / (1000 * 60 * 60 * 24)); // Converter ms para dias
+  
+            return { ...protocolo, prazoRestante };
+          }
+          return protocolo;
+        });
+  
+        setProtocolos(protocolosAtualizados);
+  
+        // Verifica se há protocolos com prazo menor que 7 dias e não concluídos
+        const alerta = protocolosAtualizados.some(
+          (protocolo) => protocolo.prazoRestante !== null &&
+            protocolo.prazoRestante < 7 &&
             protocolo.status !== "CONCLUIDO"
         );
         setTemAlerta(alerta);
+  
       } catch (error) {
         console.error("Erro ao buscar os protocolos:", error);
       }
     }
-
+  
     fetchProtocolos();
   }, []);
+  
 
   return (
     <>
@@ -73,8 +90,8 @@ function PaginaInicialCoordenador() {
                 protocolo.prazoConclusao < 7 &&
                 protocolo.status !== "CONCLUIDO"
               )
-                ? (protocolos.some(protocolo => protocolo.prazoConclusao < 3 && protocolo.status !== "CONCLUIDO")
-                  ? "red" // Vermelho se for menor que 3 dias
+                ? (protocolos.some(protocolo => protocolo.prazoConclusao < 4 && protocolo.status !== "CONCLUIDO")
+                  ? "red" // Vermelho se for menor que 4 dias
                   : "yellow") // Amarelo se for menor que 7 dias
                 : "transparent" // Oculto caso não haja alertas
             }}

@@ -35,14 +35,30 @@ function ListarProtocolosBySecretaria() {
         setProtocolos(response2.data);
 
         const novosPrazoConclusao = {};
+
         response2.data.forEach(protocolo => {
           if (protocolo.status === "CONCLUIDO") {
-            novosPrazoConclusao[protocolo.id_protocolo] = null; // Define como null quando o status for Concluído
+            novosPrazoConclusao[protocolo.id_protocolo] = null; // Se estiver concluído, define como null
           } else {
-            novosPrazoConclusao[protocolo.id_protocolo] = protocolo.prazoConclusao * 24 * 60 * 60; // Converte dias para segundos
+            // Converte data_protocolo para um objeto Date
+            const dataProtocolo = new Date(protocolo.data_protocolo);
+
+            // Converte prazoConclusao de dias para milissegundos
+            const prazoEmMilissegundos = protocolo.prazoConclusao * 24 * 60 * 60 * 1000;
+
+            // Calcula a data final somando prazoConclusao
+            const dataFinal = new Date(dataProtocolo.getTime() + prazoEmMilissegundos);
+
+            // Calcula o tempo restante em segundos
+            const tempoRestante = Math.max(Math.floor((dataFinal - Date.now()) / 1000), 0);
+
+            // Armazena o tempo restante
+            novosPrazoConclusao[protocolo.id_protocolo] = tempoRestante;
           }
         });
+
         setPrazoConclusaoSimulado(novosPrazoConclusao);
+
 
       } catch (error) {
         console.error('Erro ao buscar as secretarias:', error);
@@ -57,7 +73,7 @@ function ListarProtocolosBySecretaria() {
         let todosFinalizados = true;
 
         Object.keys(novosPrazoConclusao).forEach(id => {
-          novosPrazoConclusao[id] -= 1; // Atualiza o tempo a cada segundo (1000 ms)
+          novosPrazoConclusao[id] -= 1; // Atualiza o tempo a cada segundo (1000 ms), aumente se quiser acelerar a Simulação
           todosFinalizados = false; // Continuar se não estiver finalizado
         });
 
@@ -75,10 +91,10 @@ function ListarProtocolosBySecretaria() {
   // Função para determinar a cor baseada no prazo
   const prazoCor = (prazoEmSegundos) => {
     const timeLeft = prazoEmSegundos;
-    if (timeLeft < 4 * 24 * 60 * 60) { // Menor ou igual a 5 dias
+    if (timeLeft < 4 * 24 * 60 * 60) { // Menor ou igual a 4 dias
       return { backgroundColor: 'red', color: 'white' };
     }
-    if (timeLeft < 9 * 24 * 60 * 60) { // Menor ou igual a 7 dias
+    if (timeLeft < 7 * 24 * 60 * 60) { // Menor ou igual a 7 dias
       return { backgroundColor: 'yellow', color: 'black' };
     }
     return {}; // Cor normal
@@ -94,7 +110,7 @@ function ListarProtocolosBySecretaria() {
       const horas = Math.floor((tempoPassado % (24 * 60 * 60)) / (60 * 60)); // Calcula horas
       const minutos = Math.floor((tempoPassado % (60 * 60)) / 60); // Calcula minutos
 
-      return `Venceu há ${dias} dia(s), ${horas} hora(s), ${minutos} minuto(s)`;
+      return `Venceu há ${dias} dia(s)`;
     }
   };
 
@@ -167,6 +183,7 @@ function ListarProtocolosBySecretaria() {
               <th>Status</th>
               <th>Valor</th>
               <th>Prazo de Coclusão</th>
+              {/* <th>Simulação em Segundos</th> */}
             </tr>
           </thead>
           <div style={{ marginTop: 30 }}></div>
@@ -194,10 +211,10 @@ function ListarProtocolosBySecretaria() {
                         <>
                           <td style={{ textAlign: 'center', minWidth: 100 }}>{prazo} dia(s)</td>
                           {/* <td style={{ textAlign: 'center', minWidth: 100 }}>
-                            {prazoEmSegundos === null ? "Concluído" : calcularPrazoRestante(prazoEmSegundos)}
+                            {prazoEmSegundos === null ? "Concluído" : prazoEmSegundos}
                             </td> */}
-                          </>
-                      )}                        
+                        </>
+                      )}
                     </tr>
                     {index !== filteredProtocolos.length - 1 && <tr><td colSpan="6"><hr style={{ margin: 0 }} /></td></tr>}
                   </React.Fragment>
