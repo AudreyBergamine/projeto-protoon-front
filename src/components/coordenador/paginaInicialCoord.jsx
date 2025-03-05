@@ -84,9 +84,10 @@ function PaginaInicialCoordenador() {
           </div>
         )}
 
-        <button className="btn-log" onClick={() => (navigate('/protocolos'))}>
-          Listar Protocolos
+        <button className="btn-log" onClick={() => (navigate('/gerenciar-secretaria'))}>
+          Cadastrar Secretarias
         </button>
+
         <button className="btn-log" onClick={() => (navigate('/protocolos'))}>
           Listar Protocolos
         </button>

@@ -198,7 +198,7 @@ function GerenciarSecretaria() {
                 name="nome_secretaria"
                 placeholder="Ex.: Secretaria de Meio Ambiente"
                 value={formData.nome_secretaria}
-                onChange={(e) => handleChangeNome(e.target.value)}
+                onChange={handleChange}
                 required
                 minLength={3}
               />
