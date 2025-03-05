@@ -53,7 +53,7 @@ function GerenciarSecretaria() {
       .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase())
       .replace(/(à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ)\w/g, (match) => match.toLowerCase())
   };
-  
+
 
   //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
   const handleChange = (e) => {
@@ -124,33 +124,33 @@ function GerenciarSecretaria() {
       });
     }
   };
-  
+
 
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     console.log("Dados enviados:", formData); // Depuração
-  
+
     try {
       const response = await axiosInstance.post('/protoon/municipe/endereco', {
         ...formData.endereco,
       });
-  
+
       console.log("Resposta do endereço:", response.data); // Verifique se response.data tem id
-  
+
       if (!response.data.id_endereco || isNaN(response.data.id_endereco)) {
         throw new Error("ID inválido retornado do servidor.");
       }
-  
+
       const createSecretaria = await axiosInstance.post(`protoon/secretaria/${response.data.id_endereco}`, {
         nome_secretaria: formData.nome_secretaria,
         nome_responsavel: formData.nome_responsavel,
         email: formData.email
       });
-  
+
       console.log("Resposta da Secretaria:", createSecretaria.data);
-  
+
       setRemoveLoading(false);
       setTimeout(() => {
         setRemoveLoading(true);
@@ -174,23 +174,18 @@ function GerenciarSecretaria() {
       }, 3000);
     }
   };
-  
-      const sendToLogin = async()=>{
-        navigate("/login")
-    }
-    
-  
+
+  const sendToLogin = async () => {
+    navigate("/login")
+  }
 
   //Por fim é retornado o html para ser exibido no front end, junto com as funções acima.
   return (
-
     <form onSubmit={handleSubmit}>
       <div style={{ paddingBottom: '100px' }}>
-
         <h3>Dados da Secretaria</h3>
         <div className="register-form">
           <div className="input-container">
-
             <div>
               <label>Nome:</label><br></br>
               <input
@@ -229,7 +224,6 @@ function GerenciarSecretaria() {
               />
             </div>
 
-
           </div>
         </div>
         <hr></hr>
@@ -253,14 +247,13 @@ function GerenciarSecretaria() {
                 }}
               />
             </div>
-        
-            
+
             <div>
-              <label>Endereço:</label><br></br> 
+              <label>Endereço:</label><br></br>
               <input
                 type="text"
                 name="logradouro"
-                placeholder="Ex.: Rua 23 de Maio" 
+                placeholder="Ex.: Rua 23 de Maio"
                 value={formData.endereco.logradouro}
                 onChange={handleChange}
                 required
@@ -269,8 +262,8 @@ function GerenciarSecretaria() {
               />
             </div>
             {/* <div> */}
-              {/* TODO: Ocultar esse trecho para o usuário e deixar nullable */}
-              {/* <label>Nome Endereço:</label><br></br> 
+            {/* TODO: Ocultar esse trecho para o usuário e deixar nullable */}
+            {/* <label>Nome Endereço:</label><br></br> 
               <input
                 type="text"
                 name="nome_endereco"
@@ -303,13 +296,11 @@ function GerenciarSecretaria() {
                 onChange={handleChange}
               />
             </div>
-
           </div>
         </div>
 
         <div className="register-form">
           <div className="input-container">
-
             <div>
               <label>Tipo de Endereço:</label><br></br>
               <input
