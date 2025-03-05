@@ -144,7 +144,9 @@ function GerenciarSecretaria() {
       }
   
       const createSecretaria = await axiosInstance.post(`protoon/secretaria/${response.data.id_endereco}`, {
-        ...formData,
+        nome_secretaria: formData.nome_secretaria,
+        nome_responsavel: formData.nome_responsavel,
+        email: formData.email
       });
   
       console.log("Resposta da Secretaria:", createSecretaria.data);
