@@ -13,6 +13,7 @@ import URL from '../services/url';
 function Header({ isAuthenticated, role }) {
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [cidade, setCidade] = useState("Ferraz de Vasconcelos");
 
     const axiosInstance = axios.create({
         baseURL: URL,
@@ -100,8 +101,10 @@ function Header({ isAuthenticated, role }) {
         navigate("/perfil-funcionario"); // Redirecionar para protocolo
         toggleMenu(e)
     }
-    //lixo
 
+    const handleChange = (event) => {
+        setCidade(event.target.value);
+    };
 
     return (
         <div>
@@ -111,20 +114,35 @@ function Header({ isAuthenticated, role }) {
                         <img className="logo" id="cidadao" src={logoImg} alt="Logo do site" style={{ height: 60, marginLeft: -30 }} />
                     </a>
                 </div>
+                <div>
+                    <select
+                        style={{ fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center" }}
+                        name="Cidade"
+                        value={cidade} // Estado que controla a cidade selecionada
+                        onChange={handleChange}
+                    >
+                        <option value="Ferraz de Vasconcelos">Ferraz de Vasconcelos</option>
+                        <option value="Mogi das Cruzes">Mogi das Cruzes</option>
+                        <option value="Suzano">Suzano</option>
+                        <option value="Poá">Poá</option>
+                        <option value="Itaquaquecetuba">Itaquaquecetuba</option>
+                    </select>
+                </div>
+
                 <nav>
-                    <div style={{ marginLeft: '30%', textAlign: 'right' }}>
+                    <div style={{ marginLeft: '20%', textAlign: 'right' }}>
                         <ul className="nav-links">
-                            <li  style={{ minWidth: 200, marginRight: 150 }}>
-                            <a 
-  href="$" 
-  style={{ 
-    cursor: "default", 
-    textDecoration: "none", // Remove sublinhado
-    pointerEvents: "none",  // Impede interações com o link
-  }}
->
-  {secretaria}
-</a>
+                            <li style={{ minWidth: 200, marginRight: 50 }}>
+                                <a
+                                    href="$"
+                                    style={{
+                                        cursor: "default",
+                                        textDecoration: "none", // Remove sublinhado
+                                        pointerEvents: "none",  // Impede interações com o link
+                                    }}
+                                >
+                                    {secretaria}
+                                </a>
                             </li>
                             <li style={{ marginLeft: 80, textAlign: 'right' }}>
                                 <a href="#">Serviços</a>
