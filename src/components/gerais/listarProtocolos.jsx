@@ -39,36 +39,6 @@ function ListarProtocolosBySecretaria() {
         response2.data.forEach(protocolo => {
           if (protocolo.status === "CONCLUIDO" || protocolo.status === "CANCELADO") {
             novosPrazoConclusao[protocolo.id_protocolo] = null; // Se estiver concluído, define como null
-          } else if (protocolo.status === "PAGAMENTO_PENDENTE") {
-            // Verifica se passaram 4 dias
-            const dataProtocolo = new Date(protocolo.data_protocolo); // Converter string para Date
-
-            const diferencaDias = (Date.now() - dataProtocolo.getTime()) / (1000 * 60 * 60 * 24);
-
-            if (diferencaDias >= 4) {
-              // Faz o update do status para "CANCELADO"
-              const response = axiosInstance.put(`/protoon/protocolo/alterar-protocolos/status/${protocolo.numero_protocolo}`, {
-                ...protocolo,
-                status: "CANCELADO"
-              });
-              let isRequesting = false;
-
-              if (!isRequesting) {
-                isRequesting = true;
-                try {
-                  const response1 = axiosInstance.post(
-                    `/protoon/devolutiva/criar-devolutiva-boleto`,
-                    protocolo
-                  );
-                  console.log("Devolutiva enviada com sucesso!");
-                } catch (error) {
-                  console.error("Erro ao enviar a devolutiva", error);
-                } finally {
-                  isRequesting = false;
-                }
-              }
-              novosPrazoConclusao[protocolo.id_protocolo] = null;
-            }
           } else {
             // Converte data_protocolo para um objeto Date
             const dataProtocolo = new Date(protocolo.data_protocolo);
@@ -92,6 +62,7 @@ function ListarProtocolosBySecretaria() {
         console.error('Erro ao buscar as secretarias:', error);
       }
     }
+    boletoVencido()
     fetchProtocolos();
 
     // Simulação de contagem regressiva para o prazo
@@ -115,6 +86,42 @@ function ListarProtocolosBySecretaria() {
 
     return () => clearInterval(intervalId);
   }, []);
+
+  const boletoVencido = async () => {
+    for (const protocolo of protocolos) {
+      // Verifica se passaram 4 dias
+      if (protocolo.status === "PAGAMENTO_PENDENTE") {
+        const dataProtocolo = new Date(protocolo.data_protocolo); // Converter string para Date
+        
+        const diferencaDias = (Date.now() - dataProtocolo.getTime()) / (1000 * 60 * 60 * 24);
+        if (diferencaDias >= 4) {
+          // Faz o update do status para "CANCELADO"
+          try {
+            const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/status/${protocolo.numero_protocolo}`, {
+              ...protocolo,
+              status: "CANCELADO"
+            });
+          } catch (error) {
+            console.error("Erro ao cancelar o protocolo", error); 
+          }
+        }
+
+        let isRequesting = false;
+        if (!isRequesting) {
+          isRequesting = true;
+          try {
+            const response1 = await axiosInstance.post(
+              `/protoon/devolutiva/criar-devolutiva-boleto`, protocolo);
+            console.log("Devolutiva enviada com sucesso!");
+          } catch (error) {
+            console.error("Erro ao enviar a devolutiva", error);
+          } finally {
+            isRequesting = false;
+          }
+        }
+      }
+    }
+  };
 
   // Função para determinar a cor baseada no prazo
   const prazoCor = (prazoEmSegundos) => {
