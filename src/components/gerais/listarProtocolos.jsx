@@ -19,6 +19,7 @@ function ListarProtocolosBySecretaria() {
 
   const [ocultarConcluidos, setOcultarConcluidos] = useState(false);
   const [prazoConclusaoSimulado, setPrazoConclusaoSimulado] = useState({}); // Valor inicial em minutos
+  const [boletoSimulado, setboletoSimulado] = useState({}); //Valor para vender o boleto em segundos
 
   // Adicionar o token ao cabeçalho de autorização
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -35,6 +36,7 @@ function ListarProtocolosBySecretaria() {
         setProtocolos(response2.data);
 
         const novosPrazoConclusao = {};
+        const novosBoletoSimulado = {};
 
         response2.data.forEach(protocolo => {
           if (protocolo.status === "CONCLUIDO" || protocolo.status === "CANCELADO") {
@@ -42,27 +44,27 @@ function ListarProtocolosBySecretaria() {
           } else {
             // Converte data_protocolo para um objeto Date
             const dataProtocolo = new Date(protocolo.data_protocolo);
-
-            // Converte prazoConclusao de dias para milissegundos
             const prazoEmMilissegundos = protocolo.prazoConclusao * 24 * 60 * 60 * 1000;
-
-            // Calcula a data final somando prazoConclusao
             const dataFinal = new Date(dataProtocolo.getTime() + prazoEmMilissegundos);
-
-            // Calcula o tempo restante em segundos
             const tempoRestante = Math.max(Math.floor((dataFinal - Date.now()) / 1000), 0);
 
             // Armazena o tempo restante
             novosPrazoConclusao[protocolo.id_protocolo] = tempoRestante;
+
+            // Simulação do tempo do Boleto
+            const prazoBoletoMilissegundos = 4 * 24 * 60 * 60 * 1000;
+            const dataFinalBoleto = new Date(dataProtocolo.getTime() + prazoBoletoMilissegundos);
+            const tempoBoleto = Math.max(Math.floor((dataFinalBoleto - Date.now()) / 1000), 0);
+            novosBoletoSimulado[protocolo.id_protocolo] = tempoBoleto;
           }
         });
         setPrazoConclusaoSimulado(novosPrazoConclusao);
+        setboletoSimulado(novosBoletoSimulado);
 
       } catch (error) {
         console.error('Erro ao buscar as secretarias:', error);
       }
     }
-    boletoVencido()
     fetchProtocolos();
 
     // Simulação de contagem regressiva para o prazo
@@ -79,20 +81,38 @@ function ListarProtocolosBySecretaria() {
         if (todosFinalizados) {
           clearInterval(intervalId); // Para o contador se todos os prazos tiverem vencido
         }
-
         return novosPrazoConclusao;
+      });
+
+      // Faz contagem regressiva do boleto
+      setboletoSimulado(prevBoleto => {
+        const novosBoleto = { ...prevBoleto };
+        Object.keys(novosBoleto).forEach(id => {
+          if (novosBoleto[id] > 0) {
+            novosBoleto[id] -= 1;
+          }
+        });
+        return novosBoleto;
       });
     }, 1000); // Atualiza a cada segundo
 
     return () => clearInterval(intervalId);
   }, []);
 
+  // 🔄 Novo useEffect para rodar boletoVencido depois que protocolos for atualizado
+  useEffect(() => {
+    if (protocolos.length > 0) {
+      boletoVencido();
+    }
+  }, [protocolos]);  // 🚀 Agora só roda quando `protocolos` for atualizado
+
+  // Função chamada para ver se o boleto venceu
   const boletoVencido = async () => {
     for (const protocolo of protocolos) {
       // Verifica se passaram 4 dias
       if (protocolo.status === "PAGAMENTO_PENDENTE") {
         const dataProtocolo = new Date(protocolo.data_protocolo); // Converter string para Date
-        
+
         const diferencaDias = (Date.now() - dataProtocolo.getTime()) / (1000 * 60 * 60 * 24);
         if (diferencaDias >= 4) {
           // Faz o update do status para "CANCELADO"
@@ -102,7 +122,7 @@ function ListarProtocolosBySecretaria() {
               status: "CANCELADO"
             });
           } catch (error) {
-            console.error("Erro ao cancelar o protocolo", error); 
+            console.error("Erro ao cancelar o protocolo", error);
           }
         }
 
@@ -204,6 +224,7 @@ function ListarProtocolosBySecretaria() {
               <th>Status</th>
               <th>Valor</th>
               <th>Prazo de Coclusão</th>
+              {/* <th>Simulação Boleto(s)</th> */}
               {/* <th>Simulação em Segundos</th> */}
             </tr>
           </thead>
@@ -231,9 +252,12 @@ function ListarProtocolosBySecretaria() {
                       {protocolo.status !== 'CONCLUIDO' && protocolo.status !== 'CANCELADO' && (
                         <>
                           <td style={{ textAlign: 'center', minWidth: 100 }}>{prazo} dia(s)</td>
-                          {/* <td style={{ textAlign: 'center', minWidth: 100 }}>
+                          {/* <td style={{ textAlign: 'center', minWidth: 100 }}> // Tag para demontrar tempo de boleto vencendo
+                            {JSON.stringify(boletoSimulado[protocolo.id_protocolo]) || "0"}(s)
+                          </td> */}
+                          {/* <td style={{ textAlign: 'center', minWidth: 100 }}> // Tag para demonstrar prazo de execução do protocolo
                             {prazoEmSegundos === null ? "Concluído" : prazoEmSegundos}
-                            </td> */}
+                          </td> */}
                         </>
                       )}
                     </tr>
