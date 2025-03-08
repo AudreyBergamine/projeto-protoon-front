@@ -1,6 +1,6 @@
 
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import URL from '../services/url';
 
@@ -20,6 +20,7 @@ function ListarProtocolosBySecretaria() {
   const [ocultarConcluidos, setOcultarConcluidos] = useState(false);
   const [prazoConclusaoSimulado, setPrazoConclusaoSimulado] = useState({}); // Valor inicial em minutos
   const [boletoSimulado, setboletoSimulado] = useState({}); //Valor para vender o boleto em segundos
+  const isBoletoVencidoRunning = useRef(false);
 
   // Adicionar o token ao cabeçalho de autorização
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -99,21 +100,23 @@ function ListarProtocolosBySecretaria() {
     return () => clearInterval(intervalId);
   }, []);
 
-  // 🔄 Novo useEffect para rodar boletoVencido depois que protocolos for atualizado
   useEffect(() => {
-    if (protocolos.length > 0) {
-      boletoVencido();
+    if (protocolos.length > 0 && !isBoletoVencidoRunning.current) {
+      isBoletoVencidoRunning.current = true;  // Bloqueia novas chamadas
+      boletoVencido().finally(() => {
+        isBoletoVencidoRunning.current = false; // Libera para futuras chamadas
+      });
     }
-  }, [protocolos]);  // 🚀 Agora só roda quando `protocolos` for atualizado
+  }, [protocolos]);
 
   // Função chamada para ver se o boleto venceu
   const boletoVencido = async () => {
     for (const protocolo of protocolos) {
-      // Verifica se passaram 4 dias
       if (protocolo.status === "PAGAMENTO_PENDENTE") {
         const dataProtocolo = new Date(protocolo.data_protocolo); // Converter string para Date
 
         const diferencaDias = (Date.now() - dataProtocolo.getTime()) / (1000 * 60 * 60 * 24);
+        // Verifica se passaram 4 dias
         if (diferencaDias >= 4) {
           // Faz o update do status para "CANCELADO"
           try {
@@ -225,7 +228,7 @@ function ListarProtocolosBySecretaria() {
               <th>Valor</th>
               <th>Prazo de Coclusão</th>
               {/* <th>Simulação Boleto(s)</th> */}
-              {/* <th>Simulação em Segundos</th> */}
+              {/* <th>Simulação do prazo em Segundos</th> */}
             </tr>
           </thead>
           <div style={{ marginTop: 30 }}></div>
@@ -252,10 +255,12 @@ function ListarProtocolosBySecretaria() {
                       {protocolo.status !== 'CONCLUIDO' && protocolo.status !== 'CANCELADO' && (
                         <>
                           <td style={{ textAlign: 'center', minWidth: 100 }}>{prazo} dia(s)</td>
-                          {/* <td style={{ textAlign: 'center', minWidth: 100 }}> // Tag para demontrar tempo de boleto vencendo
+                          {/* Tag para demonstrar tempo de boleto vencendo */}
+                          {/* <td style={{ textAlign: 'center', minWidth: 100 }}>
                             {JSON.stringify(boletoSimulado[protocolo.id_protocolo]) || "0"}(s)
                           </td> */}
-                          {/* <td style={{ textAlign: 'center', minWidth: 100 }}> // Tag para demonstrar prazo de execução do protocolo
+                          {/* <td style={{ textAlign: 'center', minWidth: 100 }}> 
+                          //  Tag para demonstrar prazo de execução do protocolo
                             {prazoEmSegundos === null ? "Concluído" : prazoEmSegundos}
                           </td> */}
                         </>
