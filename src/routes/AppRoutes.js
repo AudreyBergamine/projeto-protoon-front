@@ -25,6 +25,7 @@ import PerfilSecretario from '../components/secretario/perfilSecretario';
 import PerfilCoordenador from '../components/coordenador/perfilCoord';
 import PerfilFuncionario from '../components/funcionario/perfilFuncionario';
 import Logs from '../components/coordenador/logs';
+import Relatorios from '../components/coordenador/relatorios';
 import RedirecionamentosCoordenador from '../components/gerais/redirecionamentos';
 import RedirecionamentosFuncionario from '../components/funcionario/redirecionamentosFuncionario';
 import GerenciarSecretaria from '../components/coordenador/GerenciarSecretaria';
@@ -74,6 +75,7 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/contato" element={<Contato />} />
             <Route path="/retornadas" element={<ReclamacoesRetornadasMunicipe />} />
             <Route path="/perfil" element={<PerfilMunicipe />} />
+            <Route path="/relatorios" element={<Relatorios />} />
             <Route path="/logs" element={<Logs />} />
             
             {/* SECRETARIO */}

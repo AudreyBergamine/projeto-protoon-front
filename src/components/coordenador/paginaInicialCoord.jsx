@@ -102,15 +102,19 @@ function PaginaInicialCoordenador() {
           </div>
         )}
 
-        <button className="btn-log" onClick={() => (navigate('/protocolos'))}>
+        <button style={{ marginBottom: 10 }} className="btn-log" onClick={() => (navigate('/protocolos'))}>
           Listar Protocolos
         </button>
 
-        <button className="btn-log" onClick={() => (navigate('/redirecionamentos-coordenador'))}>
+        <button style={{ marginBottom: 10, paddingBottom: 50 }} className="btn-log" onClick={() => (navigate('/redirecionamentos-coordenador'))}>
           Aprovar Redirecionamentos
         </button>
 
-        <button className="btn-log" onClick={() => (navigate('/gerenciar-secretaria'))}>
+        <button style={{ marginBottom: 10 }} className="btn-log" onClick={() => (navigate('/relatorios'))}>
+          Relatórios
+        </button>
+
+        <button style={{ marginBottom: 10 }} className="btn-log" onClick={() => (navigate('/gerenciar-secretaria'))}>
           Cadastrar Secretarias
         </button>
         
