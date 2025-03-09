@@ -99,7 +99,7 @@ function AnalisarProtocolos() {
       const response = await axiosInstance.post(`/protoon/devolutiva/criar-devolutiva/${id}`, { devolutiva });
 
       salvarAlteracoes()
-      
+
       setTimeout(() => {
         setDevolutiva('');
         navigate(`/protocolo/${id}`);
@@ -307,7 +307,7 @@ function AnalisarProtocolos() {
     if (enviandoDevolutiva || mensagemAtiva) {
       return;
     }
-    setMensagemAtiva(true);    
+    setMensagemAtiva(true);
     try {
       setTimeout(() => {
         setRemoveLoading(true)
@@ -387,7 +387,11 @@ function AnalisarProtocolos() {
                   <td style={{ textAlign: 'center' }}>{protocolo.assunto}</td>
                   <td>{protocolo.numero_protocolo}</td>
                   <td style={{ textAlign: 'center' }}>{formatarDataHora(protocolo.data_protocolo)}</td>
-                  <td style={{ textAlign: 'center' }}>R$ {protocolo.valor.toFixed(2)}</td>
+                  <td style={{ textAlign: 'center' }}>
+                    {protocolo.valor !== null && protocolo.valor !== undefined
+                      ? `R$ ${protocolo.valor.toFixed(2)}`
+                      : ""}
+                  </td>
                   <td>
                     <select
                       value={statusSelecionado}

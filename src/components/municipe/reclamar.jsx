@@ -14,7 +14,7 @@ function Reclamar() {
     assunto: "",
     descricao: "",
     idSecretaria: "",
-    status: 0,
+    status: 1,
     valor: 0
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -60,7 +60,7 @@ function Reclamar() {
       setFormData(prevState => ({
         ...prevState,
         idSecretaria: selectedAssunto ? selectedAssunto.secretaria.id_secretaria : null,
-        valor: selectedAssunto ? selectedAssunto.valor : null
+        valor: null
       }));
     }
   };
@@ -98,7 +98,7 @@ function Reclamar() {
 
     try {
       const currentDate = new Date(); // Obtém a data e hora atuais
-      const response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos/${formData.idSecretaria}`, {
+      const response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos-reclamar/${formData.idSecretaria}`, {
         assunto: formData.assunto,
         descricao: formData.descricao,
         status: formData.status,

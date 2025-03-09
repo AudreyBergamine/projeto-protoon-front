@@ -174,6 +174,9 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
               </div>
             </div>
           </div>
+          <div>
+            <label style={{ fontSize: 15 }}>O Protocolo será cancelado automaticamente se não for pago em 4 dias corridos.</label>
+          </div>
           {removeLoading && <div style={{ marginTop: -30 }}>
           {message && <Message type={type} msg={message} />}
           <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Confirmar</button>
