@@ -22,6 +22,9 @@ function AnalisarProtocolos() {
   const [devolutiva, setDevolutiva] = useState('');
   const [protocolo, setProtocolo] = useState(null);
   const [statusSelecionado, setStatusSelecionado] = useState(""); // Estado para armazenar o status selecionado
+  const [valorSelecionado, setValorSelecionado] = useState(); // Estado para armazenar o status selecionado
+  const [oldValor, setOldValor] = useState(); // Estado para armazenar o valor anterior
+  const [oldSecretaria, setOldSecretaria] = useState(); // Estado para armazenar a secretaria anterior
   const [secretarias, setSecretarias] = useState([]);
   const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
   const [message, setMessage] = useState()
@@ -53,6 +56,8 @@ function AnalisarProtocolos() {
         const response2 = await axiosInstance.get(`/protoon/protocolo/pesquisar-id/${id}`);
         setProtocolo(response2.data);
         setStatusSelecionado(response2.data.status);
+        setOldValor(response2.data.valor);
+        setOldSecretaria(response2.data.secretaria.id_secretaria);
         const devolutivasResponse = await axiosInstance.get(`/protoon/devolutiva/devolutiva-protocolo/${id}`);
         const devolutivas = devolutivasResponse.data;
 
@@ -65,7 +70,6 @@ function AnalisarProtocolos() {
 
           // Pegar a devolutiva mais recente
           setDevolutivaMaisRecente(devolutivas[0]);
-          console.log("Devolutiva mais recente:", devolutivas[0]);
         }
 
       } catch (error) {
@@ -136,9 +140,6 @@ function AnalisarProtocolos() {
 
   const updateProtocolo = async () => {
     try {
-      console.log("Novo status selecionado:", statusSelecionado); // Adicionando console.log para depurar
-      console.log(idSecretariaSelecionada)
-
       if (!devolutiva || devolutiva.trim() === '') {
         if (exibirMensagem) {
           exibirMensagem("Campo de descrição de Devolutiva vazio. Não é possível atualizar status.", 'error');
@@ -172,83 +173,92 @@ function AnalisarProtocolos() {
   }
 
   const solicitarRedirecionar = async () => {
-
     try {
-      const response1 = await axiosInstance.get(`/protoon/secretaria/${idSecretariaSelecionada}`)
-      console.log(response1.data)
+      // Verifica se a secretaria foi definida
+      if (idSecretariaSelecionada === null || idSecretariaSelecionada === undefined) {
+        setMessage('Secretaria não definida para este protocolo.');
+        setType('error');
+        return; // Evita continuar com a requisição caso não tenha secretaria
+      }
+
+      const response1 = await axiosInstance.get(`/protoon/secretaria/${idSecretariaSelecionada}`);
       const secretariaData = response1.data;
 
-      const response2 = await axiosInstance.post(`/protoon/redirecionamento/${id}`,
-        { novaSecretaria: secretariaData.nome_secretaria }
-      )
-      console.log(response2.data)
+      // Verifica se a resposta da secretaria está vazia ou não
+      if (!secretariaData || !secretariaData.nome_secretaria) {
+        setMessage('Secretaria não encontrada.');
+        setType('error');
+        return; // Se a secretaria não for encontrada, retorna um erro
+      }
 
-      // Exibe um alerta de confirmação antes de redirecionar o protocolo
-
-      // const response3 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/departamento/${protocolo.numero_protocolo}`, {
-      //   ...protocolo,
-      //   secretaria: secretariaData
-      // });
+      const response2 = await axiosInstance.post(`/protoon/redirecionamento/${id}`, {
+        novaSecretaria: secretariaData.nome_secretaria,
+      });
 
       if (response2.status.valueOf() === 201) {
-        setRemoveLoading(false)
+        setRemoveLoading(false);
         setTimeout(() => {
-          setRemoveLoading(true)
-          setMessage('Solicitação de redirecionamento feita com Sucesso!')
-          setType('success')
+          setRemoveLoading(true);
+          setMessage('Solicitação de redirecionamento feita com Sucesso!');
+          setType('success');
           setTimeout(() => {
-            setMessage('')
+            setMessage('');
             navigate('/protocolos');
-          }, 2000)
-        }, 2000)
+          }, 2000);
+        }, 2000);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     } catch (error) {
-
       // TODO: ATUALIZAR MENSAGEM QUANDO DER ERRO PERSONALIZADA NO REDIRECIONAMENTO DE PROTOCOLO
       if (error.response && error.response.data && error.response.data.message) {
         setMessage(error.response.data.message);
-
         console.log(error.response.data.message);
       } else {
         setMessage('Erro desconhecido ocorreu.');
         console.log('Erro desconhecido ocorreu.');
       }
     }
-  }
+  };
 
   const redirecionar = async () => {
     if (ConfirmationDialog) {
       setShowConfirmationDialog(false)
       try {
         const response1 = await axiosInstance.get(`/protoon/secretaria/${idSecretariaSelecionada}`)
-        console.log(response1.data)
         const secretariaData = response1.data;
 
         const response2 = await axiosInstance.post(`/protoon/redirecionamento/${id}`,
           { novaSecretaria: secretariaData.nome_secretaria }
         )
-        console.log(response2.data)
 
-        // Exibe um alerta de confirmação antes de redirecionar o protocolo
+        console.log("secretarias: " + oldSecretaria + " - " + idSecretariaSelecionada)
+        if (oldSecretaria != idSecretariaSelecionada) {
+          const response3 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/departamento/${protocolo.numero_protocolo}`, {
+            ...protocolo,
+            secretaria: secretariaData
+          });
 
-        const response3 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/departamento/${protocolo.numero_protocolo}`, {
-          ...protocolo,
-          secretaria: secretariaData
-        });
-
-        if (response3) {
+          if (response3) {
+            setRemoveLoading(false)
+            setTimeout(() => {
+              setRemoveLoading(true)
+              setMessage('Redirecionamento feito com Sucesso!')
+              setType('success')
+              setTimeout(() => {
+                setMessage('')
+                navigate('/protocolos');
+              }, 2000)
+            }, 2000)
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        } else {
           setRemoveLoading(false)
           setTimeout(() => {
             setRemoveLoading(true)
-            setMessage('Redirecionamento feito com Sucesso!')
-            setType('success')
-            setTimeout(() => {
-              setMessage('')
-              navigate('/protocolos');
-            }, 2000)
+            setMessage('Você está tentando redirecionar para a mesma Secretaria!')
+            setType('error')
+            navigate('/protocolo/' + id);
           }, 2000)
-          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       } catch (error) {
 
@@ -259,7 +269,7 @@ function AnalisarProtocolos() {
           console.log(error.response.data.message);
         } else {
           setMessage('Erro desconhecido ocorreu.');
-          console.log('Erro desconhecido ocorreu.');
+          console.error('Erro desconhecido ocorreu. ' + error);
         }
       }
     }
@@ -303,6 +313,13 @@ function AnalisarProtocolos() {
       return; // Impede chamadas 
     }
     setIsSubmitting(true)
+
+    console.log("Valores: " + protocolo.valor + "  " + valorSelecionado)
+    if (protocolo.assunto === 'Outros' && protocolo.valor !== null) {
+      if (oldValor !== valorSelecionado) {
+        SalvarNovoValor()
+      }
+    }
     setTimeout(() => setIsSubmitting(false), 1000); // Reativa após 1s
     if (enviandoDevolutiva || mensagemAtiva) {
       return;
@@ -326,6 +343,22 @@ function AnalisarProtocolos() {
 
   const handleCancelRedirect = () => {
     setShowConfirmationDialog(false);
+  }
+
+  const handleValorChange = (e) => {
+    const novoValor = parseFloat(e.target.value);
+    setValorSelecionado(novoValor)
+    setProtocolo(prevProtocolo => ({
+      ...prevProtocolo,
+      valor: novoValor,
+    }));
+  };
+
+  const SalvarNovoValor = async () => {
+    const response3 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/valor/${protocolo.numero_protocolo}`, {
+      ...protocolo,
+      valor: valorSelecionado
+    });
   }
 
   return (
@@ -387,10 +420,21 @@ function AnalisarProtocolos() {
                   <td style={{ textAlign: 'center' }}>{protocolo.assunto}</td>
                   <td>{protocolo.numero_protocolo}</td>
                   <td style={{ textAlign: 'center' }}>{formatarDataHora(protocolo.data_protocolo)}</td>
-                  <td style={{ textAlign: 'center' }}>
-                    {protocolo.valor !== null && protocolo.valor !== undefined
-                      ? `R$ ${protocolo.valor.toFixed(2)}`
-                      : ""}
+                  <td>
+                    {protocolo.assunto === "Outros" && protocolo.valor !== null ? (
+                      <select
+                        value={protocolo.valor.toFixed(2)}
+                        onChange={handleValorChange} // Função para manipular mudança de valor
+                      >
+                        <option value="30.00">R$ 30,00</option>
+                        <option value="130.00">R$ 130,00</option>
+                        <option value="150.00">R$ 150,00</option>
+                      </select>
+                    ) : (
+                      protocolo.valor !== null && protocolo.valor !== undefined
+                        ? `R$ ${protocolo.valor.toFixed(2)}`
+                        : "Sem valor"
+                    )}
                   </td>
                   <td>
                     <select
@@ -454,31 +498,30 @@ function AnalisarProtocolos() {
           )}
 
           {protocolo.secretaria ? (
-            <>
-              <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
-                <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Secretaria</legend>
-                <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
-                  <thead>
+            <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
+              <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Secretaria</legend>
+              <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
+                <thead>
+                  <tr>
                     <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Nome</p></td>
                     <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Responsável</p></td>
                     <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Email</p></td>
                     <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Endereço</p></td>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td style={{ width: 100 }}>{protocolo.secretaria.nome_secretaria}</td>
-                      <td style={{ width: 100 }}>{protocolo.secretaria.nome_responsavel}</td>
-                      <td style={{ width: 100 }}>{protocolo.secretaria.email}</td>
-                      <td style={{ maxWidth: 500 }}>{protocolo.secretaria.endereco.logradouro}, {protocolo.secretaria.endereco.num_endereco}, {protocolo.secretaria.endereco.complemento}, {protocolo.secretaria.endereco.bairro}, {protocolo.secretaria.endereco.cidade} - {protocolo.secretaria.endereco.estado}, {protocolo.secretaria.endereco.pais}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </fieldset>
-            </>
-          ) : (
-            <li>Carregando...</li>
-          )}
-
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style={{ width: 100 }}>{protocolo.secretaria.nome_secretaria}</td>
+                    <td style={{ width: 100 }}>{protocolo.secretaria.nome_responsavel}</td>
+                    <td style={{ width: 100 }}>{protocolo.secretaria.email}</td>
+                    <td style={{ maxWidth: 500 }}>
+                      {protocolo.secretaria.endereco.logradouro}, {protocolo.secretaria.endereco.num_endereco}, {protocolo.secretaria.endereco.complemento}, {protocolo.secretaria.endereco.bairro}, {protocolo.secretaria.endereco.cidade} - {protocolo.secretaria.endereco.estado}, {protocolo.secretaria.endereco.pais}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+          ) : null}
 
           <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
             <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Municipe</legend>
@@ -498,12 +541,11 @@ function AnalisarProtocolos() {
                   <td style={{ width: 100 }}>{protocolo.municipe.num_CPF}</td>
                   <td style={{ width: 100 }}>{protocolo.municipe.data_nascimento}</td>
                   <td style={{ maxWidth: 50 }}>{protocolo.municipe.celular}</td>
-                  <td style={{ maxWidth: 500, minWidth: 300 }}>{protocolo.secretaria.endereco.logradouro}, {protocolo.secretaria.endereco.num_endereco}, {protocolo.secretaria.endereco.complemento}, {protocolo.secretaria.endereco.bairro}, {protocolo.secretaria.endereco.cidade} - {protocolo.secretaria.endereco.estado}, {protocolo.secretaria.endereco.pais}</td>
+                  <td style={{ maxWidth: 500, minWidth: 300 }}>{protocolo.municipe.endereco.logradouro}, {protocolo.municipe.endereco.num_endereco}, {protocolo.municipe.endereco.complemento}, {protocolo.municipe.endereco.bairro}, {protocolo.municipe.endereco.cidade} - {protocolo.municipe.endereco.estado}, {protocolo.municipe.endereco.pais}</td>
                 </tr>
               </tbody>
             </table>
           </fieldset>
-
 
           <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
             <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Endereço do Protocolo</legend>

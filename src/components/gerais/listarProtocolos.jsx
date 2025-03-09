@@ -28,13 +28,27 @@ function ListarProtocolosBySecretaria() {
 
   useEffect(() => {
     async function fetchProtocolos() {
-
       try {
         const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
         const id_secretaria = response1.data.secretaria.id_secretaria;
 
-        const response2 = await axiosInstance.get(`/protoon/secretaria/protocolos/` + id_secretaria);
-        setProtocolos(response2.data);
+        // const response2 = await axiosInstance.get(`/protoon/secretaria/protocolos/` + id_secretaria);
+        const response2 = await axiosInstance.get(`/protoon/protocolo/todos-protocolos`);
+        const protocolosFiltrados = response2.data.filter(protocolo =>
+          protocolo.secretaria === null || 
+          (protocolo.secretaria.id_secretaria === id_secretaria)
+        );
+        
+        setProtocolos(protocolosFiltrados); // Atualiza o estado apenas com os protocolos filtrados
+        
+
+        // Verifica se algum protocolo não tem uma secretaria
+        // const protocolosSemSecretaria = response3.data.filter(protocolo => protocolo.secretaria === null);
+
+        // Se houver protocolos sem secretaria, adicione-os ao estado atual
+        // if (protocolosSemSecretaria.length > 0) {
+        //   setProtocolos(prevProtocolos => [...prevProtocolos, ...protocolosSemSecretaria]);
+        // }
 
         const novosPrazoConclusao = {};
         const novosBoletoSimulado = {};
@@ -135,7 +149,6 @@ function ListarProtocolosBySecretaria() {
           try {
             const response1 = await axiosInstance.post(
               `/protoon/devolutiva/criar-devolutiva-boleto`, protocolo);
-            console.log("Devolutiva enviada com sucesso!");
           } catch (error) {
             console.error("Erro ao enviar a devolutiva", error);
           } finally {
@@ -181,16 +194,18 @@ function ListarProtocolosBySecretaria() {
   };
 
   // Função para filtrar e ordenar os protocolos por prazo
-  const filteredProtocolos = protocolos
-    .filter(protocolo => protocolo.numero_protocolo.toLowerCase().includes(pesquisarProt.toLowerCase()))
-    .filter(protocolo => ocultarConcluidos || protocolo.status !== "CONCLUIDO")
-    .sort((a, b) => {
-      const prazoA = a.prazoConclusao;  // Se o valor for uma data
-      const prazoB = b.prazoConclusao;
+  const filteredProtocolos = protocolos?.length > 0
+    ? protocolos
+      .filter(protocolo => protocolo.numero_protocolo?.toLowerCase().includes(pesquisarProt.toLowerCase()))
+      .filter(protocolo => ocultarConcluidos || protocolo.status !== "CONCLUIDO")
+      .sort((a, b) => {
+        const prazoA = a.prazoConclusao;  // Se o valor for uma data
+        const prazoB = b.prazoConclusao;
 
-      // Ordena pelo prazo (menor prazo primeiro)
-      return prazoA - prazoB;
-    });
+        // Ordena pelo prazo (menor prazo primeiro)
+        return prazoA - prazoB;
+      })
+    : [];  // Caso protocolos seja vazio ou indefinido, retorna um array vazio
 
   const handleOcultarConcluidosChange = () => {
     setOcultarConcluidos(!ocultarConcluidos);
@@ -251,7 +266,11 @@ function ListarProtocolosBySecretaria() {
                         </div>
                       </td>
                       <td style={{ textAlign: 'center', minWidth: 200 }}>{protocolo.status}</td>
-                      <td style={{ textAlign: 'center', minWidth: 100 }}>{'R$ ' + protocolo.valor.toFixed(2)}</td>
+                      <td style={{ textAlign: 'center', minWidth: 100 }}>
+                        {protocolo.valor !== null && protocolo.valor !== undefined
+                          ? `R$ ${protocolo.valor.toFixed(2)}`
+                          : ""}
+                      </td>
                       {protocolo.status !== 'CONCLUIDO' && protocolo.status !== 'CANCELADO' && (
                         <>
                           <td style={{ textAlign: 'center', minWidth: 100 }}>{prazo} dia(s)</td>

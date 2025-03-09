@@ -97,14 +97,27 @@ function Reclamar() {
     }
 
     try {
-      const currentDate = new Date(); // Obtém a data e hora atuais
-      const response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos-reclamar/${formData.idSecretaria}`, {
-        assunto: formData.assunto,
-        descricao: formData.descricao,
-        status: formData.status,
-        valor: formData.valor,
-        data_protocolo: currentDate // Envia a data e hora atuais para data_protocolo
-      });
+      let response; // Variável de resposta (não precisa ser inicializada com string vazia)
+      const currentDate = new Date(); // Obtém a data e hora atuais (fora do `if` para não repetir código)
+
+      if (formData.assunto === "Outros") {
+        response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos-sem-secretaria`, {
+          assunto: formData.assunto,
+          descricao: formData.descricao,
+          status: formData.status,
+          valor: formData.valor,
+          data_protocolo: currentDate // Envia a data e hora atuais para data_protocolo
+        });
+      } else {
+        response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos/${formData.idSecretaria}`, {
+          assunto: formData.assunto,
+          descricao: formData.descricao,
+          status: formData.status,
+          valor: formData.valor,
+          data_protocolo: currentDate // Envia a data e hora atuais para data_protocolo
+        });
+      }
+
       setRemoveLoading(false);
       setTimeout(() => {
         console.log(response.data);
@@ -165,7 +178,10 @@ function Reclamar() {
                   <input
                     type="text"
                     name="valor"
-                    value={"R$ " + formData.valor.toFixed(2)}
+                    value=
+                    {formData.valor !== null && formData.valor !== undefined
+                      ? `R$ ${formData.valor.toFixed(2)}`
+                      : "Não definido"}
                     onChange={handleChange}
                     readOnly
                   />

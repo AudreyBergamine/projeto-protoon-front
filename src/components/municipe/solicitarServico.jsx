@@ -24,11 +24,11 @@ function SolicitarServico() {
     withCredentials: true, // Set withCredentials to true
   });
 
-    // Recuperar o token do localStorage
-const token = localStorage.getItem('token');
+  // Recuperar o token do localStorage
+  const token = localStorage.getItem('token');
 
-// Adicionar o token ao cabeçalho de autorização
-axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  // Adicionar o token ao cabeçalho de autorização
+  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   const [assuntos, setAssuntos] = useState([]);
 
   // Buscar os assuntos do banco de dados
@@ -97,20 +97,32 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
 
     try {
-      const currentDate = new Date(); // Obtém a data e hora atuais
-      const response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos/${formData.idSecretaria}`, {
-        assunto: formData.assunto,
-        descricao: formData.descricao,
-        status: formData.status,
-        valor: formData.valor,
-        data_protocolo: currentDate // Envia a data e hora atuais para data_protocolo
-      });
-      
+      let response; // Variável de resposta (não precisa ser inicializada com string vazia)
+      const currentDate = new Date(); // Obtém a data e hora atuais (fora do `if` para não repetir código)
+
+      if (formData.assunto === "Outros") {
+        response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos-sem-secretaria`, {
+          assunto: formData.assunto,
+          descricao: formData.descricao,
+          status: formData.status,
+          valor: formData.valor,
+          data_protocolo: currentDate // Envia a data e hora atuais para data_protocolo
+        });
+      } else {
+        response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos/${formData.idSecretaria}`, {
+          assunto: formData.assunto,
+          descricao: formData.descricao,
+          status: formData.status,
+          valor: formData.valor,
+          data_protocolo: currentDate // Envia a data e hora atuais para data_protocolo
+        });
+      }
+
       setRemoveLoading(false);
       setTimeout(() => {
         console.log(response.data);
         setRemoveLoading(true);
-        setMessage('Reclamação bem sucedida! Redirecionando...');
+        setMessage('Solicitação bem sucedida! Redirecionando...');
         setType('success');
         setTimeout(() => {
           navigate('/');
@@ -166,7 +178,10 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                   <input
                     type="text"
                     name="valor"
-                    value={"R$ " + formData.valor.toFixed(2)}
+                    value=
+                    {formData.valor !== null && formData.valor !== undefined
+                      ? `R$ ${formData.valor.toFixed(2)}`
+                      : "Não definido"}
                     onChange={handleChange}
                     readOnly
                   />
@@ -178,8 +193,8 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             <label style={{ fontSize: 15 }}>O Protocolo será cancelado automaticamente se não for pago em 4 dias corridos.</label>
           </div>
           {removeLoading && <div style={{ marginTop: -30 }}>
-          {message && <Message type={type} msg={message} />}
-          <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Confirmar</button>
+            {message && <Message type={type} msg={message} />}
+            <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Confirmar</button>
             <button className="btn-log" onClick={() => navigate('/paginaInicial')}>Voltar</button>
           </div>}
           {!removeLoading && <Loading />}
