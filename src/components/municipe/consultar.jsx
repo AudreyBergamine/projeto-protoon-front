@@ -108,7 +108,9 @@ function Consultar() {
                           {truncateText(protocolo.descricao, 50)}
                         </div>
                       </td>
-                      <td style={{ padding: 10, textAlign: 'center', fontSize: 14 }}>{protocolo.secretaria.nome_secretaria}</td>
+                      <td style={{ padding: 10, textAlign: 'center', fontSize: 14 }}>
+                        {protocolo.secretaria ? protocolo.secretaria.nome_secretaria : "Não informado"}
+                      </td>
                       <td style={{ padding: 10, textAlign: 'center', fontSize: 14 }}>{protocolo.status}</td>
                       <td style={{ padding: 10, textAlign: 'center', fontSize: 14 }}>
                         {protocolo.valor !== null && protocolo.valor !== undefined
