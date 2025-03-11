@@ -76,6 +76,14 @@ function Relatorios() {
     return acc;
   }, []);
 
+  // Ordenar os dados antes de renderizar o gráfico
+  const dadosParaGraficoOrdenados = [...(dadosParaGrafico || [])].sort((a, b) => {
+    const [diaA, mesA, anoA] = a.data.split("/").map(Number);
+    const [diaB, mesB, anoB] = b.data.split("/").map(Number);
+
+    return new Date(anoA, mesA - 1, diaA) - new Date(anoB, mesB - 1, diaB);
+  });
+
   return (
     <div style={{ padding: "20px" }}>
       <h2>Relatório de Protocolos</h2>
@@ -90,7 +98,7 @@ function Relatorios() {
       </select>
 
       <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={dadosParaGrafico} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
+        <LineChart data={dadosParaGraficoOrdenados} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="data" />
           <YAxis />
