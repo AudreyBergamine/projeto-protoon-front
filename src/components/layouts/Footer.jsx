@@ -1,11 +1,11 @@
-function Footer(){
+function Footer() {
     return (
         <div>
-             <footer className="footer">
-                    © 2024 Proto-on. Todos os direitos reservados.
-                </footer>
+            <footer className="footer">
+                © {new Date().getFullYear()} Proto-on. Todos os direitos reservados.
+            </footer>
         </div>
-    )
+    );
 }
 
-export default Footer
+export default Footer;
