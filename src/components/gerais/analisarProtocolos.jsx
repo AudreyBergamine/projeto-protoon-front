@@ -379,7 +379,8 @@ function AnalisarProtocolos() {
                 >
                 <option value="">Selecione a secretaria</option>
                 {secretarias
-                  .filter(secretaria => secretaria.nome_secretaria !== protocolo.secretaria.nome_secretaria) // Filtra a secretaria atual
+                  .filter(secretaria => 
+                    !protocolo.secretaria || secretaria.nome_secretaria !== protocolo.secretaria.nome_secretaria) // Filtra a secretaria atual
                   .map(secretaria => (
                     <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
                       {secretaria.nome_secretaria}
