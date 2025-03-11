@@ -131,28 +131,27 @@ function ListarProtocolosBySecretaria() {
 
         const diferencaDias = (Date.now() - dataProtocolo.getTime()) / (1000 * 60 * 60 * 24);
         // Verifica se passaram 4 dias
-        if (diferencaDias >= 4) {
+        if (diferencaDias >= 4 && protocolo.status !== "CANCELADO") {
           // Faz o update do status para "CANCELADO"
           try {
             const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/status/${protocolo.numero_protocolo}`, {
               ...protocolo,
-              status: "CANCELADO"
+              status: 5
             });
           } catch (error) {
             console.error("Erro ao cancelar o protocolo", error);
           }
-        }
-
-        let isRequesting = false;
-        if (!isRequesting) {
-          isRequesting = true;
-          try {
-            const response1 = await axiosInstance.post(
-              `/protoon/devolutiva/criar-devolutiva-boleto`, protocolo);
-          } catch (error) {
-            console.error("Erro ao enviar a devolutiva", error);
-          } finally {
-            isRequesting = false;
+          let isRequesting = false;
+          if (!isRequesting) {
+            isRequesting = true;
+            try {
+              const response1 = await axiosInstance.post(
+                `/protoon/devolutiva/criar-devolutiva-boleto`, protocolo);
+            } catch (error) {
+              console.error("Erro ao enviar a devolutiva", error);
+            } finally {
+              isRequesting = false;
+            }
           }
         }
       }

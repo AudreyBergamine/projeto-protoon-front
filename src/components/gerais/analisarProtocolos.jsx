@@ -23,7 +23,7 @@ function AnalisarProtocolos() {
   const [protocolo, setProtocolo] = useState(null);
   const [statusSelecionado, setStatusSelecionado] = useState(""); // Estado para armazenar o status selecionado
   const [valorSelecionado, setValorSelecionado] = useState(); // Estado para armazenar o status selecionado
-  const [oldValor, setOldValor] = useState(); // Estado para armazenar o valor anterior
+  const [oldValor, setOldValor] = useState(40); // Estado para armazenar o valor anterior
   const [oldSecretaria, setOldSecretaria] = useState(); // Estado para armazenar a secretaria anterior
   const [secretarias, setSecretarias] = useState([]);
   const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
@@ -314,10 +314,10 @@ function AnalisarProtocolos() {
     }
     setIsSubmitting(true)
 
-    console.log("Valores: " + protocolo.valor + "  " + valorSelecionado)
+    console.log("Valores: " + oldValor + "  " + valorSelecionado)
     if (protocolo.assunto === 'Outros' && protocolo.valor !== null) {
-      if (oldValor !== valorSelecionado) {
-        SalvarNovoValor()
+      if (oldValor !== valorSelecionado && valorSelecionado != null) {
+        SalvarNovoValor(valorSelecionado)
       }
     }
     setTimeout(() => setIsSubmitting(false), 1000); // Reativa após 1s
@@ -354,7 +354,7 @@ function AnalisarProtocolos() {
     }));
   };
 
-  const SalvarNovoValor = async () => {
+  const SalvarNovoValor = async (valorSelecionado) => {
     const response3 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/valor/${protocolo.numero_protocolo}`, {
       ...protocolo,
       valor: valorSelecionado
@@ -374,15 +374,17 @@ function AnalisarProtocolos() {
               <h3 style={{ marginLeft: -180, marginBottom: -30 }}>Secretaria</h3>
               <select
                 style={{ fontSize: 18, marginRight: 10, padding: 10, borderRadius: 10, textAlign: "center" }}
-                value={idSecretariaSelecionada} // Aqui se precisa usar idSecretariaSelecionada em vez de selectedSecretaria
+                value={idSecretariaSelecionada}
                 onChange={handleSecretariaChange}
-              >
+                >
                 <option value="">Selecione a secretaria</option>
-                {secretarias.map(secretaria => (
-                  <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
-                    {secretaria.nome_secretaria}
-                  </option>
-                ))}
+                {secretarias
+                  .filter(secretaria => secretaria.nome_secretaria !== protocolo.secretaria.nome_secretaria) // Filtra a secretaria atual
+                  .map(secretaria => (
+                    <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
+                      {secretaria.nome_secretaria}
+                    </option>
+                  ))}
               </select>
               {role === "FUNCIONARIO" ? (
                 <button className="btn-log" onClick={solicitarRedirecionar}>Solicitar Redirecionamento Protocolo</button>
