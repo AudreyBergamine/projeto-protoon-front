@@ -57,7 +57,7 @@ function AnalisarProtocolos() {
         setProtocolo(response2.data);
         setStatusSelecionado(response2.data.status);
         setOldValor(response2.data.valor);
-        setOldSecretaria(response2.data.secretaria.id_secretaria);
+        setOldSecretaria(response2.data.secretaria ? response2.data.secretaria.id_secretaria : null);
         const devolutivasResponse = await axiosInstance.get(`/protoon/devolutiva/devolutiva-protocolo/${id}`);
         const devolutivas = devolutivasResponse.data;
 
@@ -79,10 +79,12 @@ function AnalisarProtocolos() {
     fetchProtocolo();
   }, [id]);
 
+  useEffect(() => {
+  }, [oldValor]);
+
   const voltarAnterior = async () => {
     navigate('/protocolos')
   }
-
 
   const enviarDevolutiva = (event) => {
     setDevolutiva(event.target.value);
@@ -154,12 +156,7 @@ function AnalisarProtocolos() {
       if (response.status.valueOf() === 200) {
         setRemoveLoading(false)
         setTimeout(() => {
-          console.log(response.data);
           setRemoveLoading(true)
-          setTimeout(() => {
-            setMessage('')
-            navigate('/protocolo/' + id);
-          }, 2000)
         }, 2000)
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -314,7 +311,6 @@ function AnalisarProtocolos() {
     }
     setIsSubmitting(true)
 
-    console.log("Valores: " + oldValor + "  " + valorSelecionado)
     if (protocolo.assunto === 'Outros' && protocolo.valor !== null) {
       if (oldValor !== valorSelecionado && valorSelecionado != null) {
         SalvarNovoValor(valorSelecionado)
@@ -331,6 +327,9 @@ function AnalisarProtocolos() {
         updateProtocolo();
         window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola para o topo com efeito suave
         exibirMensagem("Protocolo atualizado com Sucesso!", 'success');
+        setTimeout(() => {
+          navigate('/protocolos');
+        }, 2000)
       }, 3000)
       setRemoveLoading(false)
 
@@ -376,10 +375,10 @@ function AnalisarProtocolos() {
                 style={{ fontSize: 18, marginRight: 10, padding: 10, borderRadius: 10, textAlign: "center" }}
                 value={idSecretariaSelecionada}
                 onChange={handleSecretariaChange}
-                >
+              >
                 <option value="">Selecione a secretaria</option>
                 {secretarias
-                  .filter(secretaria => 
+                  .filter(secretaria =>
                     !protocolo.secretaria || secretaria.nome_secretaria !== protocolo.secretaria.nome_secretaria) // Filtra a secretaria atual
                   .map(secretaria => (
                     <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>

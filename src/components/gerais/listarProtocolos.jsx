@@ -136,7 +136,7 @@ function ListarProtocolosBySecretaria() {
           try {
             const response = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/status/${protocolo.numero_protocolo}`, {
               ...protocolo,
-              status: 5
+              status: "CANCELADO"
             });
           } catch (error) {
             console.error("Erro ao cancelar o protocolo", error);
