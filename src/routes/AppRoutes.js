@@ -5,7 +5,7 @@ import Home from '../components/gerais/homePage';
 import LoginForm from '../components/gerais/login';
 
 
-import cadastroAssunto from '../components/coordenador/cadastroAssunto';
+import CadastroAssunto from '../components/coordenador/cadastroAssunto';
 import CadastrarMunicipe from '../components/municipe/cadastrarMunicipe';
 import RecuperarSenhaForm from '../components/municipe/recuperarSenha';
 import AtualizarForm from '../components/municipe/atualizarSenha';
@@ -90,7 +90,7 @@ function AppRoutes({ isAuthenticated, role }) {
             {/* COORDENADOR */}
             <Route path="/perfil-coordenador" element={<PerfilCoordenador />} />
             <Route path="/gerenciar-secretaria" element={<GerenciarSecretaria />} />
-            <Route path="/cadastrar-assunto" element={<cadastroAssunto />} />
+            <Route path="/cadastrar-assunto" element={<CadastroAssunto />} />
 
             {/* FUNCIONARIO */}
             <Route path="/perfil-funcionario" element={<PerfilFuncionario />} />
