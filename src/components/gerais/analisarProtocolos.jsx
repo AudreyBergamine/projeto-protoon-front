@@ -35,6 +35,9 @@ function AnalisarProtocolos() {
   const [enviandoDevolutiva, setEnviandoDevolutiva] = useState(false);
   const [mensagemAtiva, setMensagemAtiva] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [motivoRecusa, setMotivoRecusa] = useState("");
+  const [motivoConfirmado, setMotivoConfirmado] = useState(false);
 
   const { id } = useParams();
   const role = localStorage.getItem('role')
@@ -97,6 +100,11 @@ function AnalisarProtocolos() {
         exibirMensagem("Campo de descrição vazio. Não é possível enviar a devolutiva.", 'error');
         return; // Retorna sem fazer a requisição
       }
+    }
+
+    if (protocolo.status === "RECUSADO" && !motivoConfirmado) {
+      setMostrarModal(true);
+      return;
     }
 
     try {
@@ -320,6 +328,7 @@ function AnalisarProtocolos() {
     if (enviandoDevolutiva || mensagemAtiva) {
       return;
     }
+
     setMensagemAtiva(true);
     try {
       setTimeout(() => {
@@ -359,6 +368,24 @@ function AnalisarProtocolos() {
       valor: valorSelecionado
     });
   }
+
+  const handleConfirmarMotivo = () => {
+    if (motivoRecusa) {
+      novaDevolutiva()
+      setMotivoConfirmado(true); // Confirmação do motivo
+      setMostrarModal(false); // Fecha o modal
+    } else {
+      alert("Selecione um motivo para a recusa!");
+    }
+  };
+
+  const motivosRecusa = [
+    "Documentação incompleta",
+    "Dados inconsistentes",
+    "Requerimentos não atendidos",
+    "Erro no preenchimento",
+    "Outro"
+  ];
 
   return (
     <>
@@ -607,6 +634,41 @@ function AnalisarProtocolos() {
 
         </div >
       }
+      <div>
+        {/* Modal */}
+        {mostrarModal && (
+          <div style={{
+            position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
+            backgroundColor: "rgba(0,0,0,0.5)", display: "flex",
+            alignItems: "center", justifyContent: "center"
+          }}>
+            <div style={{ background: "#fff", padding: 20, borderRadius: 8 }}>
+              <h2>Motivo da Recusa</h2>
+
+              {/* Lista Suspensa */}
+              <select
+                value={motivoRecusa}
+                onChange={(e) => setMotivoRecusa(e.target.value)}
+                style={{ width: "100%", padding: 8, marginBottom: 10 }}
+              >
+                <option value="">Selecione um motivo</option>
+                {motivosRecusa.map((motivo, index) => (
+                  <option key={index} value={motivo}>{motivo}</option>
+                ))}
+              </select>
+
+              <div style={{ display: "flex", gap: 10 }}>
+                {/* Botão Confirmar */}
+                <button onClick={handleConfirmarMotivo}>Confirmar</button>
+                {/* Botão Cancelar */}
+                <button onClick={() => setMostrarModal(false)}>
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </>
   );
 }
