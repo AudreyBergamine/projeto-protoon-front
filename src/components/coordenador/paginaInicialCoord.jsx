@@ -24,7 +24,9 @@ function PaginaInicialCoordenador() {
         const response1 = await axiosInstance.get(`/protoon/funcionarios/bytoken`);
         const id_secretaria = response1.data.secretaria.id_secretaria;
 
+
         const response2 = await axiosInstance.get(`/protoon/secretaria/protocolos/` + id_secretaria);
+
 
         const protocolosAtualizados = response2.data.map(protocolo => {
           if (protocolo.data_protocolo && protocolo.prazoConclusao !== null) {
@@ -32,13 +34,16 @@ function PaginaInicialCoordenador() {
             const prazoEmMilissegundos = protocolo.prazoConclusao * 24 * 60 * 60 * 1000; // Converter dias para ms
             const dataLimite = new Date(dataProtocolo.getTime() + prazoEmMilissegundos); // Data final do prazo
 
+
             const agora = new Date();
             const prazoRestante = Math.ceil((dataLimite - agora) / (1000 * 60 * 60 * 24)); // Converter ms para dias
+
 
             return { ...protocolo, prazoRestante };
           }
           return protocolo;
         });
+
 
         setProtocolos(protocolosAtualizados);
 
@@ -58,13 +63,16 @@ function PaginaInicialCoordenador() {
         setTemAlerta(alerta);
 
 
+
       } catch (error) {
         console.error("Erro ao buscar os protocolos:", error);
       }
     }
 
+
     fetchProtocolos();
   }, []);
+
 
 
   return (
@@ -128,6 +136,13 @@ function PaginaInicialCoordenador() {
           <button style={{ marginBottom: 10, width: 250, height: 60 }} className="btn-log" onClick={() => (navigate('/protocolos'))}>
             Listar Protocolos
           </button>
+        <button style={{ marginBottom: 10 }} className="btn-log" onClick={() => (navigate('/protocolos'))}>
+          Listar Protocolos
+        </button>
+
+        <button style={{ marginBottom: 10 }} className="btn-log" onClick={() => (navigate('/cadastrar-assunto'))}>
+          tela leandro
+        </button>
 
           <button style={{ marginBottom: 10, paddingBottom: 10, height: 60 }} className="btn-log" onClick={() => (navigate('/redirecionamentos-coordenador'))}>
             Aprovar Redirecionamentos
