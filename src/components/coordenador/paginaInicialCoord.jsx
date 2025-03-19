@@ -132,17 +132,14 @@ function PaginaInicialCoordenador() {
           </div>
         )}
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "50px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "50px" }}>
           <button style={{ marginBottom: 10, width: 250, height: 60 }} className="btn-log" onClick={() => (navigate('/protocolos'))}>
             Listar Protocolos
           </button>
-        <button style={{ marginBottom: 10 }} className="btn-log" onClick={() => (navigate('/protocolos'))}>
-          Listar Protocolos
-        </button>
 
-        <button style={{ marginBottom: 10 }} className="btn-log" onClick={() => (navigate('/cadastrar-assunto'))}>
-          tela leandro
-        </button>
+          <button style={{ marginBottom: 10 }} className="btn-log" onClick={() => (navigate('/cadastrar-assunto'))}>
+            tela leandro
+          </button>
 
           <button style={{ marginBottom: 10, paddingBottom: 10, height: 60 }} className="btn-log" onClick={() => (navigate('/redirecionamentos-coordenador'))}>
             Aprovar Redirecionamentos
