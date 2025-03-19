@@ -447,7 +447,7 @@ function AnalisarProtocolos() {
                       <option value="CIENCIA">CIÊNCIA</option>
                       <option value="CIENCIA_ENTREGA">CIÊNCIA ENTREGA</option>
                       <option value="CONCLUIDO">CONCLUÍDO</option>
-                      <option value="CANCELADO">CANCELADO</option>
+                      <option value="RECUSADO">RECUSADO</option>
                     </select>
                   </td>
                   <td style={{ minWidth: 100, textAlign: 'center' }}>

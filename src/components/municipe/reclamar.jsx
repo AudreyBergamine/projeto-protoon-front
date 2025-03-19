@@ -101,7 +101,7 @@ function Reclamar() {
       const currentDate = new Date(); // Obtém a data e hora atuais (fora do `if` para não repetir código)
 
       if (formData.assunto === "Outros") {
-        response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos-sem-secretaria`, {
+        response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos-reclamar-sem-secretaria`, {
           assunto: formData.assunto,
           descricao: formData.descricao,
           status: formData.status,
@@ -109,7 +109,7 @@ function Reclamar() {
           data_protocolo: currentDate // Envia a data e hora atuais para data_protocolo
         });
       } else {
-        response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos/${formData.idSecretaria}`, {
+        response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos-reclamar/${formData.idSecretaria}`, {
           assunto: formData.assunto,
           descricao: formData.descricao,
           status: formData.status,

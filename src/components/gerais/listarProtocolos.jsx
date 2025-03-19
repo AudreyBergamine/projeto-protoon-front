@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import URL from '../services/url';
+import { differenceInDays, parseISO } from 'date-fns';
 
 function ListarProtocolosBySecretaria() {
   const axiosInstance = axios.create({
@@ -17,10 +18,10 @@ function ListarProtocolosBySecretaria() {
   // Recuperar o token do localStorage
   const token = localStorage.getItem('token');
 
-  const [ocultarConcluidos, setOcultarConcluidos] = useState(false);
   const [prazoConclusaoSimulado, setPrazoConclusaoSimulado] = useState({}); // Valor inicial em minutos
   const [boletoSimulado, setboletoSimulado] = useState({}); //Valor para vender o boleto em segundos
   const isBoletoVencidoRunning = useRef(false);
+  const [filtroStatus, setFiltroStatus] = useState([]);
 
   // Adicionar o token ao cabeçalho de autorização
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -35,46 +36,11 @@ function ListarProtocolosBySecretaria() {
         // const response2 = await axiosInstance.get(`/protoon/secretaria/protocolos/` + id_secretaria);
         const response2 = await axiosInstance.get(`/protoon/protocolo/todos-protocolos`);
         const protocolosFiltrados = response2.data.filter(protocolo =>
-          protocolo.secretaria === null || 
+          protocolo.secretaria === null ||
           (protocolo.secretaria.id_secretaria === id_secretaria)
         );
-        
+
         setProtocolos(protocolosFiltrados); // Atualiza o estado apenas com os protocolos filtrados
-        
-
-        // Verifica se algum protocolo não tem uma secretaria
-        // const protocolosSemSecretaria = response3.data.filter(protocolo => protocolo.secretaria === null);
-
-        // Se houver protocolos sem secretaria, adicione-os ao estado atual
-        // if (protocolosSemSecretaria.length > 0) {
-        //   setProtocolos(prevProtocolos => [...prevProtocolos, ...protocolosSemSecretaria]);
-        // }
-
-        const novosPrazoConclusao = {};
-        const novosBoletoSimulado = {};
-
-        response2.data.forEach(protocolo => {
-          if (protocolo.status === "CONCLUIDO" || protocolo.status === "CANCELADO") {
-            novosPrazoConclusao[protocolo.id_protocolo] = null; // Se estiver concluído, define como null
-          } else {
-            // Converte data_protocolo para um objeto Date
-            const dataProtocolo = new Date(protocolo.data_protocolo);
-            const prazoEmMilissegundos = protocolo.prazoConclusao * 24 * 60 * 60 * 1000;
-            const dataFinal = new Date(dataProtocolo.getTime() + prazoEmMilissegundos);
-            const tempoRestante = Math.max(Math.floor((dataFinal - Date.now()) / 1000), 0);
-
-            // Armazena o tempo restante
-            novosPrazoConclusao[protocolo.id_protocolo] = tempoRestante;
-
-            // Simulação do tempo do Boleto
-            const prazoBoletoMilissegundos = 4 * 24 * 60 * 60 * 1000;
-            const dataFinalBoleto = new Date(dataProtocolo.getTime() + prazoBoletoMilissegundos);
-            const tempoBoleto = Math.max(Math.floor((dataFinalBoleto - Date.now()) / 1000), 0);
-            novosBoletoSimulado[protocolo.id_protocolo] = tempoBoleto;
-          }
-        });
-        setPrazoConclusaoSimulado(novosPrazoConclusao);
-        setboletoSimulado(novosBoletoSimulado);
 
       } catch (error) {
         console.error('Erro ao buscar as secretarias:', error);
@@ -159,15 +125,20 @@ function ListarProtocolosBySecretaria() {
   };
 
   // Função para determinar a cor baseada no prazo
-  const prazoCor = (prazoEmSegundos) => {
-    const timeLeft = prazoEmSegundos;
-    if (timeLeft < 4 * 24 * 60 * 60) { // Menor ou igual a 4 dias
+  const prazoCor = (prazoConclusao, dataProtocolo) => {
+    if (!prazoConclusao || !dataProtocolo) return {}; // Retorna sem estilo se os valores forem inválidos
+
+    const prazo = parseISO(prazoConclusao); // Converte string para data
+    const dataInicio = parseISO(dataProtocolo);
+    const diasRestantes = differenceInDays(prazo, dataInicio); // Diferença de dias
+
+    if (diasRestantes <= 3) { // Menos de 4 dias para o vencimento
       return { backgroundColor: 'red', color: 'white' };
     }
-    if (timeLeft < 7 * 24 * 60 * 60) { // Menor ou igual a 7 dias
+    if (diasRestantes <= 8) { // Menos de 7 dias para o vencimento
       return { backgroundColor: 'yellow', color: 'black' };
     }
-    return {}; // Cor normal
+    return {}; // Estilo padrão
   };
 
   const handleClick = (id) => {
@@ -195,19 +166,27 @@ function ListarProtocolosBySecretaria() {
   // Função para filtrar e ordenar os protocolos por prazo
   const filteredProtocolos = protocolos?.length > 0
     ? protocolos
-      .filter(protocolo => protocolo.numero_protocolo?.toLowerCase().includes(pesquisarProt.toLowerCase()))
-      .filter(protocolo => ocultarConcluidos || protocolo.status !== "CONCLUIDO")
+      .filter(protocolo =>
+        protocolo.numero_protocolo?.toLowerCase().includes(pesquisarProt.toLowerCase())
+      )
+      .filter(protocolo =>
+        filtroStatus.length > 0
+          ? filtroStatus.includes(protocolo.status) // Mostra apenas os selecionados
+          : !["CONCLUIDO", "CANCELADO", "RECUSADO", "PAGAMENTO_PENDENTE"].includes(protocolo.status) // Se nenhum for selecionado, mostra os outros
+      )
       .sort((a, b) => {
-        const prazoA = a.prazoConclusao;  // Se o valor for uma data
-        const prazoB = b.prazoConclusao;
-
-        // Ordena pelo prazo (menor prazo primeiro)
+        const prazoA = a.prazoConclusao ? new Date(a.prazoConclusao) : new Date(9999, 11, 31);
+        const prazoB = b.prazoConclusao ? new Date(b.prazoConclusao) : new Date(9999, 11, 31);
         return prazoA - prazoB;
       })
-    : [];  // Caso protocolos seja vazio ou indefinido, retorna um array vazio
+    : [];
 
-  const handleOcultarConcluidosChange = () => {
-    setOcultarConcluidos(!ocultarConcluidos);
+  const toggleFiltro = (status) => {
+    setFiltroStatus((prev) =>
+      prev.includes(status)
+        ? prev.filter((s) => s !== status) // Remove se já estiver selecionado
+        : [...prev, status] // Adiciona se não estiver selecionado
+    );
   };
 
   return (
@@ -220,16 +199,28 @@ function ListarProtocolosBySecretaria() {
           value={pesquisarProt}
           onChange={(e) => setPesquisarProt(e.target.value)}
         />
-        <div style={{ marginTop: 10, marginBottom: 10 }}>
-          <label style={{ fontSize: '20px' }}>
-            <input
-              type="checkbox"
-              checked={ocultarConcluidos}
-              onChange={handleOcultarConcluidosChange}
-              style={{ marginRight: -140, transform: 'scale(2)' }}
-            />
-            Mostrar Protocolos Concluídos
-          </label>
+        <div style={{ marginTop: 10, marginBottom: 50, paddingInline: 50 }}>
+          <div style={{ display: "flex", gap: 10, justifyContent: "space-between" }}>
+            {["CONCLUIDO", "CANCELADO", "RECUSADO", "PAGAMENTO_PENDENTE"].map(
+              (status) => (
+                <button
+                  key={status}
+                  onClick={() => toggleFiltro(status)}
+                  style={{
+                    padding: "10px 15px",
+                    fontSize: "16px",
+                    backgroundColor: filtroStatus.includes(status) ? "#2D9596" : "gray",
+                    color: "white",
+                    border: "none",
+                    cursor: "pointer",
+                    borderRadius: "5px",
+                  }}
+                >
+                  {status}
+                </button>
+              )
+            )}
+          </div>
         </div>
         <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '100%', padding: 30 }}>
           <thead>
@@ -240,7 +231,9 @@ function ListarProtocolosBySecretaria() {
               <th>Descrição</th>
               <th>Status</th>
               <th>Valor</th>
-              <th>Prazo de Coclusão</th>
+              {filtroStatus.length === 0 && (
+                <th>Prazo de Conclusão</th>
+              )}
               {/* <th>Simulação Boleto(s)</th> */}
               {/* <th>Simulação do prazo em Segundos</th> */}
             </tr>
@@ -248,11 +241,11 @@ function ListarProtocolosBySecretaria() {
           <div style={{ marginTop: 30 }}></div>
           <tbody>
             {filteredProtocolos
-              .filter(protocolo => ocultarConcluidos || protocolo.status !== "CONCLUIDO")
               .map((protocolo, index) => {
                 const prazoEmSegundos = prazoConclusaoSimulado[protocolo.id_protocolo] || 0; // Converte o prazo em dias para segundos
-                const prazo = protocolo.prazoConclusao; // Usa o prazo real ou o simulado
-                const prazoStyle = protocolo.status === 'CONCLUIDO' || protocolo.status === 'CANCELADO' ? {} : prazoCor(prazoEmSegundos);
+                const prazo = protocolo.prazoConclusao; // Suponha que seja "2024-09-10"
+                const dataFormatada = prazo ? new Date(prazo).toLocaleDateString('pt-BR') : "";
+                const prazoStyle = prazoCor(protocolo.prazoConclusao, protocolo.data_protocolo);
                 return (
                   <React.Fragment key={protocolo.id_protocolo}>
                     <tr onClick={() => handleClick(protocolo.id_protocolo)} className="rowTable" style={prazoStyle}>
@@ -270,19 +263,7 @@ function ListarProtocolosBySecretaria() {
                           ? `R$ ${protocolo.valor.toFixed(2)}`
                           : ""}
                       </td>
-                      {protocolo.status !== 'CONCLUIDO' && protocolo.status !== 'CANCELADO' && (
-                        <>
-                          <td style={{ textAlign: 'center', minWidth: 100 }}>{prazo} dia(s)</td>
-                          {/* Tag para demonstrar tempo de boleto vencendo */}
-                          {/* <td style={{ textAlign: 'center', minWidth: 100 }}>
-                            {JSON.stringify(boletoSimulado[protocolo.id_protocolo]) || "0"}(s)
-                          </td> */}
-                          {/* <td style={{ textAlign: 'center', minWidth: 100 }}> 
-                          //  Tag para demonstrar prazo de execução do protocolo
-                            {prazoEmSegundos === null ? "Concluído" : prazoEmSegundos}
-                          </td> */}
-                        </>
-                      )}
+                      <td style={{ textAlign: 'center', minWidth: 100 }}>{dataFormatada}</td>
                     </tr>
                     {index !== filteredProtocolos.length - 1 && <tr><td colSpan="6"><hr style={{ margin: 0 }} /></td></tr>}
                   </React.Fragment>
