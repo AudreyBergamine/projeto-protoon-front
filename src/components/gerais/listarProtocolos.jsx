@@ -7,14 +7,14 @@ import { differenceInDays, parseISO } from 'date-fns';
 
 function ListarProtocolosBySecretaria() {
   const axiosInstance = axios.create({
-    baseURL: URL, // Adjust the base URL as needed
-    withCredentials: true, // Set withCredentials to true
+    baseURL: URL, 
+    withCredentials: true,
   });
 
   // const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
   const [protocolos, setProtocolos] = useState([]);
   const [pesquisarProt, setPesquisarProt] = useState(''); //Pesquisar protocolos
-  const navigate = useNavigate(); // Use o hook useNavigation para acessar a navegação
+  const navigate = useNavigate();
   // Recuperar o token do localStorage
   const token = localStorage.getItem('token');
 

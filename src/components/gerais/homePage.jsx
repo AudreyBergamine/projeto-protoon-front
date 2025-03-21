@@ -1,6 +1,6 @@
 import PaginaInicial from "../municipe/paginaInicalMunicipe";
 import PaginaInicialSecretario from "../secretario/paginaInicialSec";
-import PaginaInicialCoordenador from "../coordenador/paginaInicialCoord";
+import PaginaInicialCoordenador from "../coordenador/paginaInicialCoordenador/paginaInicialCoord";
 import PaginaInicialFuncionario from "../funcionario/paginaInicialFuncionario";
 import { useNavigate } from "react-router-dom";
 function Home({ isAuthenticated, role }) {

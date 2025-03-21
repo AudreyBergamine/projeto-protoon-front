@@ -5,7 +5,7 @@ import Home from '../components/gerais/homePage';
 import LoginForm from '../components/gerais/login';
 
 
-import CadastroAssunto from '../components/coordenador/cadastroAssunto';
+import CadastroAssunto from '../components/coordenador/cadastroAssunto/cadastroAssunto';
 import CadastrarMunicipe from '../components/municipe/cadastrarMunicipe';
 import RecuperarSenhaForm from '../components/municipe/recuperarSenha';
 import AtualizarForm from '../components/municipe/atualizarSenha';

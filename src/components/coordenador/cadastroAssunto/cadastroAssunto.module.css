@@ -1,8 +1,10 @@
 /* Container do formulário */
-
 .containerPrincipal {
-    place-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-top: -20px;
+    height: 75vh; /* Centraliza verticalmente na tela */
 }
 
 
@@ -41,9 +43,10 @@ h1 {
 form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 3px;
     place-items: center
 }
+
 
 /* Estilo das labels */
 label {
@@ -85,5 +88,9 @@ input:focus, select:focus {
 }
 
 button{
-    width: 10px;
+    width: 10px ;
+    height: 10px ;
 }
+
+
+

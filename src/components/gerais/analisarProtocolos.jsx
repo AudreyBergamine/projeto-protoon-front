@@ -6,6 +6,7 @@ import Message from '../layouts/Message'
 import URL from '../services/url';
 import TodasDevolutivas from "./todasDevolutivas";
 import ConfirmationDialog from '../layouts/ConfirmationDialog';
+import './css/analisarProtocolos.css';
 
 function AnalisarProtocolos() {
   const navigate = useNavigate()
@@ -13,24 +14,21 @@ function AnalisarProtocolos() {
     baseURL: URL,
     withCredentials: true,
   });
-  // Recuperar o token do localStorage
   const token = localStorage.getItem('token');
-
-  // Adicionar o token ao cabeçalho de autorização
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
   const [devolutiva, setDevolutiva] = useState('');
   const [protocolo, setProtocolo] = useState(null);
-  const [statusSelecionado, setStatusSelecionado] = useState(""); // Estado para armazenar o status selecionado
-  const [valorSelecionado, setValorSelecionado] = useState(); // Estado para armazenar o status selecionado
-  const [oldValor, setOldValor] = useState(40); // Estado para armazenar o valor anterior
-  const [oldSecretaria, setOldSecretaria] = useState(); // Estado para armazenar a secretaria anterior
+  const [statusSelecionado, setStatusSelecionado] = useState("");
+  const [valorSelecionado, setValorSelecionado] = useState();
+  const [oldValor, setOldValor] = useState(40);
+  const [oldSecretaria, setOldSecretaria] = useState();
   const [secretarias, setSecretarias] = useState([]);
   const [idSecretariaSelecionada, setIdSecretariaSelecionada] = useState("");
   const [message, setMessage] = useState()
   const [type, setType] = useState()
   const [removeLoading, setRemoveLoading] = useState(true)
-  const [devolutivaMaisRecente, setDevolutivaMaisRecente] = useState(null); // Estado para armazenar a devolutiva mais recente
+  const [devolutivaMaisRecente, setDevolutivaMaisRecente] = useState(null);
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [enviandoDevolutiva, setEnviandoDevolutiva] = useState(false);
   const [mensagemAtiva, setMensagemAtiva] = useState(false);
@@ -42,11 +40,8 @@ function AnalisarProtocolos() {
   const { id } = useParams();
   const role = localStorage.getItem('role')
 
-  let message1 = false
-
   const HistoricoDevolutivas = () => {
-    //navigate(`/todas-devolutivas/${id}`); // Na mesma pagina 
-    window.open(`/todas-devolutivas/${id}`, '_blank'); // Abre outra pagina, achei melhor...
+    window.open(`/todas-devolutivas/${id}`, '_blank');
   };
 
   useEffect(() => {
@@ -65,13 +60,7 @@ function AnalisarProtocolos() {
         const devolutivas = devolutivasResponse.data;
 
         if (devolutivas.length > 0) {
-          // Ordenar as devolutivas por momento_devolutiva (do mais recente para o mais antigo)
-          devolutivas.sort((a, b) => {
-            // Comparar as datas de momento_devolutiva, ordena de forma "alfabetica", ja q data é uma String, igual a atividade da prof carla para organizar os nomes pelo valor de cada carctere
-            return b.momento_devolutiva.localeCompare(a.momento_devolutiva);
-          });
-
-          // Pegar a devolutiva mais recente
+          devolutivas.sort((a, b) => b.momento_devolutiva.localeCompare(a.momento_devolutiva));
           setDevolutivaMaisRecente(devolutivas[0]);
         }
 
@@ -82,9 +71,6 @@ function AnalisarProtocolos() {
     fetchProtocolo();
   }, [id]);
 
-  useEffect(() => {
-  }, [oldValor]);
-
   const voltarAnterior = async () => {
     navigate('/protocolos')
   }
@@ -94,11 +80,10 @@ function AnalisarProtocolos() {
   };
 
   const novaDevolutiva = async () => {
-    // Verifica se o campo de descrição está vazio ou nulo
     if (!devolutiva || devolutiva.trim() === '') {
       if (exibirMensagem) {
         exibirMensagem("Campo de descrição vazio. Não é possível enviar a devolutiva.", 'error');
-        return; // Retorna sem fazer a requisição
+        return;
       }
     }
 
@@ -109,11 +94,8 @@ function AnalisarProtocolos() {
 
     try {
       setEnviandoDevolutiva(true);
-
       const response = await axiosInstance.post(`/protoon/devolutiva/criar-devolutiva/${id}`, { devolutiva });
-
       salvarAlteracoes()
-
       setTimeout(() => {
         setDevolutiva('');
         navigate(`/protocolo/${id}`);
@@ -131,7 +113,6 @@ function AnalisarProtocolos() {
     setMessage(msg);
     setType(tipo);
     setMensagemAtiva(true);
-
     setTimeout(() => {
       setMessage('');
       setType('');
@@ -139,21 +120,12 @@ function AnalisarProtocolos() {
     }, 3000);
   };
 
-  useEffect(() => {
-    // Habilita o botão quando a mensagem estiver inativa
-    const timer = setTimeout(() => {
-      setMensagemAtiva(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [mensagemAtiva]);
-
   const updateProtocolo = async () => {
     try {
       if (!devolutiva || devolutiva.trim() === '') {
         if (exibirMensagem) {
           exibirMensagem("Campo de descrição de Devolutiva vazio. Não é possível atualizar status.", 'error');
-          return; // Retorna sem fazer a requisição
+          return;
         }
       }
 
@@ -179,21 +151,19 @@ function AnalisarProtocolos() {
 
   const solicitarRedirecionar = async () => {
     try {
-      // Verifica se a secretaria foi definida
       if (idSecretariaSelecionada === null || idSecretariaSelecionada === undefined) {
         setMessage('Secretaria não definida para este protocolo.');
         setType('error');
-        return; // Evita continuar com a requisição caso não tenha secretaria
+        return;
       }
 
       const response1 = await axiosInstance.get(`/protoon/secretaria/${idSecretariaSelecionada}`);
       const secretariaData = response1.data;
 
-      // Verifica se a resposta da secretaria está vazia ou não
       if (!secretariaData || !secretariaData.nome_secretaria) {
         setMessage('Secretaria não encontrada.');
         setType('error');
-        return; // Se a secretaria não for encontrada, retorna um erro
+        return;
       }
 
       const response2 = await axiosInstance.post(`/protoon/redirecionamento/${id}`, {
@@ -214,7 +184,6 @@ function AnalisarProtocolos() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     } catch (error) {
-      // TODO: ATUALIZAR MENSAGEM QUANDO DER ERRO PERSONALIZADA NO REDIRECIONAMENTO DE PROTOCOLO
       if (error.response && error.response.data && error.response.data.message) {
         setMessage(error.response.data.message);
         console.log(error.response.data.message);
@@ -266,11 +235,8 @@ function AnalisarProtocolos() {
           }, 2000)
         }
       } catch (error) {
-
-        // TODO: ATUALIZAR MENSAGEM QUANDO DER ERRO PERSONALIZADA NO REDIRECIONAMENTO DE PROTOCOLO
         if (error.response && error.response.data && error.response.data.message) {
           setMessage(error.response.data.message);
-
           console.log(error.response.data.message);
         } else {
           setMessage('Erro desconhecido ocorreu.');
@@ -300,10 +266,10 @@ function AnalisarProtocolos() {
 
   const handleStatusChange = (e) => {
     const novoStatus = e.target.value;
-    setStatusSelecionado(novoStatus); // Atualiza o estado com o novo status selecionado
+    setStatusSelecionado(novoStatus);
     setProtocolo(prevProtocolo => ({
       ...prevProtocolo,
-      status: novoStatus // Atualiza o status do protocolo com o novo status selecionado
+      status: novoStatus
     }));
   };
 
@@ -312,10 +278,9 @@ function AnalisarProtocolos() {
   }
 
   const salvarAlteracoes = async () => {
-    // Evita múltiplos cliques e varias chamadas da função
     if (isSubmitting) {
       console.log("Duplo Click detectado!")
-      return; // Impede chamadas 
+      return;
     }
     setIsSubmitting(true)
 
@@ -324,7 +289,7 @@ function AnalisarProtocolos() {
         SalvarNovoValor(valorSelecionado)
       }
     }
-    setTimeout(() => setIsSubmitting(false), 1000); // Reativa após 1s
+    setTimeout(() => setIsSubmitting(false), 1000);
     if (enviandoDevolutiva || mensagemAtiva) {
       return;
     }
@@ -334,7 +299,7 @@ function AnalisarProtocolos() {
       setTimeout(() => {
         setRemoveLoading(true)
         updateProtocolo();
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola para o topo com efeito suave
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         exibirMensagem("Protocolo atualizado com Sucesso!", 'success');
         setTimeout(() => {
           navigate('/protocolos');
@@ -372,8 +337,8 @@ function AnalisarProtocolos() {
   const handleConfirmarMotivo = () => {
     if (motivoRecusa) {
       novaDevolutiva()
-      setMotivoConfirmado(true); // Confirmação do motivo
-      setMostrarModal(false); // Fecha o modal
+      setMotivoConfirmado(true);
+      setMostrarModal(false);
     } else {
       alert("Selecione um motivo para a recusa!");
     }
@@ -389,24 +354,21 @@ function AnalisarProtocolos() {
 
   return (
     <>
-      {message ? <div style={{ marginTop: 300 }}><Message type={type} msg={message} /></div> :
-        <div style={{ padding: 40, marginTop: -100 }}>
-          {/* {successMessage && <div className="success-message">{successMessage}</div>} */}
+      {message ? <div className="message-container"><Message type={type} msg={message} /></div> :
+        <div className="container">
           <h1>Detalhes do Protocolo</h1>
 
-          {/* Select para a secretaria */}
           {(role === "COORDENADOR" || role === "FUNCIONARIO") && (
-            <div>
-              <h3 style={{ marginLeft: -180, marginBottom: -30 }}>Secretaria</h3>
+            <div className="secretaria-container">
+              <h3>Secretaria</h3>
               <select
-                style={{ fontSize: 18, marginRight: 10, padding: 10, borderRadius: 10, textAlign: "center" }}
                 value={idSecretariaSelecionada}
                 onChange={handleSecretariaChange}
               >
                 <option value="">Selecione a secretaria</option>
                 {secretarias
                   .filter(secretaria =>
-                    !protocolo.secretaria || secretaria.nome_secretaria !== protocolo.secretaria.nome_secretaria) // Filtra a secretaria atual
+                    !protocolo.secretaria || secretaria.nome_secretaria !== protocolo.secretaria.nome_secretaria)
                   .map(secretaria => (
                     <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
                       {secretaria.nome_secretaria}
@@ -419,8 +381,6 @@ function AnalisarProtocolos() {
                 <button className="btn-log" onClick={redirectProtocolo}>Redirecionar Protocolo</button>
               )}
 
-
-              {/* {message && <Message type={type} msg={message} />} */}
               {!removeLoading && <Loading />}
 
               {showConfirmationDialog && (<ConfirmationDialog
@@ -431,29 +391,28 @@ function AnalisarProtocolos() {
             </div>
           )}
 
-          <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
-            <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Protocolo</legend>
-            <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '100%', padding: 30 }}>
+          <fieldset className="protocolo-fieldset">
+            <legend>Protocolo</legend>
+            <table>
               <thead>
                 <tr>
-                  <th style={{ minWidth: 150 }}>Assunto</th>
-                  <th style={{ minWidth: 100 }}>Número</th>
-                  <th style={{ minWidth: 150 }}>Data</th>
-                  <th style={{ minWidth: 100 }}>Valor</th>
+                  <th>Assunto</th>
+                  <th>Número</th>
+                  <th>Data</th>
+                  <th>Valor</th>
                   <th>Alterar Status</th>
-                  {/* <th style={{ minWidth: 100 }}>Alterar Status</th> */}
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style={{ textAlign: 'center' }}>{protocolo.assunto}</td>
+                  <td>{protocolo.assunto}</td>
                   <td>{protocolo.numero_protocolo}</td>
-                  <td style={{ textAlign: 'center' }}>{formatarDataHora(protocolo.data_protocolo)}</td>
+                  <td>{formatarDataHora(protocolo.data_protocolo)}</td>
                   <td>
                     {protocolo.assunto === "Outros" && protocolo.valor !== null ? (
                       <select
                         value={protocolo.valor.toFixed(2)}
-                        onChange={handleValorChange} // Função para manipular mudança de valor
+                        onChange={handleValorChange}
                       >
                         <option value="30.00">R$ 30,00</option>
                         <option value="130.00">R$ 130,00</option>
@@ -477,73 +436,62 @@ function AnalisarProtocolos() {
                       <option value="RECUSADO">RECUSADO</option>
                     </select>
                   </td>
-                  <td style={{ minWidth: 100, textAlign: 'center' }}>
-                    {/* <button onClick={salvarAlteracoes} disabled={mensagemAtiva} style={{ opacity: mensagemAtiva ? 0.5 : 1, fontSize: '0.7em' }}>
-                      Salvar
-                    </button> */}
-                  </td>
                 </tr>
               </tbody>
             </table>
           </fieldset>
 
-          {/* {message && (<Message type={type} msg={message} />)} */}
-
-          <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
-            <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Descrição do problema</legend>
-            <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '100%', padding: 30 }}>
-              <div style={{ backgroundColor: '#f5f5f5', padding: 20, borderRadius: 5 }}>
-                <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                  {protocolo.descricao}
-                </div>
-              </div>
-            </table>
+          <fieldset className="descricao-fieldset">
+            <legend>Descrição do problema</legend>
+            <div className="descricao-container">
+              {protocolo.descricao}
+            </div>
           </fieldset>
 
           {devolutivaMaisRecente && (
-            <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
-              <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Devolutiva Mais Recente</legend>
-              <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
+            <fieldset className="devolutiva-fieldset">
+              <legend>Devolutiva Mais Recente</legend>
+              <table>
                 <thead>
-                  <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Data e Hora</p></td>
-                  <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Funcionário</p></td>
-                  <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Secretaria</p></td>
+                  <td><p>Data e Hora</p></td>
+                  <td><p>Funcionário</p></td>
+                  <td><p>Secretaria</p></td>
                 </thead>
                 <tbody>
                   <tr>
-                    <td style={{ width: 100 }}>{devolutivaMaisRecente.momento_devolutiva ? devolutivaMaisRecente.momento_devolutiva : 'N/A'}</td>
-                    <td style={{ width: 100 }}>{devolutivaMaisRecente.id_funcionario && devolutivaMaisRecente.id_funcionario.nome ? devolutivaMaisRecente.id_funcionario.nome : 'N/A'}</td>
-                    <td style={{ width: 100 }}>{devolutivaMaisRecente.id_funcionario && devolutivaMaisRecente.id_funcionario.secretaria.nome_secretaria ? devolutivaMaisRecente.id_funcionario.secretaria.nome_secretaria : 'N/A'}</td>
+                    <td>{devolutivaMaisRecente.momento_devolutiva ? devolutivaMaisRecente.momento_devolutiva : 'N/A'}</td>
+                    <td>{devolutivaMaisRecente.id_funcionario && devolutivaMaisRecente.id_funcionario.nome ? devolutivaMaisRecente.id_funcionario.nome : 'N/A'}</td>
+                    <td>{devolutivaMaisRecente.id_funcionario && devolutivaMaisRecente.id_funcionario.secretaria.nome_secretaria ? devolutivaMaisRecente.id_funcionario.secretaria.nome_secretaria : 'N/A'}</td>
                   </tr>
                 </tbody>
               </table>
-              <div style={{ backgroundColor: '#f5f5f5', padding: 20, borderRadius: 5, marginTop: 20 }}>
-                <p style={{ textAlign: 'justify' }}>
+              <div className="devolutiva-texto">
+                <p>
                   {devolutivaMaisRecente.devolutiva ? devolutivaMaisRecente.devolutiva : 'N/A'}
                 </p>
               </div>
-              <button onClick={HistoricoDevolutivas} style={{ marginTop: 20 }}>Historico de devolutivas</button>
+              <button onClick={HistoricoDevolutivas} style={{width:'150px'}}>Historico de devolutivas</button>
             </fieldset>
           )}
 
           {protocolo.secretaria ? (
-            <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
-              <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Secretaria</legend>
-              <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
+            <fieldset className="secretaria-fieldset">
+              <legend>Secretaria</legend>
+              <table>
                 <thead>
                   <tr>
-                    <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Nome</p></td>
-                    <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Responsável</p></td>
-                    <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Email</p></td>
-                    <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Endereço</p></td>
+                    <td><p>Nome</p></td>
+                    <td><p>Responsável</p></td>
+                    <td><p>Email</p></td>
+                    <td><p>Endereço</p></td>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td style={{ width: 100 }}>{protocolo.secretaria.nome_secretaria}</td>
-                    <td style={{ width: 100 }}>{protocolo.secretaria.nome_responsavel}</td>
-                    <td style={{ width: 100 }}>{protocolo.secretaria.email}</td>
-                    <td style={{ maxWidth: 500 }}>
+                    <td>{protocolo.secretaria.nome_secretaria}</td>
+                    <td>{protocolo.secretaria.nome_responsavel}</td>
+                    <td>{protocolo.secretaria.email}</td>
+                    <td>
                       {protocolo.secretaria.endereco.logradouro}, {protocolo.secretaria.endereco.num_endereco}, {protocolo.secretaria.endereco.complemento}, {protocolo.secretaria.endereco.bairro}, {protocolo.secretaria.endereco.cidade} - {protocolo.secretaria.endereco.estado}, {protocolo.secretaria.endereco.pais}
                     </td>
                   </tr>
@@ -552,82 +500,75 @@ function AnalisarProtocolos() {
             </fieldset>
           ) : null}
 
-          <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
-            <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Municipe</legend>
-            <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
+          <fieldset className="municipe-fieldset">
+            <legend>Municipe</legend>
+            <table>
               <thead>
-                <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Nome</p></td>
-                <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Email</p></td>
-                <td style={{ minWidth: 150 }}><p style={{ fontWeight: 700 }}>CPF</p></td>
-                <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Data de Nascimento</p></td>
-                <td style={{ minWidth: 150 }}><p style={{ fontWeight: 700 }}>Celular</p></td>
-                <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Endereço</p></td>
+                <td><p>Nome</p></td>
+                <td><p>Email</p></td>
+                <td><p>CPF</p></td>
+                <td><p>Data de Nascimento</p></td>
+                <td><p>Celular</p></td>
+                <td><p>Endereço</p></td>
               </thead>
               <tbody>
                 <tr>
-                  <td style={{ width: 100 }}>{protocolo.municipe.nome}</td>
-                  <td style={{ width: 100 }}>{protocolo.municipe.email}</td>
-                  <td style={{ width: 100 }}>{protocolo.municipe.num_CPF}</td>
-                  <td style={{ width: 100 }}>{protocolo.municipe.data_nascimento}</td>
-                  <td style={{ maxWidth: 50 }}>{protocolo.municipe.celular}</td>
-                  <td style={{ maxWidth: 500, minWidth: 300 }}>{protocolo.municipe.endereco.logradouro}, {protocolo.municipe.endereco.num_endereco}, {protocolo.municipe.endereco.complemento}, {protocolo.municipe.endereco.bairro}, {protocolo.municipe.endereco.cidade} - {protocolo.municipe.endereco.estado}, {protocolo.municipe.endereco.pais}</td>
+                  <td>{protocolo.municipe.nome}</td>
+                  <td>{protocolo.municipe.email}</td>
+                  <td>{protocolo.municipe.num_CPF}</td>
+                  <td>{protocolo.municipe.data_nascimento}</td>
+                  <td>{protocolo.municipe.celular}</td>
+                  <td>{protocolo.municipe.endereco.logradouro}, {protocolo.municipe.endereco.num_endereco}, {protocolo.municipe.endereco.complemento}, {protocolo.municipe.endereco.bairro}, {protocolo.municipe.endereco.cidade} - {protocolo.municipe.endereco.estado}, {protocolo.municipe.endereco.pais}</td>
                 </tr>
               </tbody>
             </table>
           </fieldset>
 
-          <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
-            <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Endereço do Protocolo</legend>
-            <table style={{ margin: 'auto', borderCollapse: 'collapse', width: '90%', padding: 30 }}>
+          <fieldset className="endereco-fieldset">
+            <legend>Endereço do Protocolo</legend>
+            <table>
               <thead>
-                <td style={{ minWidth: 100 }}><p style={{ fontWeight: 700 }}>CEP</p></td>
-                <td style={{ minWidth: 250 }}><p style={{ fontWeight: 700 }}>Logradouro</p></td>
-                <td style={{ minWidth: 100 }}><p style={{ fontWeight: 700 }}>Número</p></td>
-                <td style={{ minWidth: 150 }}><p style={{ fontWeight: 700 }}>Complemento</p></td>
-                <td style={{ minWidth: 100 }}><p style={{ fontWeight: 700 }}>Bairro</p></td>
-                <td style={{ minWidth: 200 }}><p style={{ fontWeight: 700 }}>Cidade</p></td>
-                <td style={{ minWidth: 100 }}><p style={{ fontWeight: 700 }}>Estado</p></td>
-                <td style={{ minWidth: 100 }}><p style={{ fontWeight: 700 }}>País</p></td>
+                <td><p>CEP</p></td>
+                <td><p>Logradouro</p></td>
+                <td><p>Número</p></td>
+                <td><p>Complemento</p></td>
+                <td><p>Bairro</p></td>
+                <td><p>Cidade</p></td>
+                <td><p>Estado</p></td>
+                <td><p>País</p></td>
               </thead>
               <tbody>
                 <tr>
-                  <td style={{ width: 100 }}>{protocolo.endereco.num_cep}</td>
-                  <td style={{ width: 100 }}>{protocolo.endereco.logradouro}</td>
-                  <td style={{ width: 100 }}>{protocolo.endereco.num_endereco}</td>
-                  <td style={{ width: 100 }}>{protocolo.endereco.complemento}</td>
-                  <td style={{ maxWidth: 50 }}>{protocolo.endereco.bairro}</td>
-                  <td style={{ maxWidth: 50 }}>{protocolo.endereco.cidade}</td>
-                  <td style={{ maxWidth: 50 }}>{protocolo.endereco.estado}</td>
-                  <td style={{ maxWidth: 50 }}>{protocolo.endereco.pais}</td>
+                  <td>{protocolo.endereco.num_cep}</td>
+                  <td>{protocolo.endereco.logradouro}</td>
+                  <td>{protocolo.endereco.num_endereco}</td>
+                  <td>{protocolo.endereco.complemento}</td>
+                  <td>{protocolo.endereco.bairro}</td>
+                  <td>{protocolo.endereco.cidade}</td>
+                  <td>{protocolo.endereco.estado}</td>
+                  <td>{protocolo.endereco.pais}</td>
                 </tr>
               </tbody>
             </table>
           </fieldset>
 
-          <fieldset style={{ border: '1px solid #ddd', backgroundColor: '#d0d0d0', padding: 20, borderRadius: 5, marginTop: 50, position: 'relative' }}>
-            <legend style={{ fontWeight: 'bold', fontSize: 20, width: '100%', textAlign: 'center', position: 'absolute', top: '-20px', left: '0', backgroundColor: '#d0d0d0', padding: '10px 0' }}>Escreva sua devolutiva</legend>
-            <div style={{ backgroundColor: '#f5f5f5', padding: 20, borderRadius: 5, marginTop: 20 }}>
+          <fieldset className="devolutiva-fieldset">
+            <legend>Escreva sua devolutiva</legend>
+            <div className="devolutiva-textarea-container">
               <textarea
                 value={devolutiva}
                 onChange={enviarDevolutiva}
                 placeholder="Digite sua devolutiva para poder enviar as alterações..."
-                style={{ width: '100%', minHeight: 100, padding: 10 }}
               />
             </div>
-            {!devolutiva || devolutiva.trim() !== '' && removeLoading && (<button onClick={novaDevolutiva} disabled={enviandoDevolutiva || mensagemAtiva} style={{ marginTop: 20 }}>
+            {!devolutiva || devolutiva.trim() !== '' && removeLoading && (<button onClick={novaDevolutiva} disabled={enviandoDevolutiva || mensagemAtiva}>
               {enviandoDevolutiva ? 'Enviando...' : 'Enviar Devolutiva'}
             </button>)}
             {!removeLoading && <Loading />}
-            {/* {message && <Message type={type} msg={message} />} */}
           </fieldset>
 
-          {/*Coloquei no botão de salvar alteração para salvar tanto protocolo quanto devolutivas*/}
-          {/*{removeLoading && (<><button onClick={updateProtocolo} className="btn-cad" style={{ marginRight: '100px' }}>Salvar Alterações</button> */}
           {removeLoading && (
             <>
-              {/*<button onClick={salvarAlteracoes} disabled={mensagemAtiva} className="btn-cad" style={{ marginRight: '100px', opacity: mensagemAtiva ? 0.6 : 1 }}>
-              Salvar Alterações
-            </button>*/}
               <button className="btn-log" onClick={voltarAnterior} style={{ opacity: mensagemAtiva ? 0.6 : 1 }}>Voltar</button>
             </>
           )}
@@ -635,32 +576,21 @@ function AnalisarProtocolos() {
         </div >
       }
       <div>
-        {/* Modal */}
         {mostrarModal && (
-          <div style={{
-            position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
-            backgroundColor: "rgba(0,0,0,0.5)", display: "flex",
-            alignItems: "center", justifyContent: "center"
-          }}>
-            <div style={{ background: "#fff", padding: 20, borderRadius: 8 }}>
+          <div className="modal-overlay">
+            <div className="modal-content">
               <h2>Motivo da Recusa</h2>
-
-              {/* Lista Suspensa */}
               <select
                 value={motivoRecusa}
                 onChange={(e) => setMotivoRecusa(e.target.value)}
-                style={{ width: "100%", padding: 8, marginBottom: 10 }}
               >
                 <option value="">Selecione um motivo</option>
                 {motivosRecusa.map((motivo, index) => (
                   <option key={index} value={motivo}>{motivo}</option>
                 ))}
               </select>
-
-              <div style={{ display: "flex", gap: 10 }}>
-                {/* Botão Confirmar */}
+              <div className="modal-buttons">
                 <button onClick={handleConfirmarMotivo}>Confirmar</button>
-                {/* Botão Cancelar */}
                 <button onClick={() => setMostrarModal(false)}>
                   Cancelar
                 </button>
@@ -673,4 +603,4 @@ function AnalisarProtocolos() {
   );
 }
 
-export default AnalisarProtocolos
+export default AnalisarProtocolos;
