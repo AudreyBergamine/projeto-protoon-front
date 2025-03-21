@@ -7,8 +7,8 @@ const CadastroAssunto = () => {
     const [formData, setFormData] = useState({
         assunto: '',
         valor_protocolo: '',
-        prioridade: '',
-        id_secretaria: 0, // Mantém o id_secretaria
+        prioridade: 0,
+        secretaria: null,  // Agora estamos guardando o objeto completo da secretaria
     });
 
     const [secretarias, setSecretarias] = useState([]); // armazena a lista de secretarias
@@ -39,29 +39,41 @@ const CadastroAssunto = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
+
+        if (name === 'id_secretaria') {
+            const selectedSecretaria = secretarias.find(secretaria => secretaria.id_secretaria === parseInt(value));
+            setFormData({
+                ...formData,
+                secretaria: selectedSecretaria, // armazena o objeto completo, NÂO É SÓ O ID, DEMOREI PRA LEMBRAR QUE PRECISO DO OBJETO TODO ;-;
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value,
+            });
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+
+
         try {
             const response = await axiosInstance.post('/protoon/assuntos/registrar-assunto', formData);
             console.log('Assunto cadastrado com sucesso:', response.data);
+            console.log(formData);
             // Limpa o formulário após o cadastro
             setFormData({
                 assunto: '',
                 valor_protocolo: '',
                 prioridade: '',
-                id_secretaria: 0,
+                secretaria: null,  // Reseta a secretaria para null
             });
         } catch (error) {
             console.error('Erro ao cadastrar o assunto:', error);
             setError('Erro ao cadastrar o assunto.');
-            console.log(handleSubmit)
+            console.log(formData);
         } finally {
             setLoading(false);
         }
@@ -108,10 +120,10 @@ const CadastroAssunto = () => {
                                     required
                                 >
                                     <option value="">Selecione a prioridade</option>
-                                    <option value="BAIXA">Baixa</option>
-                                    <option value="MEDIA">Média</option>
-                                    <option value="ALTA">Alta</option>
-                                    <option value="URGENTE">Urgente</option>
+                                    <option value="1">Baixa</option>
+                                    <option value="2">Média</option>
+                                    <option value="3">Alta</option>
+                                    <option value="4">Urgente</option>
                                 </select>
                             </label>
                         </div>
@@ -120,7 +132,7 @@ const CadastroAssunto = () => {
                                 Secretaria:
                                 <select
                                     name="id_secretaria"
-                                    value={formData.id_secretaria}
+                                    value={formData.secretaria ? formData.secretaria.id_secretaria : ''}
                                     onChange={handleChange}
                                     required
                                 >
