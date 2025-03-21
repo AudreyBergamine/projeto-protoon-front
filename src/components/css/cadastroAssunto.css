@@ -1,0 +1,89 @@
+/* Container do formulário */
+
+.containerPrincipal {
+    place-items: center;
+    margin-top: -20px;
+}
+
+
+.containerSecundario {
+    background-color: #f7f6f2;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    place-items: center; /* Centraliza horizontal e verticalmente */
+    justify-content: center; /* Alinha horizontalmente no centro */
+    height: 75vh; /* Tamanho da div tela */
+}
+
+
+/* Alinhar os elementos dentro da containerTerciario */
+.containerTerciario {
+    display: flex;
+    flex-direction: column;  /* Alinha os itens na vertical */
+    gap: 15px;               /* Espaço entre os elementos */
+    align-items: flex-start; /* Alinha os itens à esquerda (ou centraliza se for necessário) */
+    width: 100%;             /* Garante que a largura do container seja 100% */
+}
+
+
+h1 {
+    padding-top: 10px;
+    text-align: center;
+    color: #4A90E2;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+
+/* Estilo do formulário */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    place-items: center
+}
+
+/* Estilo das labels */
+label {
+    width: 1000px;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+input {
+    width: 270px;
+    height: 40px;
+    font-size: 14px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+}
+
+/* Estilo dos campos de entrada */
+select {
+    width: 270px;
+    height: 40px;
+    font-size: 14px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: #4A90E2;
+    outline: none;
+    background-color: #eaf2f8;
+}
+
+button{
+    width: 10px;
+}
