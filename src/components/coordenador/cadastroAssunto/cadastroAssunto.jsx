@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import URL from '../../services/url';
-import './cadastroAssunto.module.css';
+import styles from './cadastroAssunto.module.css'; // Importando o módulo CSS
 
 const CadastroAssunto = () => {
     const [formData, setFormData] = useState({
@@ -75,12 +75,12 @@ const CadastroAssunto = () => {
     };
 
     return (
-        <div className="containerPrincipal">
-            <div className="containerSecundario">
+        <div className={styles.containerPrincipal}>
+            <div className={styles.containerSecundario}>
                 <h1>Cadastro de Assunto</h1>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 <form onSubmit={handleSubmit}>
-                    <div className="containerTerciario">
+                    <div className={styles.containerTerciario}>
                         <label>
                             Assunto:
                             <input
@@ -133,7 +133,7 @@ const CadastroAssunto = () => {
                             </select>
                         </label>
                     </div>
-                    <button type="submit" className="btn-log"  disabled={loading}>
+                    <button type="submit" className={styles.btnLog} disabled={loading}>
                         {loading ? 'Cadastrando...' : 'Cadastrar'}
                     </button>
                 </form>

@@ -3,13 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { FaExclamationTriangle } from "react-icons/fa"; // Ícone de alerta
 import axios from "axios";
 import URL from '../../services/url';
-import styles from './paginaInicialCoord.module.css';
+import styles from './paginaInicialCoord.module.css'; // Importando o módulo CSS
 
 function PaginaInicialCoordenador() {
-
   const navigate = useNavigate();
   const [protocolos, setProtocolos] = useState([]);
-  const [temAlerta, setTemAlerta] = useState(false);
+  const [alertaStatus, setAlertaStatus] = useState("transparente"); // Estado do alerta
 
   const axiosInstance = axios.create({
     baseURL: URL, // Ajuste a URL base conforme necessário
@@ -43,20 +42,28 @@ function PaginaInicialCoordenador() {
 
         setProtocolos(protocolosAtualizados);
 
-        const dataAtual = new Date();
-
-        // Cria a data limite, que é a data atual + 7 dias
-        const dataLimite = new Date(dataAtual);
-        dataLimite.setDate(dataAtual.getDate() + 7);
-
-        // Verifica se há protocolos com prazo menor que 7 dias e não concluídos
-        const alerta = protocolosAtualizados.some(
+        // Verifica o status dos protocolos
+        const agora = new Date();
+        const temVencido = protocolosAtualizados.some(
           (protocolo) =>
             protocolo.prazoConclusao !== null &&
-            new Date(protocolo.prazoConclusao) < dataLimite
+            new Date(protocolo.prazoConclusao) < agora
         );
 
-        setTemAlerta(alerta);
+        const temProximo = protocolosAtualizados.some(
+          (protocolo) =>
+            protocolo.prazoConclusao !== null &&
+            new Date(protocolo.prazoConclusao) >= agora &&
+            new Date(protocolo.prazoConclusao) <= new Date(agora.getTime() + 7 * 24 * 60 * 60 * 1000) // 7 dias
+        );
+
+        if (temVencido) {
+          setAlertaStatus("vermelho"); // Alerta vermelho se houver protocolos vencidos
+        } else if (temProximo) {
+          setAlertaStatus("amarelo"); // Alerta amarelo se houver protocolos próximos do vencimento
+        } else {
+          setAlertaStatus("transparente"); // Transparente se não houver alertas
+        }
 
       } catch (error) {
         console.error("Erro ao buscar os protocolos:", error);
@@ -69,41 +76,32 @@ function PaginaInicialCoordenador() {
   return (
     <>
       <div className={styles.paginaInicialContainer}>
-        {temAlerta && (
-          <div
-            className={styles`alerta ${protocolos.some(protocolo => {
-              const prazoConclusaoDate = protocolo.prazoConclusao ? new Date(protocolo.prazoConclusao) : null;
-              const dataAtual = new Date();
-              const diffTime = prazoConclusaoDate ? prazoConclusaoDate - dataAtual : 0;
-              const diffDays = prazoConclusaoDate ? Math.ceil(diffTime / (1000 * 3600 * 24)) : Infinity;
-
-              return (
-                prazoConclusaoDate !== null &&
-                diffDays <= 7 // Se o prazo estiver dentro de 7 dias
-              );
-            }) ? "show" : ""}`}
-            onClick={() => navigate("/protocolos")}
-          >
-            <FaExclamationTriangle title="Há protocolos com prazo próximo do vencimento!" />
-          </div>
-        )}
-        <div className="button-container">
-          <button className="btn-log" onClick={() => navigate('/protocolos')}>
+        <div
+          className={`${styles.alerta} ${alertaStatus === "amarelo" ? styles.alertaAmarelo :
+              alertaStatus === "vermelho" ? styles.alertaVermelho :
+                ""
+            }`}
+          onClick={() => navigate("/protocolos")}
+        >
+          <FaExclamationTriangle title="Há protocolos com prazo próximo do vencimento!" />
+        </div>
+        <div className={styles.buttonContainer}>
+          <button className={styles.btnLog} onClick={() => navigate('/protocolos')}>
             Listar Protocolos
           </button>
-          <button className="btn-log" onClick={() => navigate('/cadastrar-assunto')}>
+          <button className={styles.btnLog} onClick={() => navigate('/cadastrar-assunto')}>
             Cadastro de Assunto
           </button>
-          <button className="btn-log" onClick={() => navigate('/redirecionamentos-coordenador')}>
+          <button className={styles.btnLog} onClick={() => navigate('/redirecionamentos-coordenador')}>
             Aprovar Redirecionamentos
           </button>
-          <button className="btn-log" onClick={() => navigate('/relatorios')}>
+          <button className={styles.btnLog} onClick={() => navigate('/relatorios')}>
             Relatórios
           </button>
-          <button className="btn-log" onClick={() => navigate('/gerenciar-secretaria')}>
+          <button className={styles.btnLog} onClick={() => navigate('/gerenciar-secretaria')}>
             Cadastrar Secretarias
           </button>
-          <button className="btn-log" onClick={() => navigate('/logs')}>
+          <button className={styles.btnLog} onClick={() => navigate('/logs')}>
             Logs
           </button>
         </div>

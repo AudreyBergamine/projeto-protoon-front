@@ -4,7 +4,7 @@
     justify-content: center;
     align-items: center;
     margin-top: -20px;
-    height: 75vh; /* Centraliza verticalmente na tela */
+    height: 75vh;
 }
 
 
@@ -14,19 +14,18 @@
     border-radius: 8px;
     width: 100%;
     max-width: 500px;
-    place-items: center; /* Centraliza horizontal e verticalmente */
-    justify-content: center; /* Alinha horizontalmente no centro */
+    place-items: center; 
+    justify-content: center;
     height: 75vh; /* Tamanho da div tela */
 }
 
 
-/* Alinhar os elementos dentro da containerTerciario */
 .containerTerciario {
     display: flex;
-    flex-direction: column;  /* Alinha os itens na vertical */
-    gap: 15px;               /* Espaço entre os elementos */
-    align-items: flex-start; /* Alinha os itens à esquerda (ou centraliza se for necessário) */
-    width: 100%;             /* Garante que a largura do container seja 100% */
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+    width: 100%;         
 }
 
 
@@ -87,10 +86,24 @@ input:focus, select:focus {
     background-color: #eaf2f8;
 }
 
-button{
-    width: 10px ;
-    height: 10px ;
+.btnLog {
+    color: white;
+    font-size: 16px;
+    padding: 5px;
+    text-align: center;
+    width: 100px;
+    height: 50px;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #2D9596 !important;
 }
 
+.btnLog:hover {
+    background-color: #20696a !important;
+}
+
+.btnLog:focus {
+    outline: none;
+}
 
 

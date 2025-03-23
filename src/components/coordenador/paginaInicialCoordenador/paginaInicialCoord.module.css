@@ -1,29 +1,30 @@
 /* PaginaInicial.module.css */
-
 .paginaInicialContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 70vh;
+    min-height: 70vh;
     position: relative;
+    padding: 20px;
 }
 
 .alerta {
-    position: absolute;
-    top: 10px;
+    position: fixed;
+    top: 20px;
     right: 20px;
     font-size: 30px;
     cursor: pointer;
     color: transparent;
     transition: color 0.3s ease;
+    z-index: 1000;
 }
 
-.alertaShow {
+.alertaAmarelo {
     color: yellow;
 }
 
-.alertaShowRed {
+.alertaVermelho {
     color: red;
 }
 
@@ -39,18 +40,18 @@
 .btnLog {
     color: white;
     font-size: 16px;
-    padding: 5px;
+    padding: 10px;
     text-align: center;
     width: 200px;
     height: 60px;
     cursor: pointer;
     border-radius: 5px;
-    background-color: #007bff; /* Adicionei uma cor de fundo padrão */
+    background-color: #2D9596;
     transition: background-color 0.3s ease;
 }
 
 .btnLog:hover {
-    background-color: #0056b3;
+    background-color: #20696a;
 }
 
 .btnLog:focus {
