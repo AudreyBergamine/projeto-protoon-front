@@ -7,11 +7,12 @@ const CadastroAssunto = () => {
     const [formData, setFormData] = useState({
         assunto: '',
         valor_protocolo: '',
-        prioridade: 0,
+        prioridade: 0, // Define a prioridade inicial como 1 (BAIXA)
         secretaria: null,
-    });
+    });    
 
     const [secretarias, setSecretarias] = useState([]);
+    const [prioridades, setPrioridades] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -24,8 +25,11 @@ const CadastroAssunto = () => {
         async function fetchSecretarias() {
             setLoading(true);
             try {
-                const response = await axiosInstance.get('/protoon/secretaria');
-                setSecretarias(response.data);
+                const responseSecretarias = await axiosInstance.get('/protoon/secretaria');
+                setSecretarias(responseSecretarias.data);
+                const responsePrioridades = await axiosInstance.get("protoon/secretaria/prioridades");
+                setPrioridades(responsePrioridades.data);
+
             } catch (error) {
                 console.error('Erro ao buscar as secretarias:', error);
                 setError('Erro ao carregar as secretarias.');
@@ -39,7 +43,14 @@ const CadastroAssunto = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        if (name === 'id_secretaria') {
+        if (name === 'prioridade_id') {
+            // Aqui estamos passando o valor da prioridade como um número
+            const selectedPrioridade = prioridades.find(prioridade => prioridade.id_prioridade === parseInt(value));
+            setFormData({
+                ...formData,
+                prioridade: selectedPrioridade, // Apenas atualizando com o ID da prioridade
+            });
+        } else if (name === 'id_secretaria') {
             const selectedSecretaria = secretarias.find(secretaria => secretaria.id_secretaria === parseInt(value));
             setFormData({
                 ...formData,
@@ -58,6 +69,7 @@ const CadastroAssunto = () => {
         setLoading(true);
 
         try {
+            console.log('Assunto cadastrado com sucesso:', formData);
             const response = await axiosInstance.post('/protoon/assuntos/registrar-assunto', formData);
             console.log('Assunto cadastrado com sucesso:', response.data);
             setFormData({
@@ -70,7 +82,9 @@ const CadastroAssunto = () => {
             console.error('Erro ao cadastrar o assunto:', error);
             setError('Erro ao cadastrar o assunto.');
         } finally {
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, 2000);
         }
     };
 
@@ -105,15 +119,16 @@ const CadastroAssunto = () => {
                             Prioridade:
                             <select
                                 name="prioridade"
-                                value={formData.prioridade}
+                                value={formData.prioridade || ""}
                                 onChange={handleChange}
                                 required
                             >
                                 <option value="">Selecione a prioridade</option>
-                                <option value="1">Baixa</option>
-                                <option value="2">Média</option>
-                                <option value="3">Alta</option>
-                                <option value="4">Urgente</option>
+                                {prioridades.map(prioridade => (
+                                    <option key={prioridade.id} value={prioridade.descricao}>
+                                        {prioridade.descricao}
+                                    </option>
+                                ))}
                             </select>
                         </label>
                         <label>
@@ -133,8 +148,8 @@ const CadastroAssunto = () => {
                             </select>
                         </label>
                     </div>
-                    <button type="submit" className={styles.btnLog} disabled={loading}>
-                        {loading ? 'Cadastrando...' : 'Cadastrar'}
+                    <button type="submit" style={{ width: 150 }} className={styles.btnLog} disabled={loading}>
+                        {loading ? 'Cadastrado' : 'Cadastrar'}
                     </button>
                 </form>
             </div>

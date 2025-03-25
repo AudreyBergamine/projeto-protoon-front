@@ -77,14 +77,13 @@ function GerenciarSecretaria() {
     let formattedValue = formatValue(value);
 
     if (name === "id_secretaria") {
-      // Encontra a secretaria correspondente ao ID selecionado
-      const secretariaSelecionada = secretarias.find(sec => sec.id_secretaria === parseInt(value));
-
+      const secretariaSelecionada = secretarias.find(sec => sec.id_secretaria === Number(value));
+    
       setFormData({
         ...formData,
-        secretaria: secretariaSelecionada || null // Atualiza o objeto secretaria corretamente
+        secretaria: secretariaSelecionada || null,
+        nome_secretaria: secretariaSelecionada ? secretariaSelecionada.nome_secretaria : "" // Atualiza o nome corretamente
       });
-
     } else if (enderecoFields.includes(name)) {
       setFormData({
         ...formData,
@@ -108,7 +107,6 @@ function GerenciarSecretaria() {
       }
     }
   };
-
 
   const handleEnderecoChange = (logradouro, bairro, cidade, estado, pais) => {
     setFormData({
