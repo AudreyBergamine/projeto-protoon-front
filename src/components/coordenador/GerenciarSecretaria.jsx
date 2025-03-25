@@ -15,6 +15,7 @@ function GerenciarSecretaria() {
   const [alert, setAlert] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const [secretarias, setSecretarias] = useState([]);
 
   const axiosInstance = axios.create({
     baseURL: URL, // Adjust the base URL as needed
@@ -43,6 +44,18 @@ function GerenciarSecretaria() {
     setAlert(newAlert);
   };
 
+  useEffect(() => {
+    const fetchSecretarias = async () => {
+      try {
+        const response = await axiosInstance.get("protoon/secretaria/listar-secretarias");
+        setSecretarias(response.data); // Define os dados corretamente
+      } catch (error) {
+        console.error("Erro ao buscar secretarias:", error);
+      }
+    };
+
+    fetchSecretarias();
+  }, []);
 
   useEffect(() => {
     setEndereco('num_cep')
@@ -58,14 +71,21 @@ function GerenciarSecretaria() {
 
   //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
   const handleChange = (e) => {
-    //A lista abaixo contém o nome de todos os campos que há em endereço
     const enderecoFields = ['tipo_endereco', 'num_cep', 'logradouro', 'nome_endereco', 'num_endereco', 'complemento', 'bairro', 'cidade', 'estado', 'pais'];
-
     const { name, value } = e.target;
 
     let formattedValue = formatValue(value);
 
-    if (enderecoFields.includes(name)) {//Caso em um formulário contenha algum nome da lista, então será alterado o valor do objeto endereco
+    if (name === "id_secretaria") {
+      // Encontra a secretaria correspondente ao ID selecionado
+      const secretariaSelecionada = secretarias.find(sec => sec.id_secretaria === parseInt(value));
+
+      setFormData({
+        ...formData,
+        secretaria: secretariaSelecionada || null // Atualiza o objeto secretaria corretamente
+      });
+
+    } else if (enderecoFields.includes(name)) {
       setFormData({
         ...formData,
         endereco: {
@@ -74,20 +94,21 @@ function GerenciarSecretaria() {
         }
       });
 
-    } else {//Caso não, será atualizado o campo municipe (todos os outros campos).
+    } else {
       if (name === 'email') {
         setFormData({
           ...formData,
-          [name]: value.toLowerCase() // Formata o email para minúsculas
-        })
+          [name]: value.toLowerCase()
+        });
       } else {
         setFormData({
           ...formData,
           [name]: formattedValue
         });
       }
-    };
-  }
+    }
+  };
+
 
   const handleEnderecoChange = (logradouro, bairro, cidade, estado, pais) => {
     setFormData({
@@ -194,8 +215,22 @@ function GerenciarSecretaria() {
         <div className="register-form">
           <div className="input-container">
             <div>
+              <select
+                name="id_secretaria"
+                value={formData.secretaria ? formData.secretaria.id_secretaria : ''}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Selecione uma secretaria</option>
+                {secretarias.map(secretaria => (
+                  <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
+                    {secretaria.nome_secretaria}
+                  </option>
+                ))}
+              </select>
+
               <label style={{ textAlign: 'center' }}>Nome:</label><br></br>
-              <input
+              {/* <input
                 type="text"
                 name="nome_secretaria"
                 placeholder="Ex.: Secretaria de Meio Ambiente"
@@ -203,7 +238,7 @@ function GerenciarSecretaria() {
                 onChange={handleChange}
                 required
                 minLength={3}
-              />
+              /> */}
             </div>
 
             <div>
