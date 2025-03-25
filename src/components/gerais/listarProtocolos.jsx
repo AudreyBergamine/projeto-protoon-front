@@ -272,7 +272,7 @@ function ListarProtocolosBySecretaria() {
 
           </tbody>
         </table>
-        <button className="btn-log" onClick={voltarIndex}>Voltar</button>
+        <button style={{ marginBottom: 200 }} className="btn-log" onClick={voltarIndex}>Voltar</button>
       </div >
     </>
   );

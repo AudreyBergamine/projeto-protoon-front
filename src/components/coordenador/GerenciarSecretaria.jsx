@@ -194,7 +194,7 @@ function GerenciarSecretaria() {
         <div className="register-form">
           <div className="input-container">
             <div>
-              <label>Nome:</label><br></br>
+              <label style={{ textAlign: 'center' }}>Nome:</label><br></br>
               <input
                 type="text"
                 name="nome_secretaria"
@@ -207,7 +207,7 @@ function GerenciarSecretaria() {
             </div>
 
             <div>
-              <label>Nome do Responsável:</label><br></br>
+              <label style={{ textAlign: 'center' }}>Nome do Responsável:</label><br></br>
               <input
                 type="text"
                 name="nome_responsavel"
@@ -219,7 +219,7 @@ function GerenciarSecretaria() {
             </div>
 
             <div>
-              <label>Email:</label><br></br>
+              <label style={{ textAlign: 'center' }}>Email:</label><br></br>
               <input
                 type="email"
                 name="email"
@@ -239,7 +239,7 @@ function GerenciarSecretaria() {
           <div className="input-container">
 
             <div>
-              <label>Número do CEP:</label><br></br>
+              <label style={{ textAlign: 'center' }}>Número do CEP:</label><br></br>
               <SetCEP
                 onAlertChange={handleAlertChange}
                 onEnderecoChange={handleEnderecoChange}
@@ -256,7 +256,7 @@ function GerenciarSecretaria() {
             </div>
 
             <div>
-              <label>Endereço:</label><br></br>
+              <label style={{ textAlign: 'center' }}>Endereço:</label><br></br>
               <input
                 type="text"
                 name="logradouro"
@@ -270,7 +270,7 @@ function GerenciarSecretaria() {
             </div>
             {/* <div> */}
             {/* TODO: Ocultar esse trecho para o usuário e deixar nullable */}
-            {/* <label>Nome Endereço:</label><br></br> 
+            {/* <label style={{ textAlign: 'center' }}>Nome Endereço:</label><br></br> 
               <input
                 type="text"
                 name="nome_endereco"
@@ -282,7 +282,7 @@ function GerenciarSecretaria() {
               /> */}
             {/* </div> */}
             <div>
-              <label>Número:</label><br></br>
+              <label style={{ textAlign: 'center' }}>Número:</label><br></br>
               <input
                 type="number"
                 name="num_endereco"
@@ -294,7 +294,7 @@ function GerenciarSecretaria() {
               />
             </div>
             <div>
-              <label>Complemento:</label><br></br>
+              <label style={{ textAlign: 'center' }}>Complemento:</label><br></br>
               <input
                 type="text"
                 name="complemento"
@@ -309,7 +309,7 @@ function GerenciarSecretaria() {
         <div className="register-form">
           <div className="input-container">
             <div>
-              <label>Tipo de Endereço:</label><br></br>
+              <label style={{ textAlign: 'center' }}>Tipo de Endereço:</label><br></br>
               <input
                 type="text"
                 name="tipo_endereco"
@@ -322,7 +322,7 @@ function GerenciarSecretaria() {
             </div>
 
             <div>
-              <label>Bairro:</label><br></br>
+              <label style={{ textAlign: 'center' }}>Bairro:</label><br></br>
               <input
                 type="text"
                 name="bairro"
@@ -337,7 +337,7 @@ function GerenciarSecretaria() {
             </div>
 
             <div>
-              <label>Cidade:</label><br></br>
+              <label style={{ textAlign: 'center' }}>Cidade:</label><br></br>
               <input
                 type="text"
                 name="cidade"
@@ -352,7 +352,7 @@ function GerenciarSecretaria() {
             </div>
 
             <div>
-              <label>Estado:</label><br></br>
+              <label style={{ textAlign: 'center' }}>Estado:</label><br></br>
               <input
                 type="text"
                 name="estado"
@@ -367,7 +367,7 @@ function GerenciarSecretaria() {
             </div>
 
             <div>
-              <label>País:</label><br></br>
+              <label style={{ textAlign: 'center' }}>País:</label><br></br>
               <input
                 type="text"
                 name="pais"
