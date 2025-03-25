@@ -57,14 +57,20 @@ function PaginaInicialCoordenador() {
             new Date(protocolo.prazoConclusao) <= new Date(agora.getTime() + 7 * 24 * 60 * 60 * 1000) // 7 dias
         );
 
-        if (temVencido) {
+        // Verifica se o prazo restante é menor que 3 dias e exibe o alerta vermelho
+        const prazoMenorQue3Dias = protocolosAtualizados.some(
+          (protocolo) => protocolo.prazoRestante < 4 && protocolo.prazoRestante > 0
+        );
+
+        if (prazoMenorQue3Dias) {
+          setAlertaStatus("vermelho"); // Alerta vermelho para protocolos com prazo menor que 3 dias
+        } else if (temVencido) {
           setAlertaStatus("vermelho"); // Alerta vermelho se houver protocolos vencidos
         } else if (temProximo) {
           setAlertaStatus("amarelo"); // Alerta amarelo se houver protocolos próximos do vencimento
         } else {
           setAlertaStatus("transparente"); // Transparente se não houver alertas
         }
-
       } catch (error) {
         console.error("Erro ao buscar os protocolos:", error);
       }
@@ -73,13 +79,14 @@ function PaginaInicialCoordenador() {
     fetchProtocolos();
   }, []);
 
+
   return (
     <>
       <div className={styles.paginaInicialContainer}>
         <div
           className={`${styles.alerta} ${alertaStatus === "amarelo" ? styles.alertaAmarelo :
-              alertaStatus === "vermelho" ? styles.alertaVermelho :
-                ""
+            alertaStatus === "vermelho" ? styles.alertaVermelho :
+              ""
             }`}
           onClick={() => navigate("/protocolos")}
         >
