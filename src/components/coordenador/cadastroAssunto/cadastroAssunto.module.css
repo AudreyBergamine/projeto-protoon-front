@@ -1,4 +1,3 @@
-/* Container do formulário */
 .containerPrincipal {
     display: flex;
     justify-content: center;
@@ -7,27 +6,24 @@
     height: 75vh;
 }
 
-
 .containerSecundario {
     background-color: #f7f6f2;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     width: 100%;
     max-width: 500px;
-    place-items: center; 
+    place-items: center;
     justify-content: center;
-    height: 75vh; /* Tamanho da div tela */
+    height: 75vh;
 }
-
 
 .containerTerciario {
     display: flex;
     flex-direction: column;
     gap: 15px;
     align-items: flex-start;
-    width: 100%;         
+    width: 100%;
 }
-
 
 h1 {
     padding-top: 10px;
@@ -37,15 +33,13 @@ h1 {
     margin-bottom: 20px;
 }
 
-
 /* Estilo do formulário */
 form {
     display: flex;
     flex-direction: column;
     gap: 3px;
-    place-items: center
+    place-items: center;
 }
-
 
 /* Estilo das labels */
 label {
@@ -80,12 +74,14 @@ select {
     transition: all 0.3s ease;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
     border-color: #4A90E2;
     outline: none;
     background-color: #eaf2f8;
 }
 
+/* Estilo do botão */
 .btnLog {
     color: white;
     font-size: 16px;
@@ -107,3 +103,69 @@ input:focus, select:focus {
 }
 
 
+
+@keyframes slideIn {
+    from {
+        right: -300px;
+        opacity: 0;
+    }
+
+    to {
+        right: 20px;
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        right: 20px;
+        opacity: 1;
+    }
+
+    to {
+        right: -300px;
+        opacity: 0;
+    }
+}
+
+
+.popup {
+    position: fixed;
+    top: 20px;
+    right: -300px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    font-weight: bold;
+    transition: all 0.5s ease;
+    opacity: 0;
+}
+
+.popup.hide {
+    animation: slideOut 0.5s forwards;
+}
+
+.popup.show {
+    right: 20px;
+    opacity: 1;
+    animation: none;
+    /* Remove qualquer animação prévia */
+}
+
+/* Opcional: animação de fade out quando desaparece */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.popup:not(.show) {
+    animation: fadeOut 0.5s ease;
+}

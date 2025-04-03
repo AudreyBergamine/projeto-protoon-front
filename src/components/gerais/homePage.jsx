@@ -1,4 +1,4 @@
-import PaginaInicial from "../municipe/paginaInicalMunicipe";
+import PaginaInicial from "../municipe/paginaInicialMunicipe/paginaInicialMunicipe";
 import PaginaInicialSecretario from "../secretario/paginaInicialSec";
 import PaginaInicialCoordenador from "../coordenador/paginaInicialCoordenador/paginaInicialCoord";
 import PaginaInicialFuncionario from "../funcionario/paginaInicialFuncionario";
