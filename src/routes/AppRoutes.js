@@ -6,11 +6,11 @@ import LoginForm from '../components/gerais/login';
 
 
 import CadastroAssunto from '../components/coordenador/cadastroAssunto/cadastroAssunto';
-import CadastrarMunicipe from '../components/municipe/cadastrarMunicipe';
+import CadastrarMunicipe from '../components/municipe/cadastrarMunicipe/cadastrarMunicipe';
 import RecuperarSenhaForm from '../components/municipe/recuperarSenha';
 import AtualizarForm from '../components/municipe/atualizarSenha';
-import PaginaInicalMunicipe from '../components/municipe/paginaInicalMunicipe';
-import Reclamar from '../components/municipe/reclamar';
+import PaginaInicalMunicipe from '../components/municipe/paginaInicialMunicipe/paginaInicialMunicipe';
+import Reclamar from '../components/municipe/reclamar/reclamar';
 import SolicitarServico from '../components/municipe/solicitarServico';
 import Consultar from '../components/municipe/consultar';
 import SobreNos from '../components/municipe/sobreNos';

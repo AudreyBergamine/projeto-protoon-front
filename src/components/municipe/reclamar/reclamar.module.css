@@ -1,0 +1,119 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    padding-bottom: 100px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.title {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.form {
+    background: white;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.inputGroup {
+    margin-bottom: 1.5rem;
+}
+
+.label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.select {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+    transition: border-color 0.3s;
+}
+
+.select:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.textarea {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    min-height: 150px;
+    resize: vertical;
+    transition: border-color 0.3s;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.buttonGroup {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+.submitButton {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    flex: 1;
+}
+
+.submitButton:hover {
+    background: #2980b9;
+}
+
+.backButton {
+    background: #95a5a6;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    flex: 1;
+}
+
+.backButton:hover {
+    background: #7f8c8d;
+}
+
+.messageContainer {
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .buttonGroup {
+        flex-direction: column;
+    }
+}

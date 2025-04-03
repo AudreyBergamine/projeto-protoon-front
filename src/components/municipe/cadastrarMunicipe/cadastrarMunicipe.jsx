@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
-import SetCelular from "../services/setCelular";
-import SetCPF from "../services/setCPF";
-import SetCEP from "../services/setCEP";
-import Loading from '../layouts/Loading';
-import Message from '../layouts/Message'
-import URL from '../services/url';
+import SetCelular from "../../services/setCelular";
+import SetCPF from "../../services/setCPF";
+import SetCEP from "../../services/setCEP";
+import Loading from '../../layouts/Loading';
+import Message from '../../layouts/Message';
+import URL from '../../services/url';
+import styles from './cadastrarMunicipe.module.css';
 
-//Função de cadastro de municipe
 function CadastrarMunicipe() {
-  const [message, setMessage] = useState()
-  const [type, setType] = useState()
-  const [removeLoading, setRemoveLoading] = useState(true)
+  const [message, setMessage] = useState();
+  const [type, setType] = useState();
+  const [removeLoading, setRemoveLoading] = useState(true);
   const [cpfValid, setCpfValid] = useState(false);
-  const [endereco, setEndereco] = useState();
   const [alert, setAlert] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
   const navigate = useNavigate();
 
   const axiosInstance = axios.create({
-    baseURL: URL, // Adjust the base URL as needed
-    withCredentials: true, // Set withCredentials to true
+    baseURL: URL,
+    withCredentials: true,
   });
-  //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
+
   const [formData, setFormData] = useState({
     nome: "",
     email: "",
@@ -54,52 +55,7 @@ function CadastrarMunicipe() {
     setCpfValid(isCpfValid);
   };
 
-  useEffect(() => {
-    setEndereco('num_cep')
-  }, []);
-
-  const formatValue = (value) => {
-    // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem separados da palavra
-    return value.toLowerCase().replace(/( de | da | do | das | dos )/g, (match) => match.toLowerCase())
-      .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase())
-      .replace(/(à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ)\w/g, (match) => match.toLowerCase())
-  };
-
-
-  //Esta função tem o propósito de inserir valores nos dados acima, que estão vázios.
-  const handleChange = (e) => {
-    //A lista abaixo contém o nome de todos os campos que há em endereço
-    const enderecoFields = ['tipo_endereco', 'num_cep', 'logradouro', 'nome_endereco', 'num_endereco', 'complemento', 'bairro', 'cidade', 'estado', 'pais'];
-
-    const { name, value } = e.target;
-
-    let formattedValue = formatValue(value);
-
-    if (enderecoFields.includes(name)) {//Caso em um formulário contenha algum nome da lista, então será alterado o valor do objeto endereco
-      setFormData({
-        ...formData,
-        endereco: {
-          ...formData.endereco,
-          [name]: formattedValue
-        }
-      });
-
-    } else {//Caso não, será atualizado o campo municipe (todos os outros campos).
-      if (name === 'email') {
-        setFormData({
-          ...formData,
-          [name]: value.toLowerCase() // Formata o email para minúsculas
-        })
-      } else {
-        setFormData({
-          ...formData,
-          [name]: formattedValue
-        });
-      }
-    };
-  }
-
-  const handleEnderecoChange = (logradouro, bairro, cidade, estado, pais) => {
+  const handleEnderecoChange = (logradouro, bairro, cidade, estado) => {
     setFormData({
       ...formData,
       endereco: {
@@ -111,6 +67,42 @@ function CadastrarMunicipe() {
         pais: "Brasil"
       }
     });
+  };
+
+  const formatValue = (value) => {
+    return value.toLowerCase()
+      .replace(/( de | da | do | das | dos )/g, (match) => match.toLowerCase())
+      .replace(/\b(?!de |da |do |das |dos )\w/g, (char) => char.toUpperCase())
+      .replace(/(à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ)\w/g, (match) => match.toLowerCase());
+  };
+
+  const handleChange = (e) => {
+    const enderecoFields = ['tipo_endereco', 'num_cep', 'logradouro', 'nome_endereco', 'num_endereco', 'complemento', 'bairro', 'cidade', 'estado', 'pais'];
+    const { name, value } = e.target;
+
+    let formattedValue = formatValue(value);
+
+    if (enderecoFields.includes(name)) {
+      setFormData({
+        ...formData,
+        endereco: {
+          ...formData.endereco,
+          [name]: formattedValue
+        }
+      });
+    } else {
+      if (name === 'email') {
+        setFormData({
+          ...formData,
+          [name]: value.toLowerCase()
+        });
+      } else {
+        setFormData({
+          ...formData,
+          [name]: formattedValue
+        });
+      }
+    }
   };
 
   const handleChangePais = (pais) => {
@@ -136,83 +128,72 @@ function CadastrarMunicipe() {
     }
   };
 
-
-  //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
   const handleSubmit = async (e) => {
-    if (isSubmitting) {
-      console.log("Duplo Click detectado!")
-      return; // Impede chamadas 
-    }
-    setIsSubmitting(true)
-    setTimeout(() => setIsSubmitting(false), 1000); // Reativa após 1s
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     e.preventDefault();
     if (!cpfValid) {
-      setMessage('Cpf Inválido')
-      return
+      setMessage('CPF Inválido');
+      setType('error');
+      return;
     }
 
-    setMessage('')
+    setMessage('');
 
-    // Verifica se a data de nascimento é menos de 5 anos da data atual
     const birthDate = moment(formData.data_nascimento);
     const currentDate = moment();
     const diffYears = currentDate.diff(birthDate, 'years');
     if (diffYears < 5) {
-      setMessage('Idade minima requirida é de 5 anos');
+      setMessage('Idade mínima requerida é de 5 anos');
       setType('error');
       return;
     }
+
     try {
       const formattedDate = moment(formData.data_nascimento).format('YYYY-MM-DD');
-      const response = await axiosInstance.post('/protoon/auth/register/municipe', {
-        ...formData, // Inclua todos os dados do formData
-        data_nascimento: formattedDate, // Substitua o campo data_nascimento formatado
-
+      await axiosInstance.post('/protoon/auth/register/municipe', {
+        ...formData,
+        data_nascimento: formattedDate,
       });
 
-      setRemoveLoading(false)
+      setRemoveLoading(false);
+      setPopupMessage('Cadastro realizado com sucesso!');
+      setShowPopup(true);
+
       setTimeout(() => {
-        console.log(response.data);
-        setRemoveLoading(true)
-        setMessage('Cadastro feito com Sucesso! Redirecionando...')
-        setType('success')
-        setTimeout(() => {
-          navigate('/login');
-        }, 3000)
-      }, 3000)
+        setRemoveLoading(true);
+        setMessage('Redirecionando para login...');
+        setType('success');
+        setTimeout(() => navigate('/login'), 2000);
+      }, 2000);
     } catch (error) {
-      setRemoveLoading(false)
+      setRemoveLoading(false);
       setTimeout(() => {
-        setRemoveLoading(true)
+        setRemoveLoading(true);
         console.error('Erro ao enviar os dados:', error);
-        if (error.response && error.response.data && error.response.data.message) {
-          setMessage(error.response.data.message); // Exibir a mensagem de erro do servidor
+        if (error.response?.data?.message) {
+          setMessage(error.response.data.message);
         } else {
-          setMessage('Falha ao tentar fazer o Cadastro!'); // Se não houver mensagem de erro específica, exibir uma mensagem genérica
+          setMessage('Falha ao tentar fazer o cadastro!');
         }
-        setType('error')
-      }, 3000)
-    }    
-  }
+        setType('error');
+      }, 2000);
+    } finally {
+      setTimeout(() => setIsSubmitting(false), 1000);
+    }
+  };
 
-  const sendToLogin = async () => {
-    navigate("/login")
-  }
-
-
-
-  //Por fim é retornado o html para ser exibido no front end, junto com as funções acima.
   return (
+    <div className={styles.container}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.formSection}>
+          <h3 className={styles.sectionTitle}>Dados Pessoais</h3>
 
-    <form onSubmit={handleSubmit}>
-      <div style={{ paddingBottom: '100px' }}>
-
-        <h3>Dados Pessoais</h3>
-        <div className="register-form">
-          <div className="input-container">
-
-            <div>
-              <label>Nome:</label><br></br>
+          <div className={styles.inputGroup}>
+            
+            <div className={styles.inputField}>
+              <label>Nome:</label>
               <input
                 type="text"
                 name="nome"
@@ -224,8 +205,8 @@ function CadastrarMunicipe() {
               />
             </div>
 
-            <div>
-              <label>Email:</label><br></br>
+            <div className={styles.inputField}>
+              <label>Email:</label>
               <input
                 type="email"
                 name="email"
@@ -237,8 +218,8 @@ function CadastrarMunicipe() {
               />
             </div>
 
-            <div>
-              <label>Senha:</label><br></br>
+            <div className={styles.inputField}>
+              <label>Senha:</label>
               <input
                 type="password"
                 name="senha"
@@ -250,9 +231,9 @@ function CadastrarMunicipe() {
             </div>
           </div>
 
-          <div className="input-container">
-            <div>
-              <label>Número do CPF:</label><br></br>
+          <div className={styles.inputGroup}>
+            <div className={styles.inputField}>
+              <label>CPF:</label>
               <SetCPF
                 cpfValido={handleCpfValidChange}
                 onCPFChange={(formattedCPF) => {
@@ -261,16 +242,17 @@ function CadastrarMunicipe() {
               />
             </div>
 
-            <div>
-              <label>Celular:</label><br></br>
-              <SetCelular onCelularChange={(formattedCelular) => {
-                setFormData({ ...formData, celular: formattedCelular })
-              }}
+            <div className={styles.inputField}>
+              <label>Celular:</label>
+              <SetCelular
+                onCelularChange={(formattedCelular) => {
+                  setFormData({ ...formData, celular: formattedCelular })
+                }}
               />
             </div>
 
-            <div>
-              <label>Data de Nascimento:</label><br></br>
+            <div className={styles.inputField}>
+              <label>Data de Nascimento:</label>
               <input
                 type="date"
                 name="data_nascimento"
@@ -279,16 +261,17 @@ function CadastrarMunicipe() {
                 required
               />
             </div>
-
           </div>
         </div>
-        <hr></hr>
-        <h3>Endereço</h3>
-        <div className="register-form">
-          <div className="input-container">
 
-            <div>
-              <label>Número do CEP:</label><br></br>
+        <div className={styles.divider} />
+
+        <div className={styles.formSection}>
+          <h3 className={styles.sectionTitle}>Endereço</h3>
+
+          <div className={styles.inputGroup}>
+            <div className={styles.inputField}>
+              <label>CEP:</label>
               <SetCEP
                 onAlertChange={handleAlertChange}
                 onEnderecoChange={handleEnderecoChange}
@@ -303,8 +286,9 @@ function CadastrarMunicipe() {
                 }}
               />
             </div>
-            <div>
-              <label>Endereço:</label><br></br>
+
+            <div className={styles.inputField}>
+              <label>Logradouro:</label>
               <input
                 type="text"
                 name="logradouro"
@@ -312,25 +296,13 @@ function CadastrarMunicipe() {
                 value={formData.endereco.logradouro}
                 onChange={handleChange}
                 required
-                readOnly={alert === '' ? true : false}
-                className={alert === '' ? 'readonly-bg' : ""}
+                readOnly={alert === ''}
+                className={alert === '' ? styles.readOnly : ''}
               />
             </div>
-            {/* <div> */}
-            {/* TODO: Ocultar esse trecho para o usuário e deixar nullable */}
-            {/* <label>Nome Endereço:</label><br></br> 
-              <input
-                type="text"
-                name="nome_endereco"
-                placeholder="Ex.: Marechael Teodoro"
-                value={formData.endereco.nome_endereco}
-                onChange={handleChange}
-                required
-                minLength={3}
-              /> */}
-            {/* </div> */}
-            <div>
-              <label>Número:</label><br></br>
+
+            <div className={styles.inputField}>
+              <label>Número:</label>
               <input
                 type="number"
                 name="num_endereco"
@@ -341,23 +313,22 @@ function CadastrarMunicipe() {
                 min={1}
               />
             </div>
-            <div>
-              <label>Complemento:</label><br></br>
+          </div>
+
+          <div className={styles.inputGroup}>
+            <div className={styles.inputField}>
+              <label>Complemento:</label>
               <input
                 type="text"
                 name="complemento"
-                placeholder="Bloco / Nº do Apartamento / Fundos..."
+                placeholder="Bloco / Apartamento..."
                 value={formData.endereco.complemento}
                 onChange={handleChange}
               />
             </div>
-          </div>
-        </div>
 
-        <div className="register-form">
-          <div className="input-container">
-            <div>
-              <label>Tipo de Endereço:</label><br></br>
+            <div className={styles.inputField}>
+              <label>Tipo:</label>
               <input
                 type="text"
                 name="tipo_endereco"
@@ -369,8 +340,8 @@ function CadastrarMunicipe() {
               />
             </div>
 
-            <div>
-              <label>Bairro:</label><br></br>
+            <div className={styles.inputField}>
+              <label>Bairro:</label>
               <input
                 type="text"
                 name="bairro"
@@ -379,13 +350,15 @@ function CadastrarMunicipe() {
                 onChange={handleChange}
                 required
                 minLength={2}
-                readOnly={alert === '' ? true : false}
-                className={alert === '' ? 'readonly-bg' : ""}
+                readOnly={alert === ''}
+                className={alert === '' ? styles.readOnly : ''}
               />
             </div>
+          </div>
 
-            <div>
-              <label>Cidade:</label><br></br>
+          <div className={styles.inputGroup}>
+            <div className={styles.inputField}>
+              <label>Cidade:</label>
               <input
                 type="text"
                 name="cidade"
@@ -394,13 +367,13 @@ function CadastrarMunicipe() {
                 onChange={handleChange}
                 required
                 minLength={2}
-                readOnly={alert === '' ? true : false}
-                className={alert === '' ? 'readonly-bg' : ""}
+                readOnly={alert === ''}
+                className={alert === '' ? styles.readOnly : ''}
               />
             </div>
 
-            <div>
-              <label>Estado:</label><br></br>
+            <div className={styles.inputField}>
+              <label>Estado:</label>
               <input
                 type="text"
                 name="estado"
@@ -409,20 +382,20 @@ function CadastrarMunicipe() {
                 onChange={handleChange}
                 required
                 minLength={2}
-                readOnly={alert === '' ? true : false}
-                className={alert === '' ? 'readonly-bg' : ""}
+                readOnly={alert === ''}
+                className={alert === '' ? styles.readOnly : ''}
               />
             </div>
 
-            <div>
-              <label>País:</label><br></br>
+            <div className={styles.inputField}>
+              <label>País:</label>
               <input
                 type="text"
                 name="pais"
                 placeholder="Ex.: Brasil"
-                value={formData.endereco.pais ? formData.endereco.pais : ""}
-                readOnly={alert === '' ? true : false}
-                className={alert === '' ? 'readonly-bg' : ""}
+                value={formData.endereco.pais || ""}
+                readOnly={alert === ''}
+                className={alert === '' ? styles.readOnly : ''}
                 onChange={(e) => handleChangePais(e.target.value)}
                 required
                 minLength={3}
@@ -430,17 +403,43 @@ function CadastrarMunicipe() {
             </div>
           </div>
         </div>
-        {message && <Message type={type} msg={message} />}
-        {!removeLoading && <Loading />}
-        {removeLoading && <div style={{ marginTop: -30 }}>
-          <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
-          <button className="btn-log" onClick={sendToLogin}>Voltar</button>
-        </div>}
-      </div>
-      <footer className="footer">
-        © 2024 Proto-on. Todos os direitos reservados.
+
+        <div className={styles.formActions}>
+          {message && <Message type={type} msg={message} />}
+          {!removeLoading && <Loading />}
+
+          {removeLoading && (
+            <>
+              <button
+                type="submit"
+                className={styles.primaryButton}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Cadastrando...' : 'Cadastrar-se'}
+              </button>
+              <button
+                type="button"
+                className={styles.secondaryButton}
+                onClick={() => navigate("/login")}
+              >
+                Voltar para Login
+              </button>
+            </>
+          )}
+        </div>
+      </form>
+
+      <footer className={styles.footer}>
+        © {new Date().getFullYear()} Proto-on. Todos os direitos reservados.
       </footer>
-    </form>
+
+      {/* Popup de sucesso */}
+      <div className={`${styles.popup} ${showPopup ? styles.showPopup : ''}`}>
+        <div className={styles.popupContent}>
+          <span>{popupMessage}</span>
+        </div>
+      </div>
+    </div>
   );
 }
 
