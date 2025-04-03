@@ -30,14 +30,14 @@ function PaginaInicialCoordenador() {
           if (protocolo.data_protocolo && protocolo.prazoConclusao !== null) {
             const dataProtocolo = new Date(protocolo.data_protocolo); // Converter para Date
             const prazoEmMilissegundos = protocolo.prazoConclusao * 24 * 60 * 60 * 1000; // Converter dias para ms
-            const dataLimite = new Date(dataProtocolo.getTime() + prazoEmMilissegundos); // Data final do prazo
+            const dataLimite = new Date(protocolo.prazoConclusao);   // Data final do prazo
 
             const agora = new Date();
             const prazoRestante = Math.ceil((dataLimite - agora) / (1000 * 60 * 60 * 24)); // Converter ms para dias
 
             return { ...protocolo, prazoRestante };
           }
-          return protocolo;
+          return { ...protocolo, prazoRestante: null };
         });
 
         setProtocolos(protocolosAtualizados);
@@ -59,7 +59,7 @@ function PaginaInicialCoordenador() {
 
         // Verifica se o prazo restante é menor que 3 dias e exibe o alerta vermelho
         const prazoMenorQue3Dias = protocolosAtualizados.some(
-          (protocolo) => protocolo.prazoRestante < 4 && protocolo.prazoRestante > 0
+          (protocolo) => protocolo.prazoRestante < 4
         );
 
         if (prazoMenorQue3Dias) {

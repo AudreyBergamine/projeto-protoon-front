@@ -142,9 +142,9 @@ function SolicitarServico() {
             <div className="register-form">
               <div className="input-container">
                 <div>
-                  <label>Problema:</label><br />
+                  <label style={{ textAlign: 'center' }}>Problema:</label><br />
                   <select
-                    style={{ fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center" }}
+                    style={{ width: '40%', fontSize: 20, padding: 10, paddingBottom: 0, borderRadius: 10, textAlign: "center" }}
                     name="assunto"
                     value={formData.assunto}
                     onChange={handleChange}
@@ -160,7 +160,7 @@ function SolicitarServico() {
             <div className="register-form">
               <div className="input-container">
                 <div>
-                  <label>Descrição</label><br />
+                  <label style={{ textAlign: 'center' }}>Descrição</label><br />
                   <textarea style={{ width: 600, padding: 20, borderRadius: 10 }}
                     name="descricao"
                     rows="5"
@@ -174,7 +174,7 @@ function SolicitarServico() {
             <div className="register-form">
               <div className="input-container">
                 <div>
-                  <label style={{ marginLeft: 30, marginTop: 20 }}>Valor do Serviço</label><br />
+                  <label style={{ marginLeft: 30, marginTop: 20, textAlign: 'center' }}>Valor do Serviço</label><br />
                   <input
                     type="text"
                     name="valor"
@@ -194,7 +194,7 @@ function SolicitarServico() {
           </div>
           {removeLoading && <div style={{ marginTop: -30 }}>
             {message && <Message type={type} msg={message} />}
-            <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Confirmar</button>
+            <button type="submit" className="btn-cad" style={{ marginRight: '100px', marginTop: '10%' }}>Confirmar</button>
             <button className="btn-log" onClick={() => navigate('/paginaInicial')}>Voltar</button>
           </div>}
           {!removeLoading && <Loading />}

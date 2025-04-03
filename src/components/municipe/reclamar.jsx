@@ -142,9 +142,9 @@ function Reclamar() {
             <div className="register-form">
               <div className="input-container">
                 <div>
-                  <label>Problema:</label><br />
+                   <label style={{ textAlign: 'center' }}>Problema:</label><br />
                   <select
-                    style={{ fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center" }}
+                    style={{ width: '40%', fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center", paddingBottom: 0 }}
                     name="assunto"
                     value={formData.assunto}
                     onChange={handleChange}
@@ -160,8 +160,8 @@ function Reclamar() {
             <div className="register-form">
               <div className="input-container">
                 <div>
-                  <label>Descrição</label><br />
-                  <textarea style={{ width: 600, padding: 20, borderRadius: 10 }}
+                   <label style={{ textAlign: 'center' }}>Descrição</label><br />
+                  <textarea style={{ width: 600, padding: 20, borderRadius: 10, marginBottom: 30 }}
                     name="descricao"
                     rows="5"
                     placeholder="Ex.: Buraco em minha rua, com risco de acidentes"
