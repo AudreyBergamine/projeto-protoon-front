@@ -9,6 +9,7 @@
     position: fixed;
     top: 0;
     width: 95vw;
+    z-index: 1000;
 }
 
 .logoContainer {

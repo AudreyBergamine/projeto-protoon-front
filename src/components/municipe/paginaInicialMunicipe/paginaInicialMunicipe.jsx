@@ -52,9 +52,9 @@ function PaginaInicialMunicipe() {
       </main>
 
       {/* Rodapé */}
-      <footer className={styles.footer}>
+      {/* <footer className={styles.footer}>
         <p>© {new Date().getFullYear()} Prefeitura Municipal - Todos os direitos reservados</p>
-      </footer>
+      </footer> */}
     </div>
   );
 }
