@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import Loading from '../layouts/Loading';
-import Message from '../layouts/Message';
-import URL from '../services/url';
+import Loading from '../../layouts/Loading';
+import Message from '../../layouts/Message';
+import URL from '../../services/url';
 
 function Reclamar() {
   const navigate = useNavigate();

@@ -49,7 +49,6 @@ function App() {
       <div className="App">
         <Header isAuthenticated={isAuthenticated} role={role} />
         {<AppRoutes isAuthenticated={isAuthenticated} role={role} />}
-        <Footer />
       </div>
     </Router>
   );
