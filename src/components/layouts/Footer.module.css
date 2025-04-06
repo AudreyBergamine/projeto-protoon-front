@@ -1,7 +1,15 @@
 .footer {
+    width: 100vw;
+    height: 20px;    
     background: #2c3e50;
     color: white;
     text-align: center;
-    padding: 1rem;
     margin-top: 2rem;
+    position: fixed;
+    bottom: 0;
+}
+
+.footer p {
+    margin-top: -1px;
+    justify-content: center;
 }
