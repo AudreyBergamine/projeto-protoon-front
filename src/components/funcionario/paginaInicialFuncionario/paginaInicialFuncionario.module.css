@@ -7,6 +7,22 @@
     background-color: #f5f7fa;
 }
 
+/* Alerta de prazo */
+.alerta {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    font-size: 30px;
+    cursor: pointer;
+    color: transparent;
+    transition: color 0.3s ease;
+    z-index: 1000;
+}
+
+.alerta:hover {
+    opacity: 0.8;
+}
+
 /* Conteúdo principal */
 .mainContent {
     flex: 1;
@@ -89,26 +105,6 @@
 
 .cardButton:hover {
     background: #2980b9;
-}
-
-/* Alerta */
-.alerta {
-    position: fixed;
-    top: 170px;
-    right: 120px;
-    font-size: 30px;
-    cursor: pointer;
-    color: transparent;
-    transition: color 0.3s ease;
-    z-index: 1000;
-}
-
-.alertaAmarelo {
-    color: yellow;
-}
-
-.alertaVermelho {
-    color: red;
 }
 
 /* Responsividade */

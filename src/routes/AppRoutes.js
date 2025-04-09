@@ -20,8 +20,8 @@ import ReclamacoesRetornadasMunicipe from '../components/municipe/reclamacoesRet
 import TodasDevolutivas from '../components/gerais/todasDevolutivas';
 import CadastrarFuncionario from '../components/secretario/cadastrarFuncionarios';
 import ListarFuncionarios from '../components/secretario/listarFuncionarios';
-import ListarProtocolosBySecretaria from '../components/gerais/listarProtocolos';
-import AnalisarProtocolos from '../components/gerais/analisarProtocolos';
+import ListarProtocolosBySecretaria from '../components/gerais/listarProtocolos/listarProtocolos';
+import AnalisarProtocolos from '../components/gerais/analisarProtocolo/analisarProtocolos';
 import AnalisarFuncionarios from '../components/secretario/analisarFuncionarios';
 import PerfilSecretario from '../components/secretario/perfilSecretario';
 import PerfilCoordenador from '../components/coordenador/perfilCoord';

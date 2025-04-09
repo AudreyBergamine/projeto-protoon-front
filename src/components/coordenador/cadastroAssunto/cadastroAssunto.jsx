@@ -89,7 +89,7 @@ const CadastroAssunto = () => {
 
         } catch (error) {
             console.error('Erro ao cadastrar o assunto:', error);
-            setError('Erro ao cadastrar o assunto.');
+            setError('Erro ao cadastrar o assunto. Por favor, tente novamente.');
         } finally {
             setLoading(false);
         }
@@ -99,7 +99,7 @@ const CadastroAssunto = () => {
         <div className={styles.containerPrincipal}>
             <div className={styles.containerSecundario}>
                 <h1>Cadastro de Assunto</h1>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {error && <p className={styles.errorMessage}>{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className={styles.containerTerciario}>
                         <label>
@@ -120,6 +120,8 @@ const CadastroAssunto = () => {
                                 value={formData.valor_protocolo}
                                 onChange={handleChange}
                                 required
+                                min="0"
+                                step="0.01"
                             />
                         </label>
                         <label>
@@ -155,8 +157,12 @@ const CadastroAssunto = () => {
                             </select>
                         </label>
                     </div>
-                    <button type="submit" style={{ width: 150 }} className={styles.btnLog} disabled={loading}>
-                        {loading ? 'Cadastrado' : 'Cadastrar'}
+                    <button
+                        type="submit"
+                        className={`${styles.btnLog} ${loading ? styles.loading : ''}`}
+                        disabled={loading}
+                    >
+                        {loading ? '' : 'Cadastrar'}
                     </button>
                 </form>
 

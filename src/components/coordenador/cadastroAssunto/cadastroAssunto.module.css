@@ -1,171 +1,168 @@
+/* Estilos principais do container */
 .containerPrincipal {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: -20px;
-    height: 75vh;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    padding: 20px;
 }
 
 .containerSecundario {
-    background-color: #f7f6f2;
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
     width: 100%;
-    max-width: 500px;
-    place-items: center;
-    justify-content: center;
-    height: 75vh;
+    max-width: 800px;
 }
 
-.containerTerciario {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    align-items: flex-start;
-    width: 100%;
-}
-
-h1 {
-    padding-top: 10px;
+.containerSecundario h1 {
     text-align: center;
-    color: #4A90E2;
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-/* Estilo do formulário */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    place-items: center;
-}
-
-/* Estilo das labels */
-label {
-    width: 1000px;
-    font-size: 16px;
     color: #333;
-    margin-bottom: 10px;
+    margin-bottom: 40px;
 }
 
-input {
-    width: 270px;
-    height: 40px;
-    font-size: 14px;
-    padding: 12px;
+/* Estilos do formulário */
+.containerTerciario {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+    .containerTerciario {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+.containerTerciario label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-weight: 500;
+    color: #555;
+}
+
+.containerTerciario input{
+    padding: 12px 15px;
     border: 1px solid #ddd;
-    border-radius: 8px;
-    box-sizing: border-box;
-    background-color: #fafafa;
-    transition: all 0.3s ease;
-}
-
-/* Estilo dos campos de entrada */
-select {
-    width: 270px;
-    height: 40px;
-    font-size: 14px;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-sizing: border-box;
-    background-color: #fafafa;
-    transition: all 0.3s ease;
-}
-
-input:focus,
-select:focus {
-    border-color: #4A90E2;
-    outline: none;
-    background-color: #eaf2f8;
-}
-
-/* Estilo do botão */
-.btnLog {
-    color: white;
-    font-size: 16px;
-    padding: 5px;
-    text-align: center;
-    width: 100px;
-    height: 50px;
-    cursor: pointer;
     border-radius: 5px;
-    background-color: #2D9596 !important;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+
+
+
+
+.containerTerciario select {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.containerTerciario input:focus,
+.containerTerciario select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Estilos do botão */
+.formActions {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btnLog {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: auto;
+    min-width: 150px;
 }
 
 .btnLog:hover {
-    background-color: #20696a !important;
+    background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
-.btnLog:focus {
-    outline: none;
+.btnLog:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+    opacity: 0.7;
 }
 
+/* Estilos para o estado de loading */
+.btnLog.loading {
+    position: relative;
+    color: transparent;
+    padding-right: 40px;
+}
 
+.btnLog.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
 
-@keyframes slideIn {
-    from {
-        right: -300px;
-        opacity: 0;
-    }
-
+@keyframes spin {
     to {
-        right: 20px;
-        opacity: 1;
+        transform: translateY(-50%) rotate(360deg);
     }
 }
 
-@keyframes slideOut {
-    from {
-        right: 20px;
-        opacity: 1;
-    }
-
-    to {
-        right: -300px;
-        opacity: 0;
-    }
-}
-
-
+/* Estilos do popup */
 .popup {
     position: fixed;
     top: 20px;
-    right: -300px;
-    background-color: #4CAF50;
+    right: 20px;
+    background-color: #28a745;
     color: white;
     padding: 15px 25px;
-    border-radius: 4px;
+    border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateX(150%);
+    transition: transform 0.3s ease-in-out;
     z-index: 1000;
-    font-weight: bold;
-    transition: all 0.5s ease;
-    opacity: 0;
-}
-
-.popup.hide {
-    animation: slideOut 0.5s forwards;
 }
 
 .popup.show {
-    right: 20px;
-    opacity: 1;
-    animation: none;
-    /* Remove qualquer animação prévia */
+    transform: translateX(0);
 }
 
-/* Opcional: animação de fade out quando desaparece */
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-    }
-
-    to {
-        opacity: 0;
-    }
-}
-
-.popup:not(.show) {
-    animation: fadeOut 0.5s ease;
+/* Estilos para mensagens de erro */
+.errorMessage {
+    color: #dc3545;
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
 }

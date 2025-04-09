@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Loading from '../layouts/Loading';
-import Message from '../layouts/Message'
-import URL from '../services/url';
-import TodasDevolutivas from "./todasDevolutivas";
-import ConfirmationDialog from '../layouts/ConfirmationDialog';
-import './css/analisarProtocolos.css';
+import Loading from '../../layouts/Loading';
+import Message from '../../layouts/Message'
+import URL from '../../services/url';
+import TodasDevolutivas from "../todasDevolutivas";
+import ConfirmationDialog from '../../layouts/ConfirmationDialog';
+import styles from './analisarProtocolos.module.css';
 
 function AnalisarProtocolos() {
   const navigate = useNavigate()
@@ -352,16 +352,18 @@ function AnalisarProtocolos() {
     "Outro"
   ];
 
+
   return (
     <>
-      {message ? <div className="message-container"><Message type={type} msg={message} /></div> :
-        <div className="container">
+      {message ? <div className={styles.messageContainer}><Message type={type} msg={message} /></div> :
+        <div className={styles.container}>
           <h1>Detalhes do Protocolo</h1>
 
           {(role === "COORDENADOR" || role === "FUNCIONARIO") && (
-            <div className="secretaria-container">
+            <div className={styles.secretariaContainer}>
               <h3>Secretaria</h3>
               <select
+                className={styles.secretariaSelect}
                 value={idSecretariaSelecionada}
                 onChange={handleSecretariaChange}
               >
@@ -376,9 +378,9 @@ function AnalisarProtocolos() {
                   ))}
               </select>
               {role === "FUNCIONARIO" ? (
-                <button className="btn-log" onClick={solicitarRedirecionar}>Solicitar Redirecionamento Protocolo</button>
+                <button className={styles.btnLog} onClick={solicitarRedirecionar}>Solicitar Redirecionamento Protocolo</button>
               ) : (
-                <button className="btn-log" onClick={redirectProtocolo}>Redirecionar Protocolo</button>
+                <button className={styles.btnLog} onClick={redirectProtocolo}>Redirecionar Protocolo</button>
               )}
 
               {!removeLoading && <Loading />}
@@ -391,9 +393,9 @@ function AnalisarProtocolos() {
             </div>
           )}
 
-          <fieldset className="protocolo-fieldset">
-            <legend>Protocolo</legend>
-            <table>
+          <fieldset className={styles.protocoloFieldset}>
+            <legend className={styles.fieldsetLegend}>Protocolo</legend>
+            <table className={styles.table}>
               <thead>
                 <tr>
                   <th>Assunto</th>
@@ -441,17 +443,17 @@ function AnalisarProtocolos() {
             </table>
           </fieldset>
 
-          <fieldset className="descricao-fieldset">
-            <legend>Descrição do problema</legend>
-            <div className="descricao-container">
+          <fieldset className={styles.descricaoFieldset}>
+            <legend className={styles.fieldsetLegend}>Descrição do problema</legend>
+            <div className={styles.descricaoContainer}>
               {protocolo.descricao}
             </div>
           </fieldset>
 
           {devolutivaMaisRecente && (
-            <fieldset className="devolutiva-fieldset">
-              <legend>Devolutiva Mais Recente</legend>
-              <table>
+            <fieldset className={styles.devolutivaFieldset}>
+              <legend className={styles.fieldsetLegend}>Devolutiva Mais Recente</legend>
+              <table className={styles.table}>
                 <thead>
                   <td><p>Data e Hora</p></td>
                   <td><p>Funcionário</p></td>
@@ -465,19 +467,19 @@ function AnalisarProtocolos() {
                   </tr>
                 </tbody>
               </table>
-              <div className="devolutiva-texto">
+              <div className={styles.devolutivaTexto}>
                 <p>
                   {devolutivaMaisRecente.devolutiva ? devolutivaMaisRecente.devolutiva : 'N/A'}
                 </p>
               </div>
-              <button onClick={HistoricoDevolutivas} style={{width:'150px'}}>Historico de devolutivas</button>
+              <button onClick={HistoricoDevolutivas} style={{ width: '150px' }}>Historico de devolutivas</button>
             </fieldset>
           )}
 
           {protocolo.secretaria ? (
-            <fieldset className="secretaria-fieldset">
-              <legend>Secretaria</legend>
-              <table>
+            <fieldset className={styles.secretariaFieldset}>
+              <legend className={styles.fieldsetLegend}>Secretaria</legend>
+              <table className={styles.table}>
                 <thead>
                   <tr>
                     <td><p>Nome</p></td>
@@ -500,9 +502,9 @@ function AnalisarProtocolos() {
             </fieldset>
           ) : null}
 
-          <fieldset className="municipe-fieldset">
-            <legend>Municipe</legend>
-            <table>
+          <fieldset className={styles.municipeFieldset}>
+            <legend className={styles.fieldsetLegend}>Municipe</legend>
+            <table className={styles.table}>
               <thead>
                 <td><p>Nome</p></td>
                 <td><p>Email</p></td>
@@ -524,9 +526,9 @@ function AnalisarProtocolos() {
             </table>
           </fieldset>
 
-          <fieldset className="endereco-fieldset">
-            <legend>Endereço do Protocolo</legend>
-            <table>
+          <fieldset className={styles.enderecoFieldset}>
+            <legend className={styles.fieldsetLegend}>Endereço do Protocolo</legend>
+            <table className={styles.table}>
               <thead>
                 <td><p>CEP</p></td>
                 <td><p>Logradouro</p></td>
@@ -552,10 +554,11 @@ function AnalisarProtocolos() {
             </table>
           </fieldset>
 
-          <fieldset className="devolutiva-fieldset">
-            <legend>Escreva sua devolutiva</legend>
-            <div className="devolutiva-textarea-container">
+          <fieldset className={styles.devolutivaFieldset}>
+            <legend className={styles.fieldsetLegend}>Escreva sua devolutiva</legend>
+            <div className={styles.devolutivaTextareaContainer}>
               <textarea
+                className={styles.devolutivaTextarea}
                 value={devolutiva}
                 onChange={enviarDevolutiva}
                 placeholder="Digite sua devolutiva para poder enviar as alterações..."
@@ -569,7 +572,7 @@ function AnalisarProtocolos() {
 
           {removeLoading && (
             <>
-              <button className="btn-log" onClick={voltarAnterior} style={{ opacity: mensagemAtiva ? 0.6 : 1 }}>Voltar</button>
+              <button className={styles.btnLog} onClick={voltarAnterior} style={{ opacity: mensagemAtiva ? 0.6 : 1 }}>Voltar</button>
             </>
           )}
 
@@ -577,10 +580,11 @@ function AnalisarProtocolos() {
       }
       <div>
         {mostrarModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h2>Motivo da Recusa</h2>
+          <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}>
+              <h2 className={styles.modalTitle}>Motivo da Recusa</h2>
               <select
+                className={styles.modalSelect}
                 value={motivoRecusa}
                 onChange={(e) => setMotivoRecusa(e.target.value)}
               >
@@ -589,7 +593,7 @@ function AnalisarProtocolos() {
                   <option key={index} value={motivo}>{motivo}</option>
                 ))}
               </select>
-              <div className="modal-buttons">
+              <div className={styles.modalButtons}>
                 <button onClick={handleConfirmarMotivo}>Confirmar</button>
                 <button onClick={() => setMostrarModal(false)}>
                   Cancelar
@@ -602,5 +606,4 @@ function AnalisarProtocolos() {
     </>
   );
 }
-
 export default AnalisarProtocolos;

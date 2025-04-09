@@ -1,7 +1,7 @@
 import PaginaInicial from "../municipe/paginaInicialMunicipe/paginaInicialMunicipe";
-import PaginaInicialSecretario from "../secretario/paginaInicialSec";
+import PaginaInicialSecretario from "../secretario/paginaInicialSec/paginaInicialSec";
 import PaginaInicialCoordenador from "../coordenador/paginaInicialCoordenador/paginaInicialCoord";
-import PaginaInicialFuncionario from "../funcionario/paginaInicialFuncionario";
+import PaginaInicialFuncionario from "../funcionario/paginaInicialFuncionario/paginaInicialFuncionario";
 import { useNavigate } from "react-router-dom";
 function Home({ isAuthenticated, role }) {
     //TODO: Criar página inicial de funcionário e implementar a lógica abaixo, igual fiz com a de municipe
