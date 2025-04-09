@@ -60,7 +60,7 @@ function Reclamar() {
       setFormData(prevState => ({
         ...prevState,
         idSecretaria: selectedAssunto ? selectedAssunto.secretaria.id_secretaria : null,
-        valor: null
+        valor: selectedAssunto ? selectedAssunto.valor_protocolo : 0
       }));
     }
   };
@@ -142,7 +142,7 @@ function Reclamar() {
             <div className="register-form">
               <div className="input-container">
                 <div>
-                   <label style={{ textAlign: 'center' }}>Problema:</label><br />
+                  <label style={{ textAlign: 'center' }}>Problema:</label><br />
                   <select
                     style={{ width: '40%', fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center", paddingBottom: 0 }}
                     name="assunto"
@@ -160,7 +160,7 @@ function Reclamar() {
             <div className="register-form">
               <div className="input-container">
                 <div>
-                   <label style={{ textAlign: 'center' }}>Descrição</label><br />
+                  <label style={{ textAlign: 'center' }}>Descrição</label><br />
                   <textarea style={{ width: 600, padding: 20, borderRadius: 10, marginBottom: 30 }}
                     name="descricao"
                     rows="5"
@@ -171,7 +171,7 @@ function Reclamar() {
                 </div>
               </div>
             </div>
-            {/* <div className="register-form">
+            {<div className="register-form">
               <div className="input-container">
                 <div>
                   <label style={{ marginLeft: 30, marginTop: 20 }}>Valor do Serviço</label><br />
@@ -187,7 +187,7 @@ function Reclamar() {
                   />
                 </div>
               </div>
-            </div> */}
+            </div>}
           </div>
           {removeLoading && <div style={{ marginTop: -30 }}>
             {message && <Message type={type} msg={message} />}
