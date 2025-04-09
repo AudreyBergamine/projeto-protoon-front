@@ -9,14 +9,20 @@
 
 /* Alerta de prazo */
 .alerta {
-    position: fixed;
-    top: 10px;
-    right: 10px;
+    position: absolute;
+    top: 20%;
+    right: 10%;
     font-size: 30px;
     cursor: pointer;
-    color: transparent;
     transition: color 0.3s ease;
-    z-index: 1000;
+}
+
+.alertaVermelho {
+    color: red;
+}
+
+.alertaAmarelo {
+    color: orange;
 }
 
 .alerta:hover {
