@@ -429,10 +429,6 @@ function CadastrarMunicipe() {
         </div>
       </form>
 
-      <footer className={styles.footer}>
-        © {new Date().getFullYear()} Proto-on. Todos os direitos reservados.
-      </footer>
-
       {/* Popup de sucesso */}
       <div className={`${styles.popup} ${showPopup ? styles.showPopup : ''}`}>
         <div className={styles.popupContent}>

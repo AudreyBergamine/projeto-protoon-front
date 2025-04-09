@@ -8,7 +8,7 @@ function Footer() {
             </footer> */}
             {/* Rodapé */}
             <footer className={styles.footer}>
-                <p>© {new Date().getFullYear()} Prefeitura Municipal - Todos os direitos reservados</p>
+                © {new Date().getFullYear()} Proto-on. Todos os direitos reservados.
             </footer>
         </div>
     );

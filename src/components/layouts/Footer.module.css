@@ -1,15 +1,9 @@
 .footer {
     width: 100vw;
     height: 20px;    
-    background: #2c3e50;
-    color: white;
+    color: black;
     text-align: center;
     margin-top: 2rem;
-    position: fixed;
+    margin-bottom: 1rem;
     bottom: 0;
-}
-
-.footer p {
-    margin-top: -1px;
-    justify-content: center;
 }
