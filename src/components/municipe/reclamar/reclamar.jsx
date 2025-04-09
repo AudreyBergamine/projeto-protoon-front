@@ -171,7 +171,7 @@ function Reclamar() {
                 </div>
               </div>
             </div>
-            {<div className="register-form">
+            {/* {<div className="register-form">
               <div className="input-container">
                 <div>
                   <label style={{ marginLeft: 30, marginTop: 20 }}>Valor do Serviço</label><br />
@@ -185,9 +185,9 @@ function Reclamar() {
                     onChange={handleChange}
                     readOnly
                   />
-                </div>
+                </div> 
               </div>
-            </div>}
+            </div>*/}
           </div>
           {removeLoading && <div style={{ marginTop: -30 }}>
             {message && <Message type={type} msg={message} />}

@@ -1,101 +1,206 @@
 .container {
-  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .title {
+  color: #2c3e50;
   font-size: 2rem;
-  margin-bottom: 20px;
-  color: #2D9596;
+  margin-bottom: 1.5rem;
+  text-align: center;
   font-weight: 600;
 }
 
 .searchInput {
-  padding: 12px;
-  font-size: 16px;
   width: 100%;
-  max-width: 400px;
-  margin-bottom: 20px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
 
 .filtersContainer {
-  margin-top: 10px;
-  margin-bottom: 50px;
-  padding-inline: 50px;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.filtersWrapper {
+  display: flex;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .filterButton {
-  padding: 10px 15px;
-  font-size: 16px;
-  background-color: gray;
-  color: white;
+  padding: 0.6rem 1rem;
   border: none;
+  border-radius: 20px;
+  background-color: #ecf0f1;
+  color: #7f8c8d;
+  font-weight: 500;
   cursor: pointer;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.filterButton:hover {
+  background-color: #d6eaf8;
+  color: #3498db;
 }
 
 .filterButtonActive {
-  background-color: #2D9596;
-}
-
-.table {
-  margin: auto;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.table th,
-.table td {
-  padding: 15px;
-  text-align: center;
-  font-weight: 500;
-}
-
-.table th {
-  background-color: #f4f4f4;
-}
-
-.table td {
-  border-bottom: 1px solid #ddd;
-}
-
-.rowTable {
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.rowTable:hover {
-  background-color: #f9f9f9;
-}
-
-.rowTableRed {
-  background-color: #e74c3c;
+  background-color: #3498db;
   color: white;
 }
 
-.rowTableYellow {
-  background-color: #f39c12;
-  color: black;
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+
+.table th {
+  background-color: #3498db;
+  color: white; 
+  padding: 1rem;
+  text-align: center;
+  font-weight: 500;
+  position: sticky;
+  top: 0;
+}
+
+.table td {
+  padding: 1rem;
+  border-bottom: 1px solid #ecf0f1;
+  color: #34495e;
+}
+
+.rowTable {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.rowTable:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .rowTableNormal {
   background-color: white;
 }
 
+.rowTableYellow {
+  background-color: #fef0be;
+}
+
+.rowTableRed {
+  background-color: #fad4cf;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.statusCONCLUIDO {
+  background-color: #e3f7e8;
+  color: #27ae60;
+}
+
+.statusCANCELADO {
+  background-color: #fdecea;
+  color: #e74c3c;
+}
+
+.statusRECUSADO {
+  background-color: #f5e8e8;
+  color: #c0392b;
+}
+
+.statusPAGAMENTO_PENDENTE {
+  background-color: #fff8e1;
+  color: #f39c12;
+}
+
+.statusEM_ANDAMENTO {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
 .voltarButton {
-  background-color: #2D9596;
+  display: block;
+  margin: 1.5rem auto 0;
+  padding: 0.8rem 1.5rem;
+  background-color: #3498db;
   color: white;
-  padding: 12px 20px;
-  font-size: 16px;
   border: none;
   border-radius: 8px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .voltarButton:hover {
-  background-color: #1d7475;
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  background-color: white;
+  border-radius: 8px;
+  margin-top: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.emptyText {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .filterButton {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
 }

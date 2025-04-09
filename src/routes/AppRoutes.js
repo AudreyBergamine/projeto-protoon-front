@@ -12,7 +12,7 @@ import AtualizarForm from '../components/municipe/atualizarSenha';
 import PaginaInicalMunicipe from '../components/municipe/paginaInicialMunicipe/paginaInicialMunicipe';
 import Reclamar from '../components/municipe/reclamar/reclamar';
 import SolicitarServico from '../components/municipe/solicitarServico';
-import Consultar from '../components/municipe/consultar';
+import Consultar from '../components/municipe/consultar/consultar';
 import SobreNos from '../components/municipe/sobreNos';
 import Contato from '../components/municipe/contato';
 import PerfilMunicipe from '../components/municipe/perfilMunicipe';
