@@ -1,0 +1,38 @@
+/* Scrollbar vertical (principal) */
+::-webkit-scrollbar {
+    width: 5px;    /* Largura da scrollbar vertical */
+
+    height: 5px;    /* Altura da scrollbar horizontal*/
+
+}
+
+/* Track (fundo da scrollbar) */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+/* Thumb (a parte móvel) */
+::-webkit-scrollbar-thumb {
+    background: #3498db;
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+/* Thumb hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #2980b9;
+}
+
+/* Scrollbar horizontal - mais estilizada */
+::-webkit-scrollbar:horizontal {
+    height: 5px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    background: #3498db;
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
+    background: #2980b9;
+}

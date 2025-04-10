@@ -1,8 +1,6 @@
 // import logo from './logo.svg';
 import './style/App.css';
 import './style/home.css';
-import './style/login.css';
-import './style/cadastro.css';
 import './style/menuLogin.css';
 //import './scripts/toast'
 //import './style/toast.css'

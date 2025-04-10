@@ -77,7 +77,7 @@
 
 .table th {
   background-color: #3498db;
-  color: white; 
+  color: white;
   padding: 1rem;
   text-align: center;
   font-weight: 500;
@@ -147,9 +147,16 @@
   color: #1976d2;
 }
 
-.voltarButton {
-  display: block;
-  margin: 1.5rem auto 0;
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.8rem 1.5rem;
   background-color: #3498db;
   color: white;
@@ -160,7 +167,7 @@
   transition: all 0.2s ease;
 }
 
-.voltarButton:hover {
+.button:hover {
   background-color: #2980b9;
   transform: translateY(-2px);
 }

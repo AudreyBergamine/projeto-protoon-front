@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiArrowLeft, FiInbox } from 'react-icons/fi';
 import URL from '../../services/url';
 import { differenceInDays, parseISO } from 'date-fns';
 import styles from './listarProtocolos.module.css';
@@ -256,9 +257,15 @@ function ListarProtocolosBySecretaria() {
         </div>
       )}
 
-      <button className={styles.voltarButton} onClick={voltarIndex}>
-        Voltar
-      </button>
+      <div className={styles.buttonContainer}>
+        <button
+          className={styles.button}
+          onClick={voltarIndex}
+        >
+          <FiArrowLeft />
+          Voltar
+        </button>
+      </div>
     </div>
   );
 }
