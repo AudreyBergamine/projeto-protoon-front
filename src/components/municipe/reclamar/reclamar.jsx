@@ -4,6 +4,8 @@ import axios from 'axios';
 import Loading from '../../layouts/Loading';
 import Message from '../../layouts/Message';
 import URL from '../../services/url';
+import styles from './reclamar.module.css';
+import { FiArrowLeft, FiInbox } from 'react-icons/fi';
 
 function Reclamar() {
   const navigate = useNavigate();
@@ -18,28 +20,23 @@ function Reclamar() {
     valor: 0
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const axiosInstance = axios.create({
-    baseURL: URL, // Adjust the base URL as needed
-    withCredentials: true, // Set withCredentials to true
-  });
-
-  // Recuperar o token do localStorage
-  const token = localStorage.getItem('token');
-
-  // Adicionar o token ao cabeçalho de autorização
-  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   const [assuntos, setAssuntos] = useState([]);
 
-  // Buscar os assuntos do banco de dados
+  const axiosInstance = axios.create({
+    baseURL: URL,
+    withCredentials: true,
+  });
+
+  const token = localStorage.getItem('token');
+  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
   useEffect(() => {
     async function fetchAssuntos() {
       try {
         const response = await axiosInstance.get('/protoon/assuntos');
-        // Atualiza o estado com os assuntos retornados
         setAssuntos(response.data.map(assunto => ({
           ...assunto,
-          valor: assunto.valor_protocolo // Adicionando o campo valor_protocolo como valor
+          valor: assunto.valor_protocolo
         })));
       } catch (error) {
         console.error('Erro ao buscar os assuntos:', error);
@@ -66,39 +63,34 @@ function Reclamar() {
   };
 
   const handleSubmit = async (e) => {
-    if (isSubmitting) {
-      console.log("Duplo Click detectado!")
-      return; // Impede chamadas 
-    }
-    setIsSubmitting(true)
-    setTimeout(() => setIsSubmitting(false), 1000); // Reativa após 1s
     e.preventDefault();
-    // const idMunicipe = localStorage.getItem('idMunicipe');
-    // if (!idMunicipe) {
-    //   console.error('ID do munícipe não encontrado!');
-    //   return;
-    // }
+
+    if (isSubmitting) {
+      console.log("Duplo Click detectado!");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setTimeout(() => setIsSubmitting(false), 1000);
+
     if (formData.assunto === "") {
       setMessage('Selecione um problema');
-      setType('error')
-      setTimeout(() => {
-        setMessage('');
-      }, 3000);
+      setType('error');
+      setTimeout(() => setMessage(''), 3000);
       return;
     }
 
     if (formData.descricao.length < 3) {
       setMessage('Descreva o Problema!');
-      setType('error')
-      setTimeout(() => {
-        setMessage('');
-      }, 3000);
+      setType('error');
+      setTimeout(() => setMessage(''), 3000);
       return;
     }
 
     try {
-      let response; // Variável de resposta (não precisa ser inicializada com string vazia)
-      const currentDate = new Date(); // Obtém a data e hora atuais (fora do `if` para não repetir código)
+      setRemoveLoading(false);
+      const currentDate = new Date();
+      let response;
 
       if (formData.assunto === "Outros") {
         response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos-reclamar-sem-secretaria`, {
@@ -106,7 +98,7 @@ function Reclamar() {
           descricao: formData.descricao,
           status: formData.status,
           valor: formData.valor,
-          data_protocolo: currentDate // Envia a data e hora atuais para data_protocolo
+          data_protocolo: currentDate
         });
       } else {
         response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos-reclamar/${formData.idSecretaria}`, {
@@ -114,90 +106,88 @@ function Reclamar() {
           descricao: formData.descricao,
           status: formData.status,
           valor: formData.valor,
-          data_protocolo: currentDate // Envia a data e hora atuais para data_protocolo
+          data_protocolo: currentDate
         });
       }
 
-      setRemoveLoading(false);
       setTimeout(() => {
-        console.log(response.data);
         setRemoveLoading(true);
-        setMessage('Reclamação bem sucedida! Redirecionando...');
+        setMessage('Reclamação registrada com sucesso! Redirecionando...');
         setType('success');
-        setTimeout(() => {
-          navigate('/');
-        }, 3000);
-      }, 3000);
+        setTimeout(() => navigate('/'), 3000);
+      }, 1000);
     } catch (error) {
       console.error('Erro ao enviar os dados:', error);
+      setRemoveLoading(true);
+      setMessage('Erro ao enviar reclamação. Tente novamente.');
+      setType('error');
     }
   };
 
+  const voltarIndex = () => {
+    navigate("/");
+  };
+
+
   return (
-    <>
-      <div style={{ paddingBottom: '100px' }}>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <h3>Reclame Aqui</h3>
-            <div className="register-form">
-              <div className="input-container">
-                <div>
-                  <label style={{ textAlign: 'center' }}>Problema:</label><br />
-                  <select
-                    style={{ width: '40%', fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center", paddingBottom: 0 }}
-                    name="assunto"
-                    value={formData.assunto}
-                    onChange={handleChange}
-                  >
-                    <option value="">Selecione um problema</option>
-                    {assuntos.map(assunto => (
-                      <option key={assunto.id_assunto} value={assunto.assunto}>{assunto.assunto}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div><br />
-            <div className="register-form">
-              <div className="input-container">
-                <div>
-                  <label style={{ textAlign: 'center' }}>Descrição</label><br />
-                  <textarea style={{ width: 600, padding: 20, borderRadius: 10, marginBottom: 30 }}
-                    name="descricao"
-                    rows="5"
-                    placeholder="Ex.: Buraco em minha rua, com risco de acidentes"
-                    value={formData.descricao}
-                    onChange={handleChange}
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-            {/* {<div className="register-form">
-              <div className="input-container">
-                <div>
-                  <label style={{ marginLeft: 30, marginTop: 20 }}>Valor do Serviço</label><br />
-                  <input
-                    type="text"
-                    name="valor"
-                    value=
-                    {formData.valor !== null && formData.valor !== undefined
-                      ? `R$ ${formData.valor.toFixed(2)}`
-                      : "Não definido"}
-                    onChange={handleChange}
-                    readOnly
-                  />
-                </div> 
-              </div>
-            </div>*/}
-          </div>
-          {removeLoading && <div style={{ marginTop: -30 }}>
-            {message && <Message type={type} msg={message} />}
-            <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Confirmar</button>
-            <button className="btn-log" onClick={() => navigate('/paginaInicial')}>Voltar</button>
-          </div>}
-          {!removeLoading && <Loading />}
-        </form>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Reclame Aqui</h1>
       </div>
-    </>
+
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>Problema:</label>
+          <select
+            className={styles.select}
+            name="assunto"
+            value={formData.assunto}
+            onChange={handleChange}
+          >
+            <option value="">Selecione um problema</option>
+            {assuntos.map(assunto => (
+              <option key={assunto.id_assunto} value={assunto.assunto}>
+                {assunto.assunto}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>Descrição</label>
+          <textarea
+            className={styles.textarea}
+            name="descricao"
+            placeholder="Ex.: Buraco em minha rua, com risco de acidentes"
+            value={formData.descricao}
+            onChange={handleChange}
+          />
+        </div>
+
+        {message && <Message type={type} msg={message} />}
+
+        {removeLoading ? (
+          <div className={styles.buttonConfirm}>
+            <button type="submit" className={styles.button}>
+              Confirmar
+            </button>
+
+            <button
+              className={styles.button}
+              onClick={voltarIndex}
+            >
+              <FiArrowLeft />
+              Voltar
+            </button>
+
+          </div>
+        ) : (
+          <div className={styles.loadingContainer}>
+            <Loading />
+          </div>
+        )}
+      </form>
+    </div>
   );
 }
 

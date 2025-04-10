@@ -94,6 +94,7 @@
     justify-content: center;
 }
 
+.buttonBack:hover,
 .btnLog:hover {
     background-color: #2980b9;
     transform: translateY(-2px);
@@ -126,6 +127,26 @@
     border-radius: 50%;
     border-top-color: white;
     animation: spin 1s ease-in-out infinite;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.buttonBack {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 @keyframes spin {

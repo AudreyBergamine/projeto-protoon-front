@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import URL from '../../services/url';
 import styles from './cadastroAssunto.module.css';
+import { useNavigate } from "react-router-dom"
+import { FiArrowLeft, FiInbox } from 'react-icons/fi';
 
 const CadastroAssunto = () => {
     const [formData, setFormData] = useState({
@@ -17,6 +19,7 @@ const CadastroAssunto = () => {
     const [error, setError] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
     const [popupMessage, setPopupMessage] = useState('');
+    const navigate = useNavigate();
 
     const axiosInstance = axios.create({
         baseURL: URL,
@@ -63,6 +66,11 @@ const CadastroAssunto = () => {
             });
         }
     };
+
+    const voltarIndex = () => {
+        navigate("/");
+    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -164,6 +172,15 @@ const CadastroAssunto = () => {
                     >
                         {loading ? '' : 'Cadastrar'}
                     </button>
+                    <div className={styles.buttonContainer}>
+                        <button
+                            className={styles.buttonBack}
+                            onClick={voltarIndex}
+                        >
+                            <FiArrowLeft />
+                            Voltar
+                        </button>
+                    </div>
                 </form>
 
                 {/* Pop-up animado */}
