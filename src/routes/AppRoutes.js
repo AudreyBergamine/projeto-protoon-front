@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
-import Home from '../components/gerais/homePage';
-import LoginForm from '../components/gerais/login';
+// import Home from '../components/gerais/homePage';
+import Home from '../components/gerais/login/login'
+import LoginForm from '../components/gerais/login/login';
 
 
 import CadastroAssunto from '../components/coordenador/cadastroAssunto/cadastroAssunto';
