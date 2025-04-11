@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
-// import Home from '../components/gerais/homePage';
-import Home from '../components/gerais/login/login'
+import Home from '../components/gerais/homePage';
+//import Home from '../components/gerais/login/login'
 import LoginForm from '../components/gerais/login/login';
-
 
 import CadastroAssunto from '../components/coordenador/cadastroAssunto/cadastroAssunto';
 import CadastrarMunicipe from '../components/municipe/cadastrarMunicipe/cadastrarMunicipe';
@@ -12,7 +11,7 @@ import RecuperarSenhaForm from '../components/municipe/recuperarSenha';
 import AtualizarForm from '../components/municipe/atualizarSenha';
 import PaginaInicalMunicipe from '../components/municipe/paginaInicialMunicipe/paginaInicialMunicipe';
 import Reclamar from '../components/municipe/reclamar/reclamar';
-import SolicitarServico from '../components/municipe/solicitarServico';
+import SolicitarServico from '../components/municipe/solicitarServico/solicitarServico';
 import Consultar from '../components/municipe/consultar/consultar';
 import SobreNos from '../components/municipe/sobreNos';
 import Contato from '../components/municipe/contato';
@@ -31,7 +30,7 @@ import Logs from '../components/coordenador/logs';
 import Relatorios from '../components/coordenador/relatorios';
 import RedirecionamentosCoordenador from '../components/gerais/redirecionamentos';
 import RedirecionamentosFuncionario from '../components/funcionario/redirecionamentosFuncionario';
-import GerenciarSecretaria from '../components/coordenador/GerenciarSecretaria';
+import GerenciarSecretaria from '../components/coordenador/GerenciarSecretaria/GerenciarSecretaria';
 
 // Defina um conjunto de rotas privadas
 const privateRoutes = ['/protocolos', '/protocolo/', '/retornadas', '/reclamar', '/consultar', '/perfil',

@@ -5,7 +5,7 @@ import Loading from '../../layouts/Loading';
 import Message from '../../layouts/Message';
 import URL from '../../services/url';
 import styles from './reclamar.module.css';
-import { FiArrowLeft, FiInbox } from 'react-icons/fi';
+import { FiAlertCircle, FiEdit2, FiArrowLeft, FiCheck } from 'react-icons/fi';
 
 function Reclamar() {
   const navigate = useNavigate();
@@ -132,60 +132,74 @@ function Reclamar() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Reclame Aqui</h1>
+        <h1 className={styles.title}>
+          <FiAlertCircle /> Reclame Aqui
+        </h1>
+        <p className={styles.subtitle}>Nos conte sobre o problema que encontrou</p>
       </div>
 
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.inputGroup}>
-          <label className={styles.label}>Problema:</label>
-          <select
-            className={styles.select}
-            name="assunto"
-            value={formData.assunto}
-            onChange={handleChange}
-          >
-            <option value="">Selecione um problema</option>
-            {assuntos.map(assunto => (
-              <option key={assunto.id_assunto} value={assunto.assunto}>
-                {assunto.assunto}
-              </option>
-            ))}
-          </select>
+          <label className={styles.label}>
+            <FiAlertCircle /> Tipo de Problema:
+          </label>
+          <div className={styles.selectContainer}>
+            <select
+              className={styles.select}
+              name="assunto"
+              value={formData.assunto}
+              onChange={handleChange}
+            >
+              <option value="">Selecione um problema</option>
+              {assuntos.map(assunto => (
+                <option key={assunto.id_assunto} value={assunto.assunto}>
+                  {assunto.assunto}
+                </option>
+              ))}
+            </select>
+            <span className={styles.selectIcon}></span>
+          </div>
         </div>
 
         <div className={styles.inputGroup}>
-          <label className={styles.label}>Descrição</label>
+          <label className={styles.label}>
+            <FiEdit2 /> Descrição Detalhada:
+          </label>
           <textarea
             className={styles.textarea}
             name="descricao"
-            placeholder="Ex.: Buraco em minha rua, com risco de acidentes"
+            placeholder="Descreva o problema com detalhes (localização, horário, etc)..."
             value={formData.descricao}
             onChange={handleChange}
+            rows={6}
           />
+          <div className={styles.charCounter}>
+            {formData.descricao.length}/500 caracteres
+          </div>
         </div>
 
         {message && <Message type={type} msg={message} />}
 
-        {removeLoading ? (
-          <div className={styles.buttonConfirm}>
-            <button type="submit" className={styles.button}>
-              Confirmar
-            </button>
-
-            <button
-              className={styles.button}
-              onClick={voltarIndex}
-            >
-              <FiArrowLeft />
-              Voltar
-            </button>
-
-          </div>
-        ) : (
-          <div className={styles.loadingContainer}>
-            <Loading />
-          </div>
-        )}
+        <div className={styles.buttonGroup}>
+          {removeLoading ? (
+            <>
+              <button type="submit" className={styles.primaryButton}>
+                <FiCheck /> Enviar Reclamação
+              </button>
+              <button
+                type="button"
+                className={styles.secondaryButton}
+                onClick={voltarIndex}
+              >
+                <FiArrowLeft /> Voltar
+              </button>
+            </>
+          ) : (
+            <div className={styles.loadingContainer}>
+              <Loading />
+            </div>
+          )}
+        </div>
       </form>
     </div>
   );

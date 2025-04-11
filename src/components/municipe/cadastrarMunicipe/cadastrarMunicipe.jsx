@@ -9,6 +9,12 @@ import Loading from '../../layouts/Loading';
 import Message from '../../layouts/Message';
 import URL from '../../services/url';
 import styles from './cadastrarMunicipe.module.css';
+import { 
+  FaUser, FaEnvelope, FaLock, FaIdCard, 
+  FaPhone, FaCalendarAlt, FaMapMarkerAlt,
+  FaHome, FaBuilding, FaGlobeAmericas, FaSignInAlt, FaArrowLeft,
+  FaHashtag, FaCheckCircle, FaRoad, FaCity, FaFlag
+} from 'react-icons/fa';
 
 function CadastrarMunicipe() {
   const [message, setMessage] = useState();
@@ -187,13 +193,15 @@ function CadastrarMunicipe() {
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
+        {/* Seção Dados Pessoais */}
         <div className={styles.formSection}>
-          <h3 className={styles.sectionTitle}>Dados Pessoais</h3>
+          <h3 className={styles.sectionTitle}>
+            <FaUser /> Dados Pessoais
+          </h3>
 
           <div className={styles.inputGroup}>
-            
             <div className={styles.inputField}>
-              <label>Nome:</label>
+              <label><FaUser /> Nome:</label>
               <input
                 type="text"
                 name="nome"
@@ -203,10 +211,11 @@ function CadastrarMunicipe() {
                 required
                 minLength={3}
               />
+              <span className={styles.inputIcon}><FaUser /></span>
             </div>
 
             <div className={styles.inputField}>
-              <label>Email:</label>
+              <label><FaEnvelope /> Email:</label>
               <input
                 type="email"
                 name="email"
@@ -216,10 +225,11 @@ function CadastrarMunicipe() {
                 required
                 minLength={7}
               />
+              <span className={styles.inputIcon}><FaEnvelope /></span>
             </div>
 
             <div className={styles.inputField}>
-              <label>Senha:</label>
+              <label><FaLock /> Senha:</label>
               <input
                 type="password"
                 name="senha"
@@ -228,31 +238,34 @@ function CadastrarMunicipe() {
                 required
                 minLength={6}
               />
+              <span className={styles.inputIcon}><FaLock /></span>
             </div>
           </div>
 
           <div className={styles.inputGroup}>
             <div className={styles.inputField}>
-              <label>CPF:</label>
+              <label><FaIdCard /> CPF:</label>
               <SetCPF
                 cpfValido={handleCpfValidChange}
                 onCPFChange={(formattedCPF) => {
                   setFormData({ ...formData, num_CPF: formattedCPF })
                 }}
               />
+              <span className={styles.inputIcon}><FaIdCard /></span>
             </div>
 
             <div className={styles.inputField}>
-              <label>Celular:</label>
+              <label><FaPhone /> Celular:</label>
               <SetCelular
                 onCelularChange={(formattedCelular) => {
                   setFormData({ ...formData, celular: formattedCelular })
                 }}
               />
+              <span className={styles.inputIcon}><FaPhone /></span>
             </div>
 
             <div className={styles.inputField}>
-              <label>Data de Nascimento:</label>
+              <label><FaCalendarAlt /> Data Nasc.:</label>
               <input
                 type="date"
                 name="data_nascimento"
@@ -260,18 +273,22 @@ function CadastrarMunicipe() {
                 onChange={handleChange}
                 required
               />
+              <span className={styles.inputIcon}><FaCalendarAlt /></span>
             </div>
           </div>
         </div>
 
         <div className={styles.divider} />
 
+        {/* Seção Endereço */}
         <div className={styles.formSection}>
-          <h3 className={styles.sectionTitle}>Endereço</h3>
+          <h3 className={styles.sectionTitle}>
+            <FaMapMarkerAlt /> Endereço
+          </h3>
 
           <div className={styles.inputGroup}>
             <div className={styles.inputField}>
-              <label>CEP:</label>
+              <label><FaMapMarkerAlt /> CEP:</label>
               <SetCEP
                 onAlertChange={handleAlertChange}
                 onEnderecoChange={handleEnderecoChange}
@@ -285,10 +302,11 @@ function CadastrarMunicipe() {
                   })
                 }}
               />
+              <span className={styles.inputIcon}><FaMapMarkerAlt /></span>
             </div>
 
             <div className={styles.inputField}>
-              <label>Logradouro:</label>
+              <label><FaRoad /> Logradouro:</label>
               <input
                 type="text"
                 name="logradouro"
@@ -299,10 +317,11 @@ function CadastrarMunicipe() {
                 readOnly={alert === ''}
                 className={alert === '' ? styles.readOnly : ''}
               />
+              <span className={styles.inputIcon}><FaRoad /></span>
             </div>
 
             <div className={styles.inputField}>
-              <label>Número:</label>
+              <label><FaHashtag /> Número:</label>
               <input
                 type="number"
                 name="num_endereco"
@@ -312,12 +331,13 @@ function CadastrarMunicipe() {
                 required
                 min={1}
               />
+              <span className={styles.inputIcon}><FaHashtag /></span>
             </div>
           </div>
 
           <div className={styles.inputGroup}>
             <div className={styles.inputField}>
-              <label>Complemento:</label>
+              <label><FaHome /> Complemento:</label>
               <input
                 type="text"
                 name="complemento"
@@ -325,10 +345,11 @@ function CadastrarMunicipe() {
                 value={formData.endereco.complemento}
                 onChange={handleChange}
               />
+              <span className={styles.inputIcon}><FaHome /></span>
             </div>
 
             <div className={styles.inputField}>
-              <label>Tipo:</label>
+              <label><FaBuilding /> Tipo:</label>
               <input
                 type="text"
                 name="tipo_endereco"
@@ -338,10 +359,11 @@ function CadastrarMunicipe() {
                 minLength={3}
                 required
               />
+              <span className={styles.inputIcon}><FaBuilding /></span>
             </div>
 
             <div className={styles.inputField}>
-              <label>Bairro:</label>
+              <label><FaCity /> Bairro:</label>
               <input
                 type="text"
                 name="bairro"
@@ -353,12 +375,13 @@ function CadastrarMunicipe() {
                 readOnly={alert === ''}
                 className={alert === '' ? styles.readOnly : ''}
               />
+              <span className={styles.inputIcon}><FaCity /></span>
             </div>
           </div>
 
           <div className={styles.inputGroup}>
             <div className={styles.inputField}>
-              <label>Cidade:</label>
+              <label><FaCity /> Cidade:</label>
               <input
                 type="text"
                 name="cidade"
@@ -370,10 +393,11 @@ function CadastrarMunicipe() {
                 readOnly={alert === ''}
                 className={alert === '' ? styles.readOnly : ''}
               />
+              <span className={styles.inputIcon}><FaCity /></span>
             </div>
 
             <div className={styles.inputField}>
-              <label>Estado:</label>
+              <label><FaFlag /> Estado:</label>
               <input
                 type="text"
                 name="estado"
@@ -385,10 +409,11 @@ function CadastrarMunicipe() {
                 readOnly={alert === ''}
                 className={alert === '' ? styles.readOnly : ''}
               />
+              <span className={styles.inputIcon}><FaFlag /></span>
             </div>
 
             <div className={styles.inputField}>
-              <label>País:</label>
+              <label><FaGlobeAmericas /> País:</label>
               <input
                 type="text"
                 name="pais"
@@ -400,31 +425,34 @@ function CadastrarMunicipe() {
                 required
                 minLength={3}
               />
+              <span className={styles.inputIcon}><FaGlobeAmericas /></span>
             </div>
           </div>
         </div>
 
+        {/* Ações do Formulário */}
         <div className={styles.formActions}>
           {message && <Message type={type} msg={message} />}
-          {!removeLoading && <Loading />}
 
-          {removeLoading && (
+          {removeLoading ? (
             <>
               <button
                 type="submit"
                 className={styles.primaryButton}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Cadastrando...' : 'Cadastrar-se'}
+                <FaSignInAlt /> {isSubmitting ? 'Cadastrando...' : 'Cadastrar-se'}
               </button>
               <button
                 type="button"
                 className={styles.secondaryButton}
                 onClick={() => navigate("/login")}
               >
-                Voltar para Login
+                <FaArrowLeft /> Voltar para Login
               </button>
             </>
+          ) : (
+            <Loading />
           )}
         </div>
       </form>
@@ -432,11 +460,13 @@ function CadastrarMunicipe() {
       {/* Popup de sucesso */}
       <div className={`${styles.popup} ${showPopup ? styles.showPopup : ''}`}>
         <div className={styles.popupContent}>
-          <span>{popupMessage}</span>
+          <FaCheckCircle /> <span>{popupMessage}</span>
         </div>
       </div>
     </div>
   );
 }
+
+
 
 export default CadastrarMunicipe;

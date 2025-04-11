@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import cidadaoImg from '../../assets/cidadao.jpg';
-import logoImg from '../../assets/logo.png';
-import coordednadorImg from '../../assets/coordenador.png';
-import funcionarioImg from '../../assets/funcionario.png';
-import secretarioImg from '../../assets/secretario.png';
-import URL from '../services/url';
+import cidadaoImg from '../../../assets/cidadao.jpg';
+import logoImg from '../../../assets/logo.png';
+import coordednadorImg from '../../../assets/coordenador.png';
+import funcionarioImg from '../../../assets/funcionario.png';
+import secretarioImg from '../../../assets/secretario.png';
+import URL from '../../services/url';
 import styles from './Header.module.css';
 
 function Header({ isAuthenticated, role }) {

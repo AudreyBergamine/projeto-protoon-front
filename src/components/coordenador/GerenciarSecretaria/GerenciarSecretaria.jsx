@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import SetCEP from "../services/setCEP";
-import Loading from '../layouts/Loading';
-import Message from '../layouts/Message'
-import URL from '../services/url';
+import SetCEP from "../../services/setCEP";
+import Loading from '../../layouts/Loading';
+import Message from '../../layouts/Message'
+import URL from '../../services/url';
+import {
+  FaBuilding, FaUserTie, FaEnvelope, FaMapMarkerAlt,
+  FaHashtag, FaHome, FaCity, FaFlag, FaGlobeAmericas,
+  FaSignInAlt, FaArrowLeft,FaRoad
+} from 'react-icons/fa';
+import styles from './GerenciarSecretaria.module.css'
 
 //Função de cadastro de municipe
 function GerenciarSecretaria() {
@@ -78,7 +84,7 @@ function GerenciarSecretaria() {
 
     if (name === "id_secretaria") {
       const secretariaSelecionada = secretarias.find(sec => sec.id_secretaria === Number(value));
-    
+
       setFormData({
         ...formData,
         secretaria: secretariaSelecionada || null,
@@ -205,42 +211,39 @@ function GerenciarSecretaria() {
     navigate("/login")
   }
 
-  //Por fim é retornado o html para ser exibido no front end, junto com as funções acima.
   return (
-    <form onSubmit={handleSubmit}>
-      <div style={{ paddingBottom: '100px' }}>
-        <h3>Dados da Secretaria</h3>
-        <div className="register-form">
-          <div className="input-container">
-            <div>
-              <select
-                name="id_secretaria"
-                value={formData.secretaria ? formData.secretaria.id_secretaria : ''}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Selecione uma secretaria</option>
-                {secretarias.map(secretaria => (
-                  <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
-                    {secretaria.nome_secretaria}
-                  </option>
-                ))}
-              </select>
+    <div className={styles.container}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        {/* Seção Dados da Secretaria */}
+        <div className={styles.formSection}>
+          <h3 className={styles.sectionTitle}>
+            <FaBuilding /> Dados da Secretaria
+          </h3>
 
-              <label style={{ textAlign: 'center' }}>Nome:</label><br></br>
-              {/* <input
-                type="text"
-                name="nome_secretaria"
-                placeholder="Ex.: Secretaria de Meio Ambiente"
-                value={formData.nome_secretaria}
-                onChange={handleChange}
-                required
-                minLength={3}
-              /> */}
+          <div className={styles.inputGroup}>
+            <div className={styles.inputField}>
+              <label><FaBuilding /> Secretaria:</label>
+              <div className={styles.selectContainer}>
+                <select
+                  name="id_secretaria"
+                  value={formData.secretaria ? formData.secretaria.id_secretaria : ''}
+                  onChange={handleChange}
+                  required
+                  className={styles.select}
+                >
+                  <option value="">Selecione uma secretaria</option>
+                  {secretarias.map(secretaria => (
+                    <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
+                      {secretaria.nome_secretaria}
+                    </option>
+                  ))}
+                </select>
+                <span className={styles.selectIcon}></span>
+              </div>
             </div>
 
-            <div>
-              <label style={{ textAlign: 'center' }}>Nome do Responsável:</label><br></br>
+            <div className={styles.inputField}>
+              <label><FaUserTie /> Nome do Responsável:</label>
               <input
                 type="text"
                 name="nome_responsavel"
@@ -249,30 +252,36 @@ function GerenciarSecretaria() {
                 required
                 minLength={6}
               />
+              <span className={styles.inputIcon}><FaUserTie /></span>
             </div>
 
-            <div>
-              <label style={{ textAlign: 'center' }}>Email:</label><br></br>
+            <div className={styles.inputField}>
+              <label><FaEnvelope /> Email:</label>
               <input
                 type="email"
                 name="email"
-                placeholder="Ex.: claudio.silva@gmail.com"
+                placeholder="Ex.: responsavel@secretaria.com"
                 value={formData.email}
                 onChange={handleChange}
                 required
                 minLength={7}
               />
+              <span className={styles.inputIcon}><FaEnvelope /></span>
             </div>
-
           </div>
         </div>
-        <hr></hr>
-        <h3>Endereço</h3>
-        <div className="register-form">
-          <div className="input-container">
 
-            <div>
-              <label style={{ textAlign: 'center' }}>Número do CEP:</label><br></br>
+        <div className={styles.divider} />
+
+        {/* Seção Endereço */}
+        <div className={styles.formSection}>
+          <h3 className={styles.sectionTitle}>
+            <FaMapMarkerAlt /> Endereço
+          </h3>
+
+          <div className={styles.inputGroup}>
+            <div className={styles.inputField}>
+              <label><FaMapMarkerAlt /> CEP:</label>
               <SetCEP
                 onAlertChange={handleAlertChange}
                 onEnderecoChange={handleEnderecoChange}
@@ -286,10 +295,11 @@ function GerenciarSecretaria() {
                   })
                 }}
               />
+              <span className={styles.inputIcon}><FaMapMarkerAlt /></span>
             </div>
 
-            <div>
-              <label style={{ textAlign: 'center' }}>Endereço:</label><br></br>
+            <div className={styles.inputField}>
+              <label><FaRoad /> Logradouro:</label>
               <input
                 type="text"
                 name="logradouro"
@@ -297,25 +307,14 @@ function GerenciarSecretaria() {
                 value={formData.endereco.logradouro}
                 onChange={handleChange}
                 required
-                readOnly={alert === '' ? true : false}
-                className={alert === '' ? 'readonly-bg' : ""}
+                readOnly={alert === ''}
+                className={alert === '' ? styles.readOnly : ''}
               />
+              <span className={styles.inputIcon}><FaRoad /></span>
             </div>
-            {/* <div> */}
-            {/* TODO: Ocultar esse trecho para o usuário e deixar nullable */}
-            {/* <label style={{ textAlign: 'center' }}>Nome Endereço:</label><br></br> 
-              <input
-                type="text"
-                name="nome_endereco"
-                placeholder="Ex.: Marechael Teodoro"
-                value={formData.endereco.nome_endereco}
-                onChange={handleChange}
-                required
-                minLength={3}
-              /> */}
-            {/* </div> */}
-            <div>
-              <label style={{ textAlign: 'center' }}>Número:</label><br></br>
+
+            <div className={styles.inputField}>
+              <label><FaHashtag /> Número:</label>
               <input
                 type="number"
                 name="num_endereco"
@@ -325,9 +324,13 @@ function GerenciarSecretaria() {
                 required
                 min={1}
               />
+              <span className={styles.inputIcon}><FaHashtag /></span>
             </div>
-            <div>
-              <label style={{ textAlign: 'center' }}>Complemento:</label><br></br>
+          </div>
+
+          <div className={styles.inputGroup}>
+            <div className={styles.inputField}>
+              <label><FaHome /> Complemento:</label>
               <input
                 type="text"
                 name="complemento"
@@ -335,14 +338,11 @@ function GerenciarSecretaria() {
                 value={formData.endereco.complemento}
                 onChange={handleChange}
               />
+              <span className={styles.inputIcon}><FaHome /></span>
             </div>
-          </div>
-        </div>
 
-        <div className="register-form">
-          <div className="input-container">
-            <div>
-              <label style={{ textAlign: 'center' }}>Tipo de Endereço:</label><br></br>
+            <div className={styles.inputField}>
+              <label><FaBuilding /> Tipo de Endereço:</label>
               <input
                 type="text"
                 name="tipo_endereco"
@@ -352,10 +352,11 @@ function GerenciarSecretaria() {
                 minLength={3}
                 required
               />
+              <span className={styles.inputIcon}><FaBuilding /></span>
             </div>
 
-            <div>
-              <label style={{ textAlign: 'center' }}>Bairro:</label><br></br>
+            <div className={styles.inputField}>
+              <label><FaCity /> Bairro:</label>
               <input
                 type="text"
                 name="bairro"
@@ -364,13 +365,16 @@ function GerenciarSecretaria() {
                 onChange={handleChange}
                 required
                 minLength={2}
-                readOnly={alert === '' ? true : false}
-                className={alert === '' ? 'readonly-bg' : ""}
+                readOnly={alert === ''}
+                className={alert === '' ? styles.readOnly : ''}
               />
+              <span className={styles.inputIcon}><FaCity /></span>
             </div>
+          </div>
 
-            <div>
-              <label style={{ textAlign: 'center' }}>Cidade:</label><br></br>
+          <div className={styles.inputGroup}>
+            <div className={styles.inputField}>
+              <label><FaCity /> Cidade:</label>
               <input
                 type="text"
                 name="cidade"
@@ -379,13 +383,14 @@ function GerenciarSecretaria() {
                 onChange={handleChange}
                 required
                 minLength={2}
-                readOnly={alert === '' ? true : false}
-                className={alert === '' ? 'readonly-bg' : ""}
+                readOnly={alert === ''}
+                className={alert === '' ? styles.readOnly : ''}
               />
+              <span className={styles.inputIcon}><FaCity /></span>
             </div>
 
-            <div>
-              <label style={{ textAlign: 'center' }}>Estado:</label><br></br>
+            <div className={styles.inputField}>
+              <label><FaFlag /> Estado:</label>
               <input
                 type="text"
                 name="estado"
@@ -394,38 +399,63 @@ function GerenciarSecretaria() {
                 onChange={handleChange}
                 required
                 minLength={2}
-                readOnly={alert === '' ? true : false}
-                className={alert === '' ? 'readonly-bg' : ""}
+                readOnly={alert === ''}
+                className={alert === '' ? styles.readOnly : ''}
               />
+              <span className={styles.inputIcon}><FaFlag /></span>
             </div>
 
-            <div>
-              <label style={{ textAlign: 'center' }}>País:</label><br></br>
+            <div className={styles.inputField}>
+              <label><FaGlobeAmericas /> País:</label>
               <input
                 type="text"
                 name="pais"
                 placeholder="Ex.: Brasil"
-                value={formData.endereco.pais ? formData.endereco.pais : ""}
-                readOnly={alert === '' ? true : false}
-                className={alert === '' ? 'readonly-bg' : ""}
+                value={formData.endereco.pais || ""}
+                readOnly={alert === ''}
+                className={alert === '' ? styles.readOnly : ''}
                 onChange={(e) => handleChangePais(e.target.value)}
                 required
                 minLength={3}
               />
+              <span className={styles.inputIcon}><FaGlobeAmericas /></span>
             </div>
           </div>
         </div>
-        {message && <Message type={type} msg={message} />}
-        {!removeLoading && <Loading />}
-        {removeLoading && <div style={{ marginTop: -30 }}>
-          <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
-          <button className="btn-log" onClick={sendToLogin}>Voltar</button>
-        </div>}
-      </div>
-      <footer className="footer">
-        © 2024 Proto-on. Todos os direitos reservados.
+
+        {/* Ações do Formulário */}
+        <div className={styles.formActions}>
+          {message && <Message type={type} msg={message} />}
+
+          {removeLoading ? (
+            <>
+              <button
+                type="submit"
+                className={styles.primaryButton}
+                disabled={isSubmitting}
+              >
+                <FaSignInAlt /> Cadastrar Secretaria
+              </button>
+              <button
+                type="button"
+                className={styles.secondaryButton}
+                onClick={sendToLogin}
+              >
+                <FaArrowLeft /> Voltar
+              </button>
+            </>
+          ) : (
+            <div className={styles.loadingContainer}>
+              <Loading />
+            </div>
+          )}
+        </div>
+      </form>
+
+      <footer className={styles.footer}>
+        © {new Date().getFullYear()} Proto-on. Todos os direitos reservados.
       </footer>
-    </form>
+    </div>
   );
 }
 

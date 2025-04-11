@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import Loading from '../layouts/Loading';
-import Message from '../layouts/Message';
-import URL from '../services/url';
+import Loading from '../../layouts/Loading';
+import Message from '../../layouts/Message';
+import URL from '../../services/url';
+import styles from './solicitarServico.module.css';
+import { FiTool, FiEdit2, FiDollarSign, FiArrowLeft, FiCheck } from 'react-icons/fi';
 
 function SolicitarServico() {
   const navigate = useNavigate();
@@ -134,73 +136,100 @@ function SolicitarServico() {
   };
 
   return (
-    <>
-      <div style={{ paddingBottom: '100px' }}>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <h3>Solicitação de Serviço</h3>
-            <div className="register-form">
-              <div className="input-container">
-                <div>
-                  <label style={{ textAlign: 'center' }}>Problema:</label><br />
-                  <select
-                    style={{ width: '40%', fontSize: 20, padding: 10, paddingBottom: 0, borderRadius: 10, textAlign: "center" }}
-                    name="assunto"
-                    value={formData.assunto}
-                    onChange={handleChange}
-                  >
-                    <option value="">Selecione um problema</option>
-                    {assuntos.map(assunto => (
-                      <option key={assunto.id_assunto} value={assunto.assunto}>{assunto.assunto}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div><br />
-            <div className="register-form">
-              <div className="input-container">
-                <div>
-                  <label style={{ textAlign: 'center' }}>Descrição</label><br />
-                  <textarea style={{ width: 600, padding: 20, borderRadius: 10 }}
-                    name="descricao"
-                    rows="5"
-                    placeholder="Ex.: Buraco em minha rua, com risco de acidentes"
-                    value={formData.descricao}
-                    onChange={handleChange}
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-            <div className="register-form">
-              <div className="input-container">
-                <div>
-                  <label style={{ marginLeft: 30, marginTop: 20, textAlign: 'center' }}>Valor do Serviço</label><br />
-                  <input
-                    type="text"
-                    name="valor"
-                    value=
-                    {formData.valor !== null && formData.valor !== undefined
-                      ? `R$ ${formData.valor.toFixed(2)}`
-                      : "Não definido"}
-                    onChange={handleChange}
-                    readOnly
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <label style={{ fontSize: 15 }}>O Protocolo será cancelado automaticamente se não for pago em 4 dias corridos.</label>
-          </div>
-          {removeLoading && <div style={{ marginTop: -30 }}>
-            {message && <Message type={type} msg={message} />}
-            <button type="submit" className="btn-cad" style={{ marginRight: '100px', marginTop: '10%' }}>Confirmar</button>
-            <button className="btn-log" onClick={() => navigate('/paginaInicial')}>Voltar</button>
-          </div>}
-          {!removeLoading && <Loading />}
-        </form>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>
+          <FiTool /> Solicitação de Serviço
+        </h1>
+        <p className={styles.subtitle}>Preencha os detalhes do serviço necessário</p>
       </div>
-    </>
+
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>
+            <FiTool /> Tipo de Serviço:
+          </label>
+          <div className={styles.selectContainer}>
+            <select
+              className={styles.select}
+              name="assunto"
+              value={formData.assunto}
+              onChange={handleChange}
+            >
+              <option value="">Selecione um problema</option>
+              {assuntos.map(assunto => (
+                <option key={assunto.id_assunto} value={assunto.assunto}>
+                  {assunto.assunto}
+                </option>
+              ))}
+            </select>
+            <span className={styles.selectIcon}></span>
+          </div>
+        </div>
+
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>
+            <FiEdit2 /> Descrição Detalhada:
+          </label>
+          <textarea
+            className={styles.textarea}
+            name="descricao"
+            placeholder="Descreva o serviço necessário com detalhes (localização, urgência, etc)..."
+            value={formData.descricao}
+            onChange={handleChange}
+            rows={6}
+          />
+          <div className={styles.charCounter}>
+            {formData.descricao.length}/500 caracteres
+          </div>
+        </div>
+
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>
+            <FiDollarSign /> Valor do Serviço:
+          </label>
+          <div className={styles.valueContainer}>
+            <input
+              type="text"
+              className={styles.valueInput}
+              value={
+                formData.valor !== null && formData.valor !== undefined
+                  ? `R$ ${formData.valor.toFixed(2)}`
+                  : "Não definido"
+              }
+              readOnly
+            />
+          </div>
+        </div>
+
+        <div className={styles.notice}>
+          <p>O Protocolo será cancelado automaticamente se não for pago em 4 dias corridos.</p>
+        </div>
+
+        {message && <Message type={type} msg={message} />}
+
+        <div className={styles.buttonGroup}>
+          {removeLoading ? (
+            <>
+              <button type="submit" className={styles.primaryButton}>
+                <FiCheck /> Confirmar Solicitação
+              </button>
+              <button
+                type="button"
+                className={styles.secondaryButton}
+                onClick={() => navigate('/paginaInicial')}
+              >
+                <FiArrowLeft /> Voltar
+              </button>
+            </>
+          ) : (
+            <div className={styles.loadingContainer}>
+              <Loading />
+            </div>
+          )}
+        </div>
+      </form>
+    </div>
   );
 }
 
