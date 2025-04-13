@@ -59,6 +59,15 @@ function TodasDevolutivas() {
           {devolutivas.length === 0 && <p style={{ textAlign: 'center', fontSize: '30px', marginTop: '150px' }}>Não há devolutivas para este Protocolo até o momento</p>}
         </div>
       )}
+      {/* <div className={styles.buttonContainer}>
+        <button
+          className={styles.button}
+          onClick={voltarIndex}
+        >
+          <FiArrowLeft />
+          Voltar
+        </button>
+      </div> */}
     </>
   );
 }
