@@ -1,44 +1,66 @@
+import { useEffect } from 'react';
 import PaginaInicial from "../municipe/paginaInicialMunicipe/paginaInicialMunicipe";
 import PaginaInicialSecretario from "../secretario/paginaInicialSec/paginaInicialSec";
 import PaginaInicialCoordenador from "../coordenador/paginaInicialCoordenador/paginaInicialCoord";
 import PaginaInicialFuncionario from "../funcionario/paginaInicialFuncionario/paginaInicialFuncionario";
 import { useNavigate } from "react-router-dom";
+
 function Home({ isAuthenticated, role }) {
-    //TODO: Criar página inicial de funcionário e implementar a lógica abaixo, igual fiz com a de municipe
-    const navigate = useNavigate()
-    console.log(process.env.REACT_APP_API_URL)
-    console.log(process.env.REACT_APP_SCORE_API_URL)
-    const sendToCadastrarMunicipe = async()=>{
-        navigate("/cadastrar-municipe")
-    }
-    const sendToLogin = async()=>{
-        navigate("/login")
+    const navigate = useNavigate();
+
+    // Redireciona para login se não estiver autenticado
+    useEffect(() => {
+        if (!isAuthenticated) {
+            navigate("/login");
+        }
+    }, [isAuthenticated, navigate]);
+
+    // Se não estiver autenticado, retorna null enquanto o redirecionamento ocorre
+    if (!isAuthenticated) {
+        return null;
     }
 
-    if (isAuthenticated && role === "MUNICIPE") {
-        return (<div>
-            <PaginaInicial />
-        </div>)
+    const sendToCadastrarMunicipe = async () => {
+        navigate("/cadastrar-municipe");
     }
 
-    if (isAuthenticated && role === "SECRETARIO") {
-        return (<div>
-            <PaginaInicialSecretario />
-        </div>)
+    const sendToLogin = async () => {
+        navigate("/login");
     }
 
-    if (isAuthenticated && role === "COORDENADOR") {
-        return (<div>
-            <PaginaInicialCoordenador />
-        </div>)
+    if (role === "MUNICIPE") {
+        return (
+            <div>
+                <PaginaInicial />
+            </div>
+        )
     }
 
-    if (isAuthenticated && role === "FUNCIONARIO") {
-        return (<div>
-            <PaginaInicialFuncionario />
-        </div>)
+    if (role === "SECRETARIO") {
+        return (
+            <div>
+                <PaginaInicialSecretario />
+            </div>
+        )
     }
 
+    if (role === "COORDENADOR") {
+        return (
+            <div>
+                <PaginaInicialCoordenador />
+            </div>
+        )
+    }
+
+    if (role === "FUNCIONARIO") {
+        return (
+            <div>
+                <PaginaInicialFuncionario />
+            </div>
+        )
+    }
+
+    // Página inicial padrão (caso o role não corresponda a nenhum dos acima)
     return (
         <div>
             <main>
