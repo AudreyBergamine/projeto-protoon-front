@@ -241,16 +241,19 @@ function SolicitarServico() {
         <div className={styles.buttonGroup}>
           {removeLoading ? (
             <>
-              <button type="submit" className={styles.primaryButton}>
-                <FiCheck /> Solicitar Serviço
-              </button>
+
               <button
                 type="button"
                 className={styles.secondaryButton}
-                onClick={voltarIndex}
-              >
+                onClick={voltarIndex}>
                 <FiArrowLeft /> Voltar
               </button>
+
+              <button type="submit" className={styles.primaryButton}>
+                <FiCheck /> Solicitar Serviço
+              </button>
+
+
             </>
           ) : (
             <div className={styles.loadingContainer}>

@@ -104,6 +104,7 @@
     display: flex;
     justify-content: flex-end;
     margin-top: 2rem;
+    flex-direction: row-reverse;
 }
 
 .button {
