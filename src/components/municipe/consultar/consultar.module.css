@@ -125,8 +125,8 @@
   background: linear-gradient(135deg, #4cc9f0 0%, #4361ee 100%);
   color: white;
   border: none;
-  padding: 1rem 2rem;
-  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  border-radius: 16px; 
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
