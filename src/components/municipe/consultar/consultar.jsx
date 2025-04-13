@@ -190,7 +190,7 @@ function Consultar() {
     if (!protocolo.comprovante) {
       return (
         <button
-          className={styles.button}
+          className={styles.buttonAnexar}
           onClick={(e) => {
             e.stopPropagation();
             openUploadModal(protocolo);
