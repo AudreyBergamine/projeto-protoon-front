@@ -14,7 +14,7 @@ function PaginaInicialMunicipe() {
       {/* Conteúdo Principal */}
       <main className={styles.mainContent}>
         <div className={styles.welcomeSection}>
-          <h2 className={styles.welcomeTitle}>Bem-vindo ao Sistema de Protocolos</h2>
+          <h2 className={styles.welcomeTitle}>Bem-vindo ao PROTO-ON - Sistema de Protocolos</h2>
           <p className={styles.welcomeText}>Selecione a opção desejada para continuar</p>
         </div>
 
