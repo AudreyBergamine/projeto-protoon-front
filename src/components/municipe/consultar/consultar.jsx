@@ -190,7 +190,7 @@ function Consultar() {
     if (!protocolo.comprovante) {
       return (
         <button
-          className={styles.uploadButton}
+          className={styles.buttonAnexar}
           onClick={(e) => {
             e.stopPropagation();
             openUploadModal(protocolo);
@@ -373,19 +373,18 @@ function Consultar() {
                 accept=".pdf,.jpg,.jpeg,.png"
                 className={styles.fileInput}
               />
-              <label htmlFor="comprovante-upload" className={styles.fileLabel}>
-                {selectedFile ? selectedFile.name : 'Selecione o comprovante'}
+              <label htmlFor="comprovante-upload    " className={styles.fileLabel}>
+                {selectedFile ? selectedFile.name : '     Selecione o comprovante'}
               </label>
             </div>
 
             <div className={styles.modalButtons}>
               <button
                 onClick={closeUploadModal}
-                className={styles.cancelButton}
-                disabled={uploading}
-              >
-                Cancelar
+                className={styles.button}
+                disabled={uploading}> Cancelar
               </button>
+
               <button
                 onClick={handleUpload}
                 className={styles.uploadButton}
