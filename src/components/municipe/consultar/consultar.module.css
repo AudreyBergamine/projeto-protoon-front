@@ -151,6 +151,8 @@
     padding: 3rem;
 }
 
+
+
 @media (max-width: 768px) {
     .container {
         padding: 1rem;
@@ -170,3 +172,111 @@
         padding: 0.7rem 1.2rem;
     }
 }
+
+
+/* consultar.module.css */
+
+.comprovanteContainer {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .comprovanteThumbnail {
+    position: relative;
+    width: 80px;
+    height: 60px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  
+  .thumbnailImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  
+  .thumbnailImage:hover {
+    transform: scale(1.05);
+  }
+  
+  .zoomHint {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 0.6rem;
+    text-align: center;
+    padding: 2px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .comprovanteThumbnail:hover .zoomHint {
+    opacity: 1;
+  }
+  
+  .comprovanteInfo {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .comprovanteMeta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: #555;
+  }
+  
+  .fileName {
+    font-weight: 500;
+  }
+  
+  .fileSize, .fileDate {
+    font-size: 0.7rem;
+  }
+  
+  .comprovanteActions {
+    display: flex;
+    gap: 8px;
+    margin-top: 5px;
+  }
+  
+  .comprovanteLink, .replaceButton {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+  
+  .comprovanteLink {
+    background-color: #e3f2fd;
+    color: #1565c0;
+  }
+  
+  .comprovanteLink:hover {
+    background-color: #bbdefb;
+  }
+  
+  .replaceButton {
+    background-color: #fff3e0;
+    color: #e65100;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .replaceButton:hover {
+    background-color: #ffe0b2;
+  }

@@ -84,6 +84,8 @@ function PaginaInicialCoordenador() {
   const sendToRedirecionamentos = () => navigate("/redirecionamentos-coordenador");
   const sendToRelatorios = () => navigate("/relatorios");
   const sendToCadastrarSecretarias = () => navigate("/gerenciar-secretaria");
+  const sendToAnalisarComprovantes = () => navigate("/analisar-comprovantes");
+
   const sendToLogs = () => navigate("/logs");
 
   return (
@@ -153,6 +155,15 @@ function PaginaInicialCoordenador() {
             </div>
             <h3 className={styles.cardTitle}>Cadastrar Secretarias</h3>
             <p className={styles.cardText}>Cadastre novas secretarias no sistema</p>
+            <button className={styles.cardButton}>Acessar</button>
+          </div>
+
+          <div className={styles.actionCard} onClick={sendToAnalisarComprovantes}>
+            <div className={styles.cardIcon} style={{ backgroundColor: '#34b7f1' }}>
+              <FaTools size={24} />
+            </div>
+            <h3 className={styles.cardTitle}>Analisar Comprovantes</h3>
+            <p className={styles.cardText}>Análise os comprovantes de pagamento</p>
             <button className={styles.cardButton}>Acessar</button>
           </div>
 

@@ -31,7 +31,7 @@ import Relatorios from '../components/coordenador/relatorios';
 import RedirecionamentosCoordenador from '../components/gerais/redirecionamentos';
 import RedirecionamentosFuncionario from '../components/funcionario/redirecionamentosFuncionario';
 import GerenciarSecretaria from '../components/coordenador/GerenciarSecretaria/GerenciarSecretaria';
-
+import AnalisarComprovantes from '../components/gerais/analisarComprovante';
 // Defina um conjunto de rotas privadas
 const privateRoutes = ['/protocolos', '/protocolo/', '/retornadas', '/reclamar', '/consultar', '/perfil',
 '/cadastrar-funcionarios', '/funcionarios', '/funcionario/', '/perfil-secretario', '/perfil-funcionario', 'perfil-coordenador' ];
@@ -64,6 +64,8 @@ function AppRoutes({ isAuthenticated, role }) {
             <Route path="/protocolos" element={<ListarProtocolosBySecretaria />} />
             <Route path="/protocolo/:id" element={<AnalisarProtocolos />} />
             <Route path="/redirecionamentos-coordenador" element={<RedirecionamentosCoordenador />} />
+            <Route path="/analisar-comprovantes" element={<AnalisarComprovantes />} />
+
 
             {/* MUNICIPE */}  
             <Route path="/cadastrar-municipe" element={<CadastrarMunicipe />} />
