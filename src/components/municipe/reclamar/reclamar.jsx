@@ -150,7 +150,7 @@ function Reclamar() {
               value={formData.assunto}
               onChange={handleChange}
             >
-              <option value="">Selecione um problema</option>
+              <option value="" hidden>Selecione um problema</option>
               {assuntos.map(assunto => (
                 <option key={assunto.id_assunto} value={assunto.assunto}>
                   {assunto.assunto}
@@ -183,17 +183,17 @@ function Reclamar() {
         <div className={styles.buttonGroup}>
           {removeLoading ? (
             <>
-              <button type="submit" className={styles.primaryButton}>
-                <FiCheck /> Enviar Reclamação
-              </button>
+              
               <button
                 type="button"
                 className={styles.secondaryButton}
-                onClick={voltarIndex}
-              >
+                onClick={voltarIndex}>
                 <FiArrowLeft /> Voltar
               </button>
-            </>
+
+              <button type="submit" className={styles.primaryButton}>
+                <FiCheck /> Enviar Reclamação
+              </button> </>
           ) : (
             <div className={styles.loadingContainer}>
               <Loading />
