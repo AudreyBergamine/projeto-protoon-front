@@ -7,6 +7,8 @@ import URL from '../../services/url';
 import TodasDevolutivas from "../todasDevolutivas";
 import ConfirmationDialog from '../../layouts/ConfirmationDialog';
 import styles from './analisarProtocolos.module.css';
+import { FiArrowLeft, FiInbox } from 'react-icons/fi';
+
 
 function AnalisarProtocolos() {
   const navigate = useNavigate()
@@ -572,7 +574,16 @@ function AnalisarProtocolos() {
 
           {removeLoading && (
             <>
-              <button className={styles.btnLog} onClick={voltarAnterior} style={{ opacity: mensagemAtiva ? 0.6 : 1 }}>Voltar</button>
+
+              <div className={styles.buttonContainer}>
+                <button
+                  className={styles.buttonBack}
+                  onClick={voltarAnterior}
+                >
+                  <FiArrowLeft />
+                  Voltar
+                </button>
+              </div>
             </>
           )}
 

@@ -223,6 +223,26 @@ h1 {
   box-shadow: none;
 }
 
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.buttonBack {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .container {
