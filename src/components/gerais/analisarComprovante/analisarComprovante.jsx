@@ -3,9 +3,9 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { FiArrowLeft, FiCheck, FiX, FiDownload, FiSearch, FiFilter } from 'react-icons/fi';
 import { useNavigate } from "react-router-dom";
-import URL from "../services/url";
-import Message from "../layouts/Message";
-import Loading from '../layouts/Loading';
+import URL from "../../services/url";
+import Message from "../../layouts/Message";
+import Loading from '../../layouts/Loading';
 import styles from './analisarComprovantes.module.css';
 
 function AnalisarComprovantes() {

@@ -5,7 +5,8 @@ import Loading from '../../layouts/Loading';
 import Message from '../../layouts/Message';
 import URL from '../../services/url';
 import styles from './solicitarServico.module.css';
-import { FiTool, FiEdit2, FiDollarSign, FiArrowLeft, FiCheck } from 'react-icons/fi';
+import { FiAlertCircle, FiEdit2, FiArrowLeft, FiCheck, FiPaperclip,FiDollarSign } from 'react-icons/fi';
+
 
 function SolicitarServico() {
   const navigate = useNavigate();
@@ -20,28 +21,25 @@ function SolicitarServico() {
     valor: 0
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [assuntos, setAssuntos] = useState([]);
+  const [files, setFiles] = useState([]);
+
 
   const axiosInstance = axios.create({
-    baseURL: URL, // Adjust the base URL as needed
-    withCredentials: true, // Set withCredentials to true
+    baseURL: URL,
+    withCredentials: true,
   });
 
-  // Recuperar o token do localStorage
   const token = localStorage.getItem('token');
-
-  // Adicionar o token ao cabeçalho de autorização
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  const [assuntos, setAssuntos] = useState([]);
 
-  // Buscar os assuntos do banco de dados
   useEffect(() => {
     async function fetchAssuntos() {
       try {
         const response = await axiosInstance.get('/protoon/assuntos');
-        // Atualiza o estado com os assuntos retornados
         setAssuntos(response.data.map(assunto => ({
           ...assunto,
-          valor: assunto.valor_protocolo // Adicionando o campo valor_protocolo como valor
+          valor: assunto.valor_protocolo
         })));
       } catch (error) {
         console.error('Erro ao buscar os assuntos:', error);
@@ -62,92 +60,110 @@ function SolicitarServico() {
       setFormData(prevState => ({
         ...prevState,
         idSecretaria: selectedAssunto ? selectedAssunto.secretaria.id_secretaria : null,
-        valor: selectedAssunto ? selectedAssunto.valor : null
+        valor: selectedAssunto ? selectedAssunto.valor_protocolo : 0
       }));
     }
   };
 
   const handleSubmit = async (e) => {
-    if (isSubmitting) {
-      console.log("Duplo Click detectado!")
-      return; // Impede chamadas 
-    }
-    setIsSubmitting(true)
-    setTimeout(() => setIsSubmitting(false), 1000); // Reativa após 1s
     e.preventDefault();
-    // const idMunicipe = localStorage.getItem('idMunicipe');
-    // if (!idMunicipe) {
-    //   console.error('ID do munícipe não encontrado!');
-    //   return;
-    // }
+    setIsSubmitting(true);
+    setTimeout(() => setIsSubmitting(false), 1000);
+
     if (formData.assunto === "") {
       setMessage('Selecione um problema');
-      setType('error')
-      setTimeout(() => {
-        setMessage('');
-      }, 3000);
+      setType('error');
+      setTimeout(() => setMessage(''), 3000);
       return;
     }
 
     if (formData.descricao.length < 3) {
       setMessage('Descreva o Problema!');
-      setType('error')
-      setTimeout(() => {
-        setMessage('');
-      }, 3000);
+      setType('error');
+      setTimeout(() => setMessage(''), 3000);
       return;
     }
 
     try {
-      let response; // Variável de resposta (não precisa ser inicializada com string vazia)
-      const currentDate = new Date(); // Obtém a data e hora atuais (fora do `if` para não repetir código)
+      setRemoveLoading(false);
+      const currentDate = new Date();
+      let response;
 
       if (formData.assunto === "Outros") {
-        response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos-sem-secretaria`, {
+        response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos-reclamar-sem-secretaria`, {
           assunto: formData.assunto,
           descricao: formData.descricao,
           status: formData.status,
           valor: formData.valor,
-          data_protocolo: currentDate // Envia a data e hora atuais para data_protocolo
+          data_protocolo: currentDate
         });
       } else {
-        response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos/${formData.idSecretaria}`, {
+        response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos-reclamar/${formData.idSecretaria}`, {
           assunto: formData.assunto,
           descricao: formData.descricao,
           status: formData.status,
           valor: formData.valor,
-          data_protocolo: currentDate // Envia a data e hora atuais para data_protocolo
+          data_protocolo: currentDate
         });
       }
 
-      setRemoveLoading(false);
+      const protocoloId = response.data.id_protocolo;
+
+      if (files.length > 0) {
+        const formDataFiles = new FormData();
+        files.forEach(file => formDataFiles.append("files", file));
+
+        try {
+          await axiosInstance.post(`/protoon/documentos/${protocoloId}/multiplos`, formDataFiles, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          });
+        } catch (error) {
+          console.log("Protocolo ID:", protocoloId);
+          console.error('Erro ao enviar documentos:', error);
+          setMessage('Protocolo criado, mas falha ao anexar documentos.');
+          setType('error');
+        }
+      }
+
       setTimeout(() => {
-        console.log(response.data);
         setRemoveLoading(true);
-        setMessage('Solicitação bem sucedida! Redirecionando...');
+        setMessage('Reclamação registrada com sucesso! Redirecionando...');
         setType('success');
-        setTimeout(() => {
-          navigate('/');
-        }, 3000);
-      }, 3000);
+        setTimeout(() => navigate('/'), 3000);
+      }, 1000);
     } catch (error) {
       console.error('Erro ao enviar os dados:', error);
+      setRemoveLoading(true);
+      setMessage('Erro ao enviar reclamação. Tente novamente.');
+      setType('error');
     }
   };
+
+  const voltarIndex = () => {
+    navigate("/");
+  };
+
+  const handleFileChange = (e) => {
+    setFiles(Array.from(e.target.files));
+  };
+
+
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>
-          <FiTool /> Solicitação de Serviço
+          <FiAlertCircle /> Solicite o seu Serviço
         </h1>
-        <p className={styles.subtitle}>Preencha os detalhes do serviço necessário</p>
+        <p className={styles.subtitle}>Nos conte o que precisa!</p>
       </div>
 
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.inputGroup}>
           <label className={styles.label}>
-            <FiTool /> Tipo de Serviço:
+            <FiAlertCircle /> Tipo de Serviço:
           </label>
           <div className={styles.selectContainer}>
             <select
@@ -156,7 +172,7 @@ function SolicitarServico() {
               value={formData.assunto}
               onChange={handleChange}
             >
-              <option value="">Selecione um problema</option>
+              <option value="">Selecione seu pedido</option>
               {assuntos.map(assunto => (
                 <option key={assunto.id_assunto} value={assunto.assunto}>
                   {assunto.assunto}
@@ -174,7 +190,7 @@ function SolicitarServico() {
           <textarea
             className={styles.textarea}
             name="descricao"
-            placeholder="Descreva o serviço necessário com detalhes (localização, urgência, etc)..."
+            placeholder="Descreva o problema com detalhes (localização, horário, etc)..."
             value={formData.descricao}
             onChange={handleChange}
             rows={6}
@@ -202,9 +218,23 @@ function SolicitarServico() {
           </div>
         </div>
 
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>
+            <FiPaperclip /> Anexar documentos:
+          </label>
+          <input
+            type="file"
+            multiple
+            className={styles.fileInput}
+            name="documentos"
+            onChange={handleFileChange}
+          />
+        </div>
+
         <div className={styles.notice}>
           <p>O Protocolo será cancelado automaticamente se não for pago em 4 dias corridos.</p>
         </div>
+
 
         {message && <Message type={type} msg={message} />}
 
@@ -212,12 +242,12 @@ function SolicitarServico() {
           {removeLoading ? (
             <>
               <button type="submit" className={styles.primaryButton}>
-                <FiCheck /> Confirmar Solicitação
+                <FiCheck /> Solicitar Serviço
               </button>
               <button
                 type="button"
                 className={styles.secondaryButton}
-                onClick={() => navigate('/paginaInicial')}
+                onClick={voltarIndex}
               >
                 <FiArrowLeft /> Voltar
               </button>
