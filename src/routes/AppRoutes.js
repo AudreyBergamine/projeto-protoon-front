@@ -10,8 +10,8 @@ import CadastrarMunicipe from '../components/municipe/cadastrarMunicipe/cadastra
 import RecuperarSenhaForm from '../components/municipe/recuperarSenha';
 import AtualizarForm from '../components/municipe/atualizarSenha';
 import PaginaInicalMunicipe from '../components/municipe/paginaInicialMunicipe/paginaInicialMunicipe';
-import Reclamar from '../components/municipe/reclamar/reclamar';
-import SolicitarServico from '../components/municipe/solicitarServico/solicitarServico';
+import Reclamar from '../components/gerais/reclamar/reclamar';
+import SolicitarServico from '../components/gerais/solicitarServico/solicitarServico';
 import Consultar from '../components/municipe/consultar/consultar';
 import SobreNos from '../components/municipe/sobreNos';
 import Contato from '../components/municipe/contato';

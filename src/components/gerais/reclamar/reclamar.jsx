@@ -5,7 +5,8 @@ import Loading from '../../layouts/Loading';
 import Message from '../../layouts/Message';
 import URL from '../../services/url';
 import styles from './reclamar.module.css';
-import { FiAlertCircle, FiEdit2, FiArrowLeft, FiCheck } from 'react-icons/fi';
+import { FiAlertCircle, FiEdit2, FiArrowLeft, FiCheck, FiPaperclip } from 'react-icons/fi';
+
 
 function Reclamar() {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ function Reclamar() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [assuntos, setAssuntos] = useState([]);
+  const [files, setFiles] = useState([]);
+
 
   const axiosInstance = axios.create({
     baseURL: URL,
@@ -64,12 +67,6 @@ function Reclamar() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (isSubmitting) {
-      console.log("Duplo Click detectado!");
-      return;
-    }
-
     setIsSubmitting(true);
     setTimeout(() => setIsSubmitting(false), 1000);
 
@@ -110,6 +107,26 @@ function Reclamar() {
         });
       }
 
+      const protocoloId = response.data.id_protocolo;
+
+      if (files.length > 0) {
+        const formDataFiles = new FormData();
+        files.forEach(file => formDataFiles.append("files", file));
+
+        try {
+          await axiosInstance.post(`/protoon/documentos/${protocoloId}/multiplos`, formDataFiles, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          });
+        } catch (error) {
+          console.log("Protocolo ID:", protocoloId);
+          console.error('Erro ao enviar documentos:', error);
+          setMessage('Protocolo criado, mas falha ao anexar documentos.');
+          setType('error');
+        }
+      }
+
       setTimeout(() => {
         setRemoveLoading(true);
         setMessage('Reclamação registrada com sucesso! Redirecionando...');
@@ -127,6 +144,11 @@ function Reclamar() {
   const voltarIndex = () => {
     navigate("/");
   };
+
+  const handleFileChange = (e) => {
+    setFiles(Array.from(e.target.files));
+  };
+
 
 
   return (
@@ -177,6 +199,20 @@ function Reclamar() {
             {formData.descricao.length}/500 caracteres
           </div>
         </div>
+
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>
+            <FiPaperclip /> Anexar documentos:
+          </label>
+          <input
+            type="file"
+            multiple
+            className={styles.fileInput}
+            name="documentos"
+            onChange={handleFileChange}
+          />
+        </div>
+
 
         {message && <Message type={type} msg={message} />}
 

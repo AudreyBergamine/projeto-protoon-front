@@ -160,6 +160,22 @@
     padding: 2rem;
 }
 
+.fileInput {
+    padding: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    width: 100%;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    transition: border 0.3s ease;
+}
+
+.fileInput:hover {
+    border-color: #888;
+}
+
+
 /* Responsividade */
 @media (max-width: 768px) {
     .container {
