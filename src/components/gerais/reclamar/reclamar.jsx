@@ -17,7 +17,7 @@ function Reclamar() {
     assunto: "",
     descricao: "",
     idSecretaria: "",
-    status: 1,
+    status: 0,
     valor: 0
   });
   const [isSubmitting, setIsSubmitting] = useState(false);

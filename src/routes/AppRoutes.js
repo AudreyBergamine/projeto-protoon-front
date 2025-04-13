@@ -17,7 +17,7 @@ import SobreNos from '../components/municipe/sobreNos';
 import Contato from '../components/municipe/contato';
 import PerfilMunicipe from '../components/municipe/perfilMunicipe';
 import ReclamacoesRetornadasMunicipe from '../components/municipe/reclamacoesRetornadasMunicipe';
-import TodasDevolutivas from '../components/gerais/todasDevolutivas';
+import TodasDevolutivas from '../components/gerais/todasDevolutivas/todasDevolutivas';
 import CadastrarFuncionario from '../components/secretario/cadastrarFuncionarios';
 import ListarFuncionarios from '../components/secretario/listarFuncionarios';
 import ListarProtocolosBySecretaria from '../components/gerais/listarProtocolos/listarProtocolos';
@@ -31,7 +31,7 @@ import Relatorios from '../components/coordenador/relatorios';
 import RedirecionamentosCoordenador from '../components/gerais/redirecionamentos';
 import RedirecionamentosFuncionario from '../components/funcionario/redirecionamentosFuncionario';
 import GerenciarSecretaria from '../components/coordenador/GerenciarSecretaria/GerenciarSecretaria';
-import AnalisarComprovantes from '../components/gerais/analisarComprovante';
+import AnalisarComprovantes from '../components/gerais/analisarComprovante/analisarComprovante';
 // Defina um conjunto de rotas privadas
 const privateRoutes = ['/protocolos', '/protocolo/', '/retornadas', '/reclamar', '/consultar', '/perfil',
 '/cadastrar-funcionarios', '/funcionarios', '/funcionario/', '/perfil-secretario', '/perfil-funcionario', 'perfil-coordenador' ];

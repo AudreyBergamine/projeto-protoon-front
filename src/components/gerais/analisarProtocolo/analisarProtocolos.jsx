@@ -4,11 +4,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import Loading from '../../layouts/Loading';
 import Message from '../../layouts/Message'
 import URL from '../../services/url';
-import TodasDevolutivas from "../todasDevolutivas";
+import TodasDevolutivas from "../todasDevolutivas/todasDevolutivas";
 import ConfirmationDialog from '../../layouts/ConfirmationDialog';
 import styles from './analisarProtocolos.module.css';
-import { FiArrowLeft, FiInbox } from 'react-icons/fi';
-
+import { FiArrowLeft, FiInbox, FiPaperclip } from 'react-icons/fi';
 
 function AnalisarProtocolos() {
   const navigate = useNavigate()
@@ -36,8 +35,17 @@ function AnalisarProtocolos() {
   const [mensagemAtiva, setMensagemAtiva] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarModalDoc, setMostrarModalDoc] = useState(false);
   const [motivoRecusa, setMotivoRecusa] = useState("");
   const [motivoConfirmado, setMotivoConfirmado] = useState(false);
+  const [imagens, setImagens] = useState([]);
+  const [imagemZoom, setImagemZoom] = useState(null);
+  const [arquivos, setArquivos] = useState([]);
+  const [previews, setPreviews] = useState([]);
+  const [enviandoImagens, setEnviandoImagens] = useState(false);
+
+
+
 
   const { id } = useParams();
   const role = localStorage.getItem('role')
@@ -344,7 +352,57 @@ function AnalisarProtocolos() {
     } else {
       alert("Selecione um motivo para a recusa!");
     }
+  }
+
+  const enviarImagens = async () => {
+    if (arquivos.length > 0) {
+      const formDataFiles = new FormData();
+      arquivos.forEach(file => formDataFiles.append("files", file));
+
+      try {
+        setEnviandoImagens(true); // Habilita o carregamento enquanto envia as imagens
+        await axiosInstance.post(`/protoon/documentos/${protocolo.id_protocolo}/multiplos`, formDataFiles, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        });
+        // Caso a resposta seja bem-sucedida
+        exibirMensagem("Imagens enviadas com sucesso!", 'success');
+      } catch (error) {
+        console.error('Erro ao enviar documentos:', error);
+        exibirMensagem('Falha ao enviar as imagens. Tente novamente mais tarde.', 'error');
+      } finally {
+        setEnviandoImagens(false); // Desabilita o carregamento quando terminar
+      }
+    }
   };
+
+  const buscarImagens = async () => {
+    try {
+      console.log(protocolo.id_protocolo);
+
+      const response = await axiosInstance.get(`/protoon/documentos/${protocolo.id_protocolo}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+
+      // Usa a URL de download correta para exibir no <img>
+      const imagensExtraidas = response.data
+        .filter(doc => doc.tipoArquivo.startsWith("image")) // filtra só imagens
+        .map(doc => doc.urlDownload);
+
+      setImagens(imagensExtraidas);
+      setMostrarModalDoc(true);
+    } catch (error) {
+      console.error('Erro ao buscar imagens:', error);
+    }
+  };
+
+
+
+
+
 
   const motivosRecusa = [
     "Documentação incompleta",
@@ -446,11 +504,25 @@ function AnalisarProtocolos() {
           </fieldset>
 
           <fieldset className={styles.descricaoFieldset}>
-            <legend className={styles.fieldsetLegend}>Descrição do problema</legend>
+            <legend className={styles.fieldsetLegend}>
+              Descrição do problema
+              <button
+                type="button"
+                className={styles.clipButton}
+                onClick={buscarImagens}
+                title="Ver anexos"
+              >
+                <FiPaperclip size={18} />
+              </button>
+              - Anexos
+            </legend>
+
             <div className={styles.descricaoContainer}>
               {protocolo.descricao}
             </div>
           </fieldset>
+
+
 
           {devolutivaMaisRecente && (
             <fieldset className={styles.devolutivaFieldset}>
@@ -556,6 +628,38 @@ function AnalisarProtocolos() {
             </table>
           </fieldset>
 
+          <fieldset className={styles.uploadContainer}>
+            <label className={styles.uploadLabel}>
+              Anexar imagens (opcional):
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => {
+                  const files = Array.from(e.target.files);
+                  setArquivos(files);
+                  setPreviews(files.map(file => window.URL.createObjectURL(file)));
+                }}
+                className={styles.uploadInput}
+              />
+            </label>
+
+            {previews.length > 0 && (
+              <div className={styles.previewGrid}>
+                {previews.map((preview, idx) => (
+                  <img
+                    key={idx}
+                    src={preview}
+                    alt={`preview-${idx}`}
+                    className={styles.previewImage}
+                    onClick={() => setImagemZoom(preview)}
+                  />
+                ))}
+              </div>
+            )}
+          </fieldset>
+
+
           <fieldset className={styles.devolutivaFieldset}>
             <legend className={styles.fieldsetLegend}>Escreva sua devolutiva</legend>
             <div className={styles.devolutivaTextareaContainer}>
@@ -566,8 +670,14 @@ function AnalisarProtocolos() {
                 placeholder="Digite sua devolutiva para poder enviar as alterações..."
               />
             </div>
-            {!devolutiva || devolutiva.trim() !== '' && removeLoading && (<button onClick={novaDevolutiva} disabled={enviandoDevolutiva || mensagemAtiva}>
-              {enviandoDevolutiva ? 'Enviando...' : 'Enviar Devolutiva'}
+            {!devolutiva || devolutiva.trim() !== '' && removeLoading && (<button
+              onClick={() => {
+                novaDevolutiva();
+                if (arquivos.length > 0) {
+                  enviarImagens();
+                }
+              }} disabled={enviandoDevolutiva || mensagemAtiva || enviandoImagens}>
+              {enviandoDevolutiva || enviandoImagens? 'Enviando...' : 'Enviar Devolutiva'}
             </button>)}
             {!removeLoading && <Loading />}
           </fieldset>
@@ -590,6 +700,7 @@ function AnalisarProtocolos() {
         </div >
       }
       <div>
+        {/* Modal de Motivo de Recusa */}
         {mostrarModal && (
           <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
@@ -601,19 +712,54 @@ function AnalisarProtocolos() {
               >
                 <option value="">Selecione um motivo</option>
                 {motivosRecusa.map((motivo, index) => (
-                  <option key={index} value={motivo}>{motivo}</option>
+                  <option key={index} value={motivo}>
+                    {motivo}
+                  </option>
                 ))}
               </select>
               <div className={styles.modalButtons}>
                 <button onClick={handleConfirmarMotivo}>Confirmar</button>
-                <button onClick={() => setMostrarModal(false)}>
-                  Cancelar
-                </button>
+                <button onClick={() => setMostrarModal(false)}>Cancelar</button>
               </div>
             </div>
           </div>
         )}
+
+        {/* Modal de Visualização de Imagens */}
+        {mostrarModalDoc && (
+          <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}>
+              <h2 className={styles.modalTitle}>Imagens do Protocolo</h2>
+              <div className={styles.imagensGrid}>
+                {imagens.length > 0 ? (
+                  imagens.map((url, index) => (
+                    <img
+                      key={index}
+                      src={url}
+                      alt={`imagem-${index}`}
+                      className={styles.imagemItem}
+                      onClick={() => setImagemZoom(url)}
+                    />
+                  ))
+                ) : (
+                  <p>Nenhuma imagem encontrada.</p>
+                )}
+              </div>
+              <div className={styles.modalButtons}>
+                <button onClick={() => setMostrarModalDoc(false)}>Fechar</button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
+      {imagemZoom && (
+        <div className={styles.zoomOverlay} onClick={() => setImagemZoom(null)}>
+          <img src={imagemZoom} alt="Imagem em zoom" className={styles.zoomedImage} />
+          <button className={styles.closeZoom} onClick={() => setImagemZoom(null)}>×</button>
+        </div>
+      )}
+
     </>
   );
 }
