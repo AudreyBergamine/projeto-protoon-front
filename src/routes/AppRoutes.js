@@ -7,7 +7,7 @@ import LoginForm from '../components/gerais/login/login';
 
 import CadastroAssunto from '../components/coordenador/cadastroAssunto/cadastroAssunto';
 import CadastrarMunicipe from '../components/municipe/cadastrarMunicipe/cadastrarMunicipe';
-import RecuperarSenhaForm from '../components/municipe/recuperarSenha';
+import RecuperarSenhaForm from '../components/municipe/recuperarSenha/recuperarSenha';
 import AtualizarForm from '../components/municipe/atualizarSenha';
 import PaginaInicalMunicipe from '../components/municipe/paginaInicialMunicipe/paginaInicialMunicipe';
 import Reclamar from '../components/gerais/reclamar/reclamar';
