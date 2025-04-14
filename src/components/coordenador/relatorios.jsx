@@ -71,8 +71,42 @@ const ErrorMessage = styled.div`
   border-radius: 4px;
 `;
 
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: ${props => (props.show ? "flex" : "none")};
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  max-width: 700px;
+  width: 90%;
+  white-space: pre-wrap;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+`;
+
+const CloseButton = styled.button`
+  background: #8884d8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  float: right;
+  cursor: pointer;
+`;
+
 const Relatorios = () => {
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
   const [state, setState] = useState({
     protocolos: [],
     secretarias: [],
@@ -218,6 +252,86 @@ const Relatorios = () => {
     }
   };
 
+  const generateAnalysisManual = () => {
+    if (protocolosFiltrados.length === 0) return;
+
+    setState(prev => ({ ...prev, loadingAnalysis: true, analysis: "", error: null }));
+
+    try {
+      const problemasCount = {};
+      const mesesCount = {};
+
+      protocolosFiltrados.forEach((protocolo) => {
+        // Contagem por tipo de problema
+        const tipo = protocolo.assunto || "Desconhecido";
+        problemasCount[tipo] = (problemasCount[tipo] || 0) + 1;
+
+        // Contagem por mês
+        const data = new Date(protocolo.data_protocolo);
+        const mes = `${data.getMonth() + 1}/${data.getFullYear()}`; // Ex: 4/2025
+        mesesCount[mes] = (mesesCount[mes] || 0) + 1;
+      });
+
+      // Tipo de problema com mais e menos ocorrências
+      const problemasEntries = Object.entries(problemasCount);
+      const [problemaMaisComum] = problemasEntries.reduce((a, b) => a[1] > b[1] ? a : b);
+      const [problemaMenosComum] = problemasEntries.reduce((a, b) => a[1] < b[1] ? a : b);
+
+      // Mês com mais e menos protocolos
+      const mesesEntries = Object.entries(mesesCount);
+      const [mesMaisProtocolos] = mesesEntries.reduce((a, b) => a[1] > b[1] ? a : b);
+      const [mesMenosProtocolos] = mesesEntries.reduce((a, b) => a[1] < b[1] ? a : b);
+
+      const qtdProblemaMaisComum = protocolosFiltrados.filter(
+        protocolo => protocolo.assunto === problemaMaisComum
+      ).length;
+
+      const qtdProblemaMenosComum = protocolosFiltrados.filter(
+        protocolo => protocolo.assunto === problemaMenosComum
+      ).length;
+
+      const qtdMesMaisProtocolos = protocolosFiltrados.filter(
+        protocolo => {
+          const data = new Date(protocolo.data_protocolo);
+          const mes = `${data.getMonth() + 1}/${data.getFullYear()}`;
+          return mes === mesMaisProtocolos;
+        }
+      ).length;
+
+      const qtdMesMenosProtocolos = protocolosFiltrados.filter(
+        protocolo => {
+          const data = new Date(protocolo.data_protocolo);
+          const mes = `${data.getMonth() + 1}/${data.getFullYear()}`;
+          return mes === mesMenosProtocolos;
+        }
+      ).length;
+
+      const relatorio = `
+📊 RELATÓRIO
+
+🔧 Tipo de problema mais comum: ${problemaMaisComum} (${qtdProblemaMaisComum} ocorrências)
+🔍 Tipo de problema menos comum: ${problemaMenosComum} (${qtdProblemaMenosComum} ocorrências)
+
+📅 Mês com mais protocolos: ${mesMaisProtocolos} (${qtdMesMaisProtocolos} protocolos)
+📉 Mês com menos protocolos: ${mesMenosProtocolos} (${qtdMesMenosProtocolos} protocolos)
+`;
+
+      setState(prev => ({
+        ...prev,
+        analysis: relatorio.trim(),
+        error: null
+      }));
+      setShowModal(true);
+
+    } catch (error) {
+      setState(prev => ({
+        ...prev,
+        error: "Erro ao gerar análise manual"
+      }));
+    } finally {
+      setState(prev => ({ ...prev, loadingAnalysis: false }));
+    }
+  };
 
   return (
     <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
@@ -240,6 +354,13 @@ const Relatorios = () => {
         disabled={state.loadingAnalysis || protocolosFiltrados.length === 0}
       >
         {state.loadingAnalysis ? "Gerando Análise..." : "Gerar Análise com IA"}
+      </GenerateButton>
+
+      <GenerateButton
+        onClick={generateAnalysisManual}
+        disabled={state.loadingAnalysis || protocolosFiltrados.length === 0}
+      >
+        {state.loadingAnalysis ? "Gerando Análise..." : "Gerar Análise"}
       </GenerateButton>
 
       {state.error && <ErrorMessage>{state.error}</ErrorMessage>}
@@ -279,6 +400,15 @@ const Relatorios = () => {
           <div>{state.analysis}</div>
         </AnalysisContainer>
       )}
+
+      <ModalOverlay show={showModal}>
+        <ModalContent>
+          <CloseButton onClick={() => setShowModal(false)}>Fechar</CloseButton>
+          <h3>Análise</h3>
+          <div>{state.analysis}</div>
+        </ModalContent>
+      </ModalOverlay>
+
     </div>
   );
 };
