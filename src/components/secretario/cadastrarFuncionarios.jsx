@@ -260,7 +260,7 @@ function CadastrarFuncionario() {
     <form onSubmit={handleSubmit}>
       <div style={{ paddingBottom: '100px' }}>
 
-        <h3>Dados Pessoais</h3>
+        <h3 style={{ marginTop: 70 }}>Dados Pessoais</h3>
         <div className="register-form">
           <div className="input-container">
 
@@ -401,18 +401,7 @@ function CadastrarFuncionario() {
                 className={alert === '' ? 'readonly-bg' : ""}
               />
             </div>
-            {/* <div> 
-              <label>Nome Endereço:</label><br></br>
-              <input
-                type="text"
-                name="nome_endereco"
-                placeholder="Ex.: Casa"
-                value={formData.endereco.nome_endereco}
-                onChange={handleChange}
-                required
-                minLength={3}
-              />
-            </div>*/}
+
             <div>
               <label>Número:</label><br></br>
               <input
@@ -516,16 +505,15 @@ function CadastrarFuncionario() {
             </div>
           </div>
         </div>
-        {message && <Message type={type} msg={message} />}
-        {!removeLoading && <Loading />}
-        {removeLoading && <div style={{ marginTop: -30 }}>
-          <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
-          <button className="btn-log" onClick={sendToLogin}>Voltar</button>
-        </div>}
+        <div style={{ marginTop: 50 }}>
+          {message && <Message type={type} msg={message} />}
+          {!removeLoading && <Loading />}
+          {removeLoading && <div style={{ marginTop: -30 }}>
+            <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Cadastrar-se</button>
+            <button className="btn-log" onClick={sendToLogin}>Voltar</button>
+          </div>}
+        </div>
       </div>
-      <footer className="footer">
-        © 2024 Proto-on. Todos os direitos reservados.
-      </footer>
     </form>
   );
 }

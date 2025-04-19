@@ -25,10 +25,10 @@ function PerfilSecretario() {
   });
 
   // Recuperar o token do localStorage
-const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
 
-// Adicionar o token ao cabeçalho de autorização
-axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  // Adicionar o token ao cabeçalho de autorização
+  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
   const [formData, setFormData] = useState({
     nome: "",
@@ -52,7 +52,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   });
 
   const handleAlertChange = (newAlert) => {
-    setAlert(newAlert);    
+    setAlert(newAlert);
   };
 
   useEffect(() => {
@@ -102,7 +102,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     const selectedSecretariaId = e.target.value;
   };
 
- 
+
 
   const formatValue = (value) => {
     // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem no sepaados da palavra
@@ -165,8 +165,8 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
   };
 
- 
-  const voltarAnterior = async() =>{
+
+  const voltarAnterior = async () => {
     navigate(-1)
   }
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
@@ -193,8 +193,8 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
     try {
       console.log(formData)
-      const response = await axiosInstance.put(`/protoon/funcionarios/bytoken`,formData
-    );
+      const response = await axiosInstance.put(`/protoon/funcionarios/bytoken`, formData
+      );
 
       setRemoveLoading(false)
 
@@ -240,7 +240,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   return (
 
     <form onSubmit={handleSubmit}>
-      <div style={{ paddingBottom: '50px' }}>
+      <div style={{ paddingBottom: '50px', marginTop: 70 }}>
 
         <h3>Dados Pessoais</h3>
         <div className="register-form">
@@ -291,9 +291,9 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             <div>
               <label>Celular:</label><br></br>
               <SetCelular
-              celularValue={celularValue}
+                celularValue={celularValue}
                 onCelularChange={handleChangeCelular}
-                
+
               />
             </div>
 
@@ -310,10 +310,10 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             </div>
 
           </div>
-         
+
         </div>
-          
-          
+
+
         <hr></hr>
         <h3>Endereço</h3>
         <div className="register-form">
@@ -456,16 +456,15 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             </div>
           </div>
         </div>
-        {message && <Message type={type} msg={message} />}
-        {!removeLoading && <Loading />}
-        {removeLoading && <div style={{ marginTop: -30 }}>
-          <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Atualizar</button>
-          <button className="btn-log" onClick={voltarAnterior}>Voltar</button>
-        </div>}
+        <div style={{ marginTop: 50 }}>
+          {message && <Message type={type} msg={message} />}
+          {!removeLoading && <Loading />}
+          {removeLoading && <div style={{ marginTop: -30 }}>
+            <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Atualizar</button>
+            <button className="btn-log" onClick={voltarAnterior}>Voltar</button>
+          </div>}
+        </div>
       </div>
-      <footer className="footer">
-        © 2024 Proto-on. Todos os direitos reservados.
-      </footer>
     </form>
   );
 }

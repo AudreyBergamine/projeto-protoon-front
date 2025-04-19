@@ -27,11 +27,11 @@ function AnalisarFuncionarios() {
     withCredentials: true, // Set withCredentials to true
   });
 
-      // Recuperar o token do localStorage
-const token = localStorage.getItem('token');
+  // Recuperar o token do localStorage
+  const token = localStorage.getItem('token');
 
-// Adicionar o token ao cabeçalho de autorização
-axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  // Adicionar o token ao cabeçalho de autorização
+  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   //Este campo abaixo é um objeto em json que é enviado ao backend para requisitar o cadastro!
   const [formData, setFormData] = useState({
     nome: "",
@@ -55,7 +55,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   });
 
   const handleAlertChange = (newAlert) => {
-    setAlert(newAlert);    
+    setAlert(newAlert);
   };
 
   useEffect(() => {
@@ -106,7 +106,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   const handleSecretariaChange = (e) => {
     const selectedSecretariaId = e.target.value;
     setIdSecretariaSelecionada(selectedSecretariaId);
-  }; 
+  };
 
   const formatValue = (value) => {
     // Converter para minúsculas e manter "de", "da", "do", "das" e "dos" em minúsculo quando estiverem no separados da palavra
@@ -175,8 +175,8 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       });
     }
   };
- 
-  const voltarAnterior = async() =>{
+
+  const voltarAnterior = async () => {
     navigate(-1)
   }
   //A função abaixo lida com a conexão com o backend e a requisição de cadastrar um municipe.
@@ -205,7 +205,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       console.log(id)
       console.log(idSecretariaSelecionada)
       console.log(formData)
-      const response = await axiosInstance.put(`/protoon/funcionarios/${id}/${idSecretariaSelecionada}`,formData);
+      const response = await axiosInstance.put(`/protoon/funcionarios/${id}/${idSecretariaSelecionada}`, formData);
 
       setRemoveLoading(false)
 
@@ -253,7 +253,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     <form onSubmit={handleSubmit}>
       <div style={{ paddingBottom: '50px' }}>
 
-        <h3>Dados Pessoais</h3>
+        <h3 style={{ marginTop: 70 }}>Dados Pessoais</h3>
         <div className="register-form">
           <div className="input-container">
 
@@ -302,9 +302,9 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             <div>
               <label>Celular:</label><br></br>
               <SetCelular
-              celularValue={celularValue}
+                celularValue={celularValue}
                 onCelularChange={handleChangeCelular}
-                
+
               />
             </div>
 
@@ -321,36 +321,36 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             </div>
 
           </div>
-         
+
         </div>
         <div>
-            <h3 >Secretaria</h3>
-            <select
-              style={{ fontSize: 18, marginRight: 10, padding: 10, borderRadius: 10, textAlign: "center" }}
-              value={idSecretariaSelecionada} // Aqui se precisa usar idSecretariaSelecionada em vez de selectedSecretaria
-              onChange={handleSecretariaChange}
-            >
-              {secretarias.map(secretaria => (
-                <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
-                  {secretaria.nome_secretaria}
-                </option>
-              ))}
-            </select>
-          </div>
-          
-          <div>
-        <h3>Selecionar o cargo do funcionário:</h3>
-        <select
-          style={{ fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center" }}
-          name="role"
-          value={formData.role} // Role pré-selecionada
-          onChange={handleRoleChange}
-        >
-          {roles.map(role => (
-            <option key={role} value={role}>{role}</option>
-          ))}
-        </select>
-      </div>
+          <h3 >Secretaria</h3>
+          <select
+            style={{ fontSize: 18, marginRight: 10, padding: 10, borderRadius: 10, textAlign: "center" }}
+            value={idSecretariaSelecionada} // Aqui se precisa usar idSecretariaSelecionada em vez de selectedSecretaria
+            onChange={handleSecretariaChange}
+          >
+            {secretarias.map(secretaria => (
+              <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
+                {secretaria.nome_secretaria}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <h3>Selecionar o cargo do funcionário:</h3>
+          <select
+            style={{ fontSize: 20, padding: 10, borderRadius: 10, textAlign: "center" }}
+            name="role"
+            value={formData.role} // Role pré-selecionada
+            onChange={handleRoleChange}
+          >
+            {roles.map(role => (
+              <option key={role} value={role}>{role}</option>
+            ))}
+          </select>
+        </div>
         <hr></hr>
         <h3>Endereço</h3>
         <div className="register-form">
@@ -481,16 +481,15 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             </div>
           </div>
         </div>
-        {message && <Message type={type} msg={message} />}
-        {!removeLoading && <Loading />}
-        {removeLoading && <div style={{ marginTop: -30 }}>
-          <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Atualizar</button>
-          <button className="btn-log" onClick={voltarAnterior}>Voltar</button>
-        </div>}
+        <div style={{ marginTop: 50 }}>
+          {message && <Message type={type} msg={message} />}
+          {!removeLoading && <Loading />}
+          {removeLoading && <div style={{ marginTop: -30 }}>
+            <button type="submit" className="btn-cad" style={{ marginRight: '100px' }}>Atualizar</button>
+            <button className="btn-log" onClick={voltarAnterior}>Voltar</button>
+          </div>}
+        </div>
       </div>
-      <footer className="footer">
-        © 2024 Proto-on. Todos os direitos reservados.
-      </footer>
     </form>
   );
 }

@@ -88,7 +88,7 @@ axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         <tbody>
           {filteredFuncionarios.map((funcionario, index) => (
             <React.Fragment key={funcionario.id} >              
-              <tr onClick={() => handleClick(funcionario.id)} className="rowTable">
+              <tr onClick={() => handleClick(funcionario.id)} className="rowTable" style={{ cursor: 'pointer' }}>
                 <td style={{ textAlign: 'center', minWidth: 300 }}>{funcionario.nome}</td>
                 <td style={{ textAlign: 'center', minWidth: 200 }}>{funcionario.email}</td>
                 <td style={{ textAlign: 'center', minWidth: 200 }}>{funcionario.role}</td>
