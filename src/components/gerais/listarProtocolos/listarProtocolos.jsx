@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft, FiInbox } from 'react-icons/fi';
 import URL from '../../services/url';
-import { differenceInDays, parseISO } from 'date-fns';
+import { parseISO, differenceInDays, isBefore } from 'date-fns';
 import styles from './listarProtocolos.module.css';
 
 function ListarProtocolosBySecretaria() {
@@ -80,7 +80,7 @@ function ListarProtocolosBySecretaria() {
 
     // Se o prazo já passou e o status não for "CONCLUIDO", atualiza
     if (prazo < dataAtual && protocolo.status !== "CONCLUIDO") {
-      return { ...protocolo, status: "CONCLUIDO" };
+      return { ...protocolo, status: protocolo.status };
     }
 
     return protocolo;
@@ -114,22 +114,49 @@ function ListarProtocolosBySecretaria() {
     }
   };
 
-  const prazoCor = (prazoConclusao, dataProtocolo) => {
+  const prazoCor = (prazoConclusao, dataProtocolo, status) => {
     const agora = new Date();
-    if (!prazoConclusao || !dataProtocolo) return {};
-    if (!prazoConclusao < agora) return {};
+    const statusSemPrazo = new Set(['PAGAMENTO_PENDENTE', 'CONCLUIDO', 'RECUSADO', 'CANCELADO']);
+
+    // Se não tiver dados de prazo ou for um status que não precisa de prazo
+    if (!prazoConclusao || !dataProtocolo || statusSemPrazo.has(status)) {
+      return {};
+    }
 
     const prazo = parseISO(prazoConclusao);
     const dataInicio = parseISO(dataProtocolo);
-    const diasRestantes = differenceInDays(prazo, dataInicio);
 
-    // Deixa o prazo mais evidente
+    // Verifica se o prazo já venceu (apenas para status que precisam de prazo)
+    if (isBefore(prazo, agora)) {
+      return {
+        backgroundColor: '#e74c3c',  // Vermelho forte
+        color: 'white',
+        fontWeight: 'bold'
+      };
+    }
+
+    // Calcula dias restantes
+    const diasRestantes = differenceInDays(prazo, agora);
+
+    // Prazo crítico (menos de 3 dias)
     if (diasRestantes <= 3) {
-      return { backgroundColor: '#e74c3c', color: 'red' };
+      return {
+        backgroundColor: '#e74c3c',  // Vermelho
+        color: 'white',
+        fontWeight: 'bold'
+      };
     }
-    if (diasRestantes <= 8) {
-      return { backgroundColor: '#f39c12', color: 'black' };
+
+    // Prazo próximo (entre 4 e 7 dias)
+    if (diasRestantes <= 7) {
+      return {
+        backgroundColor: '#f39c12',  // Amarelo/laranja
+        color: 'black',
+        fontWeight: 'bold'
+      };
     }
+
+    // Prazo normal (mais de 7 dias)
     return {};
   };
 
@@ -223,14 +250,14 @@ function ListarProtocolosBySecretaria() {
           </thead>
           <tbody>
             {filteredProtocolos.map((protocolo) => {
-              const prazoStyle = prazoCor(protocolo.prazoConclusao, protocolo.data_protocolo);
+              const prazoStyle = prazoCor(protocolo.prazoConclusao, protocolo.data_protocolo, protocolo.status);
               const rowClass = prazoStyle.backgroundColor === '#e74c3c'
                 ? styles.rowTableRed
                 : prazoStyle.backgroundColor === '#f39c12'
                   ? styles.rowTableYellow
                   : styles.rowTableNormal;
 
-              const isCancelado = protocolo.status === 'CANCELADO';
+              const isCancelado = protocolo.status === 'PAGAMENTO_PENDENTE';
               const clickHandler = isCancelado ? undefined : () => handleClick(protocolo.id_protocolo);
 
               return (
@@ -251,7 +278,7 @@ function ListarProtocolosBySecretaria() {
                   <td>{protocolo.valor ? `R$ ${protocolo.valor.toFixed(2)}` : "Grátis"}</td>
                   {filtroStatus.length === 0 && (
                     <td style={{
-                      color: prazoStyle.color,
+                      color: 'black',
                       fontWeight: prazoStyle.backgroundColor === '#e74c3c' ? 'bold' : 'normal'
                     }}>
                       {protocolo.prazoConclusao ? formatarDataHora(protocolo.prazoConclusao) : "Sem prazo"}

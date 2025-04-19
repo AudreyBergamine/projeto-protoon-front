@@ -44,28 +44,40 @@ function PaginaInicialCoordenador() {
 
         // Verifica o status dos protocolos
         const agora = new Date();
-        const temVencido = protocolosAtualizados.some(
-          (protocolo) =>
-            protocolo.prazoConclusao !== null &&
-            new Date(protocolo.prazoConclusao) < agora
+
+        const statusSemPrazo = new Set(['PAGAMENTO_PENDENTE', 'CONCLUIDO', 'RECUSADO', 'CANCELADO']);
+
+        const prazoAtualizados = protocolosAtualizados.map(protocolo => {
+          const updated = statusSemPrazo.has(protocolo.status)
+            ? { ...protocolo, prazoConclusao: null }
+            : protocolo;
+
+          return updated;
+        });
+
+        // 3. Filtra apenas protocolos com prazo válido para as verificações
+        const protocolosComPrazo = prazoAtualizados.filter(p => p.prazoConclusao !== null);
+
+        // 4. Verifica prazos vencidos (antes da data atual)
+        const temVencido = protocolosComPrazo.some(
+          protocolo => new Date(protocolo.prazoConclusao) < agora
         );
 
-        const temProximo = protocolosAtualizados.some(
-          (protocolo) =>
-            protocolo.prazoConclusao !== null &&
-            new Date(protocolo.prazoConclusao) >= agora &&
-            new Date(protocolo.prazoConclusao) <= new Date(agora.getTime() + 7 * 24 * 60 * 60 * 1000) // 7 dias
+        const temProximo = protocolosComPrazo.some(
+          protocolo => {
+            const prazoDate = new Date(protocolo.prazoConclusao);
+            return prazoDate >= agora &&
+              prazoDate <= new Date(agora.getTime() + 7 * 24 * 60 * 60 * 1000);
+          }
         );
 
         // Verifica se o prazo restante é menor que 3 dias e exibe o alerta vermelho
-        const prazoMenorQue3Dias = protocolosAtualizados.some(
+        const prazoMenorQue3Dias = protocolosComPrazo.some(
           (protocolo) => protocolo.prazoRestante < 4
         );
 
-        if (prazoMenorQue3Dias) {
-          setAlertaStatus("vermelho"); // Alerta vermelho para protocolos com prazo menor que 3 dias
-        } else if (temVencido) {
-          setAlertaStatus("vermelho"); // Alerta vermelho se houver protocolos vencidos
+        if (prazoMenorQue3Dias || temVencido) {
+          setAlertaStatus("vermelho");
         } else if (temProximo) {
           setAlertaStatus("amarelo"); // Alerta amarelo se houver protocolos próximos do vencimento
         } else {
