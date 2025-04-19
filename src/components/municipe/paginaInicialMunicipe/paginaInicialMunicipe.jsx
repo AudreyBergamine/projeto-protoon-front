@@ -20,14 +20,14 @@ function PaginaInicialMunicipe() {
 
         <div className={styles.actionCards}>
           {/* Card de Reclamação */}
-          <div className={styles.actionCard} onClick={sendToReclamar}>
+          {/* <div className={styles.actionCard} onClick={sendToReclamar}>
             <div className={styles.cardIcon} style={{ backgroundColor: '#ff6b6b' }}>
               <FaExclamationTriangle size={24} />
             </div>
             <h3 className={styles.cardTitle}>Abrir Reclamação</h3>
             <p className={styles.cardText}>Registre problemas ou irregularidades encontradas</p>
             <button className={styles.cardButton}>Acessar</button>
-          </div>
+          </div> */}
 
           {/* Card de Serviço */}
           <div className={styles.actionCard} onClick={sendToSolicitarServico}>
@@ -50,11 +50,6 @@ function PaginaInicialMunicipe() {
           </div>
         </div>
       </main>
-
-      {/* Rodapé */}
-      {/* <footer className={styles.footer}>
-        <p>© {new Date().getFullYear()} Prefeitura Municipal - Todos os direitos reservados</p>
-      </footer> */}
     </div>
   );
 }
