@@ -104,6 +104,49 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
+// Adicione estilos para os novos componentes
+const PeriodoContainer = styled.div`
+  display: flex;
+  justify-content: space-between; /* Distribui espaço entre os itens */
+  align-items: center;
+  margin: 0 0 20px 20px;
+  gap: 15px;
+  width: calc(100% - 20px); /* Ajusta a largura para compensar a margem */
+`;
+
+const FilterGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const PeriodoSelect = styled.select`
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+`;
+
+const DateInput = styled.input`
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+`;
+
+const PeriodoLabel = styled.span`
+  font-size: 14px;
+  font-weight: 500;
+`;
+
+const AssuntoSelect = styled.select`
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  min-width: 250px;
+`;
+
 const Relatorios = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -112,8 +155,14 @@ const Relatorios = () => {
     secretarias: [],
     idSecretariaSelecionada: "",
     analysis: "",
+    analysisType: "",
     loadingAnalysis: false,
-    error: null
+    error: null,
+    periodoSelecionado: "30", // Valor padrão: 30 dias
+    dataInicio: null,
+    dataFim: null,
+    assuntoSelecionado: "", // Novo estado para o filtro de assunto
+    assuntosDisponiveis: [] // Lista de assuntos únicos
   });
 
   const axiosInstance = axios.create({
@@ -121,6 +170,52 @@ const Relatorios = () => {
     withCredentials: true,
     timeout: 30000
   });
+
+  const filtrarPorPeriodo = (protocolos) => {
+    if (!state.periodoSelecionado) { // Se for "" (Todo Período)
+      return protocolos; // Retorna todos sem filtrar
+    }
+
+    const agora = new Date();
+    let dataInicioFiltro = new Date();
+    let dataFimFiltro = new Date();
+
+    // Definir período baseado na seleção
+    switch (state.periodoSelecionado) {
+      case "7":
+        dataInicioFiltro.setDate(agora.getDate() - 7);
+        break;
+      case "30":
+        dataInicioFiltro.setDate(agora.getDate() - 30);
+        break;
+      case "90":
+        dataInicioFiltro.setDate(agora.getDate() - 90);
+        break;
+      case "180":
+        dataInicioFiltro.setDate(agora.getDate() - 180);
+        break;
+      case "365":
+        dataInicioFiltro.setDate(agora.getDate() - 365);
+        break;
+      case "custom":
+        if (state.dataInicio) {
+          dataInicioFiltro = new Date(state.dataInicio);
+        }
+        if (state.dataFim) {
+          dataFimFiltro = new Date(state.dataFim);
+        } else {
+          dataFimFiltro = agora;
+        }
+        break;
+      default:
+        return protocolos;
+    }
+
+    return protocolos.filter(protocolo => {
+      const dataProtocolo = new Date(protocolo.data_protocolo);
+      return dataProtocolo >= dataInicioFiltro && dataProtocolo <= dataFimFiltro;
+    });
+  };
 
   // Verificação de permissão
   useEffect(() => {
@@ -139,10 +234,16 @@ const Relatorios = () => {
           axiosInstance.get("/protoon/protocolo/todos-protocolos")
         ]);
 
+        // Extrai assuntos únicos dos protocolos
+        const assuntosUnicos = [...new Set(protocolosRes.data
+          .map(p => p.assunto)
+          .filter(assunto => assunto))]; // Filtra valores nulos/undefined
+
         setState(prev => ({
           ...prev,
           secretarias: secretariasRes.data,
-          protocolos: protocolosRes.data
+          protocolos: protocolosRes.data,
+          assuntosDisponiveis: assuntosUnicos
         }));
       } catch (error) {
         setState(prev => ({
@@ -155,6 +256,15 @@ const Relatorios = () => {
 
     fetchData();
   }, []);
+
+  const filtrarPorAssunto = (protocolos) => {
+    if (!state.assuntoSelecionado) {
+      return protocolos;
+    }
+    return protocolos.filter(protocolo =>
+      protocolo.assunto === state.assuntoSelecionado
+    );
+  };
 
   const handleSecretariaChange = (e) => {
     setState(prev => ({
@@ -171,13 +281,21 @@ const Relatorios = () => {
       protocolo => protocolo.secretaria &&
         protocolo.secretaria.id_secretaria === Number(state.idSecretariaSelecionada)
     )
-    : state.protocolos;
+    : [...state.protocolos]; // Cria uma nova array com todos protocolos quando não há filtro
+
+  const protocolosPeriodoFiltrados = filtrarPorPeriodo(protocolosFiltrados);
+  const protocolosAllFiltrados = filtrarPorAssunto(protocolosPeriodoFiltrados);
 
   // Preparar dados para o gráfico
   const prepareChartData = () => {
-    const dados = protocolosFiltrados.reduce((acc, protocolo) => {
+    if (protocolosAllFiltrados.length === 0) return [];
+
+    const dados = protocolosAllFiltrados.reduce((acc, protocolo) => {
+      if (!protocolo.data_protocolo) return acc; // Pula protocolos sem data
+
       const date = new Date(protocolo.data_protocolo);
       const dataFormatada = date.toLocaleDateString("pt-BR");
+
       const existente = acc.find(dado => dado.data === dataFormatada);
 
       if (existente) {
@@ -202,7 +320,7 @@ const Relatorios = () => {
   const generateAnalysis = async () => {
     if (protocolosFiltrados.length === 0) return;
 
-    setState(prev => ({ ...prev, loadingAnalysis: true, analysis: "", error: null }));
+    setState(prev => ({ ...prev, loadingAnalysis: true, analysis: "", analysisType: "ia", error: null }));
 
     const chunkSize = 10;
     const chunks = [];
@@ -255,13 +373,13 @@ const Relatorios = () => {
   const generateAnalysisManual = () => {
     if (protocolosFiltrados.length === 0) return;
 
-    setState(prev => ({ ...prev, loadingAnalysis: true, analysis: "", error: null }));
+    setState(prev => ({ ...prev, loadingAnalysis: true, analysis: "", analysisType: "Manual", error: null }));
 
     try {
       const problemasCount = {};
       const mesesCount = {};
 
-      protocolosFiltrados.forEach((protocolo) => {
+      protocolosAllFiltrados.forEach((protocolo) => {
         // Contagem por tipo de problema
         const tipo = protocolo.assunto || "Desconhecido";
         problemasCount[tipo] = (problemasCount[tipo] || 0) + 1;
@@ -282,15 +400,15 @@ const Relatorios = () => {
       const [mesMaisProtocolos] = mesesEntries.reduce((a, b) => a[1] > b[1] ? a : b);
       const [mesMenosProtocolos] = mesesEntries.reduce((a, b) => a[1] < b[1] ? a : b);
 
-      const qtdProblemaMaisComum = protocolosFiltrados.filter(
+      const qtdProblemaMaisComum = protocolosAllFiltrados.filter(
         protocolo => protocolo.assunto === problemaMaisComum
       ).length;
 
-      const qtdProblemaMenosComum = protocolosFiltrados.filter(
+      const qtdProblemaMenosComum = protocolosAllFiltrados.filter(
         protocolo => protocolo.assunto === problemaMenosComum
       ).length;
 
-      const qtdMesMaisProtocolos = protocolosFiltrados.filter(
+      const qtdMesMaisProtocolos = protocolosAllFiltrados.filter(
         protocolo => {
           const data = new Date(protocolo.data_protocolo);
           const mes = `${data.getMonth() + 1}/${data.getFullYear()}`;
@@ -298,7 +416,7 @@ const Relatorios = () => {
         }
       ).length;
 
-      const qtdMesMenosProtocolos = protocolosFiltrados.filter(
+      const qtdMesMenosProtocolos = protocolosAllFiltrados.filter(
         protocolo => {
           const data = new Date(protocolo.data_protocolo);
           const mes = `${data.getMonth() + 1}/${data.getFullYear()}`;
@@ -333,6 +451,15 @@ const Relatorios = () => {
     }
   };
 
+  const ChartInfoLabel = styled.div`
+  margin: 10px 0;
+  padding: 8px 12px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
+`;
+
   return (
     <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
       <h2>Relatório de Protocolos</h2>
@@ -348,6 +475,71 @@ const Relatorios = () => {
           </option>
         ))}
       </SecretariaSelect>
+
+      <PeriodoContainer>
+        {/* Filtro de Período */}
+        <FilterGroup>
+          <PeriodoLabel>Período:</PeriodoLabel>
+          <PeriodoSelect
+            value={state.periodoSelecionado}
+            onChange={(e) => setState(prev => ({
+              ...prev,
+              periodoSelecionado: e.target.value,
+              dataInicio: null,
+              dataFim: null
+            }))}
+          >
+            <option value="">Todo Período</option>
+            <option value="7">Últimos 7 dias</option>
+            <option value="30">Últimos 30 dias</option>
+            <option value="90">Últimos 3 meses</option>
+            <option value="180">Últimos 6 meses</option>
+            <option value="365">Últimos 12 meses</option>
+            <option value="custom">Personalizado</option>
+          </PeriodoSelect>
+
+          {state.periodoSelecionado === "custom" && (
+            <>
+              <DateInput
+                type="date"
+                value={state.dataInicio || ""}
+                onChange={(e) => setState(prev => ({
+                  ...prev,
+                  dataInicio: e.target.value
+                }))}
+              />
+              <span>até</span>
+              <DateInput
+                type="date"
+                value={state.dataFim || ""}
+                onChange={(e) => setState(prev => ({
+                  ...prev,
+                  dataFim: e.target.value
+                }))}
+              />
+            </>
+          )}
+        </FilterGroup>
+
+        {/* Filtro de Assunto */}
+        <FilterGroup>
+          <PeriodoLabel>Assunto:</PeriodoLabel>
+          <AssuntoSelect
+            value={state.assuntoSelecionado}
+            onChange={(e) => setState(prev => ({
+              ...prev,
+              assuntoSelecionado: e.target.value
+            }))}
+          >
+            <option value="">Todos os Assuntos</option>
+            {state.assuntosDisponiveis.map((assunto, index) => (
+              <option key={index} value={assunto}>
+                {assunto}
+              </option>
+            ))}
+          </AssuntoSelect>
+        </FilterGroup>
+      </PeriodoContainer>      
 
       <GenerateButton
         onClick={generateAnalysis}
@@ -367,34 +559,49 @@ const Relatorios = () => {
 
       <ChartContainer>
         <h3>Distribuição Temporal de Protocolos</h3>
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart
-            data={dadosParaGrafico}
-            margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="data"
-              label={{ value: "Data", position: "insideBottomRight", offset: -10 }}
-            />
-            <YAxis
-              label={{ value: "Quantidade", angle: -90, position: "insideLeft" }}
-            />
-            <Tooltip />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="quantidade"
-              stroke="#8884d8"
-              strokeWidth={2}
-              dot={{ r: 4 }}
-              activeDot={{ r: 6 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        <ChartInfoLabel>
+          <span style={{ marginRight: '15px' }}>
+            📅 <strong>{dadosParaGrafico.length}</strong> dias no gráfico
+          </span>
+          <span>
+            📋 <strong>{protocolosAllFiltrados.length}</strong> protocolos no período
+          </span>
+          {state.periodoSelecionado === "custom" && state.dataInicio && state.dataFim && (
+            <span style={{ marginLeft: '15px' }}>
+              📅 Período: {new Date(state.dataInicio).toLocaleDateString()} a {new Date(state.dataFim).toLocaleDateString()}
+            </span>
+          )}
+        </ChartInfoLabel>
+        {dadosParaGrafico.length > 0 && (
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart
+              data={dadosParaGrafico}
+              margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="data"
+                label={{ value: "Data", position: "insideBottomRight", offset: -10 }}
+              />
+              <YAxis
+                label={{ value: "Quantidade", angle: -90, position: "insideLeft" }}
+              />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="quantidade"
+                stroke="#8884d8"
+                strokeWidth={2}
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
       </ChartContainer>
 
-      {state.analysis && (
+      {state.analysis && state.analysis == "ia" && (
         <AnalysisContainer>
           <h3>Análise de IA</h3>
           <div>{state.analysis}</div>

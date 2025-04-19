@@ -68,7 +68,8 @@ function Header({ isAuthenticated, role }) {
     };
 
     const handleChange = (event) => {
-        setCidade(event.target.value);
+        // 
+        return;
     };
 
     // Funções de navegação
