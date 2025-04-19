@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import { format } from 'date-fns';
 import { FiArrowLeft, FiInbox, FiPaperclip, FiCheck, FiX, FiRefreshCw, FiDownload } from 'react-icons/fi';
@@ -19,6 +19,7 @@ function Consultar() {
   const [uploading, setUploading] = useState(false);
   const [currentProtocolo, setCurrentProtocolo] = useState(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const modalRef = useRef(null);
 
   const axiosInstance = axios.create({
     baseURL: URL,
@@ -34,14 +35,14 @@ function Consultar() {
       setIsLoading(true);
       setError(null);
       setMessage(null);
-  
+
       try {
         const response = await axiosInstance.get(`/protoon/protocolo/meus-protocolos/bytoken`);
         console.log('Resposta completa:', response);
-        
+
         // Extrai os protocolos da resposta (considerando diferentes estruturas possíveis)
         let protocolosData = [];
-        
+
         if (Array.isArray(response.data)) {
           // Caso 1: A API retorna um array diretamente
           protocolosData = response.data;
@@ -55,18 +56,18 @@ function Consultar() {
           // Caso 4: Transforma objeto único em array com 1 elemento
           protocolosData = [response.data];
         }
-  
+
         console.log('Protocolos extraídos:', protocolosData);
-        
+
         if (protocolosData.length === 0) {
           setMessage('Você ainda não possui protocolos cadastrados');
           setType('info');
         } else {
           setMessage(null); // Remove mensagem anterior se houver dados
         }
-        
+
         setProtocolos(protocolosData);
-        
+
       } catch (error) {
         console.error('Erro ao buscar os protocolos:', error);
         setError('Erro ao buscar os protocolos. Por favor, tente novamente.');
@@ -77,10 +78,10 @@ function Consultar() {
         setIsLoading(false);
       }
     };
-  
+
     fetchProtocolos();
 
-    
+
   }, []);
 
   const handleClick = (id) => {
@@ -125,6 +126,11 @@ function Consultar() {
   const openUploadModal = (protocolo) => {
     setCurrentProtocolo(protocolo);
     setShowUploadModal(true);
+
+    // Adicione um pequeno timeout para garantir que o modal esteja renderizado
+    setTimeout(() => {
+      modalRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
   };
 
   const closeUploadModal = () => {
@@ -135,12 +141,12 @@ function Consultar() {
 
   const handleUpload = async () => {
     if (!selectedFile || !currentProtocolo) return;
-  
+
     setUploading(true);
-    
+
     const formData = new FormData();
     formData.append('file', selectedFile);
-  
+
     try {
       const response = await axiosInstance.post( // Mude para PUT para indicar atualização
         `/protoon/comprovantes/${currentProtocolo.id_protocolo}`,
@@ -151,26 +157,26 @@ function Consultar() {
           },
         }
       );
-  
+
       setMessage('Comprovante atualizado com sucesso!');
       setType('success');
-      
+
       // Atualiza o protocolo específico
       setProtocolos(prev => prev.map(proto => {
         if (proto.id_protocolo === currentProtocolo.id_protocolo) {
-          return { 
-            ...proto, 
+          return {
+            ...proto,
             comprovante: response.data
           };
         }
         return proto;
       }));
-      
+
       closeUploadModal();
     } catch (error) {
       console.error('Erro ao atualizar comprovante:', error);
       let errorMsg = 'Erro ao atualizar comprovante. Por favor, tente novamente.';
-      
+
       if (error.response) {
         if (error.response.status === 413) {
           errorMsg = 'Arquivo muito grande. Tamanho máximo permitido: 10MB';
@@ -178,7 +184,7 @@ function Consultar() {
           errorMsg = error.response.data.message;
         }
       }
-      
+
       setMessage(errorMsg);
       setType('error');
     } finally {
@@ -200,17 +206,17 @@ function Consultar() {
         </button>
       );
     }
-  
+
     const isImage = protocolo.comprovante.tipoArquivo?.startsWith('image/');
     const fileUrl = protocolo.comprovante.urlDownload || protocolo.comprovante.url;
-  
+
     return (
       <div className={styles.comprovanteContainer}>
         {/* Miniatura da imagem (se for um arquivo de imagem) */}
         {isImage && (
           <div className={styles.comprovanteThumbnail}>
-            <img 
-              src={fileUrl} 
+            <img
+              src={fileUrl}
               alt={`Comprovante ${protocolo.comprovante.nomeArquivo}`}
               className={styles.thumbnailImage}
               onClick={(e) => {
@@ -221,13 +227,13 @@ function Consultar() {
             <span className={styles.zoomHint}>Clique para ampliar</span>
           </div>
         )}
-        
+
         {/* Informações do comprovante */}
         <div className={styles.comprovanteInfo}>
           <div className={styles.comprovanteStatus}>
             {protocolo.comprovante.status === 'PENDENTE' && (
               <span className={styles.comprovantePending}>
-             Em análise
+                Em análise
               </span>
             )}
             {protocolo.comprovante.status === 'APROVADO' && (
@@ -241,7 +247,7 @@ function Consultar() {
               </span>
             )}
           </div>
-          
+
           <div className={styles.comprovanteMeta}>
             <span className={styles.fileName}>
               {protocolo.comprovante.nomeArquivo}
@@ -250,10 +256,10 @@ function Consultar() {
               {(protocolo.comprovante.tamanhoArquivo / 1024).toFixed(2)} KB
             </span>
             <span className={styles.fileDate}>
-            {formatDateSafely(protocolo.comprovante.dataUpload)}
+              {formatDateSafely(protocolo.comprovante.dataUpload)}
             </span>
           </div>
-          
+
           <div className={styles.comprovanteActions}>
             <a
               href={fileUrl}
@@ -289,14 +295,14 @@ function Consultar() {
       {message && <Message type={type} msg={message} />}
 
 
-{isLoading ? (
-  <div className={styles.loadingContainer}>
-    <Loading />
-  </div>
-) : (
-  <div className={styles.tableContainer}>
-    {Array.isArray(protocolos) && protocolos.length > 0 ? (
-      <table className={styles.table}>
+      {isLoading ? (
+        <div className={styles.loadingContainer}>
+          <Loading />
+        </div>
+      ) : (
+        <div className={styles.tableContainer}>
+          {Array.isArray(protocolos) && protocolos.length > 0 ? (
+            <table className={styles.table}>
               <thead className={styles.tableHead}>
                 <tr>
                   <th className={styles.tableHeader}>Assunto</th>
@@ -334,9 +340,9 @@ function Consultar() {
                     <td className={`${styles.tableCell} ${styles.valueCell}`}>
                       {protocolo.valor ? `R$ ${parseFloat(protocolo.valor).toFixed(2)}` : 'Grátis'}
                     </td>
-                    <td className={styles.tableCell}>
+                    {protocolo.status === 'PAGAMENTO_PENDENTE' ? (<td className={styles.tableCell}>
                       {renderComprovanteStatus(protocolo)}
-                    </td>
+                    </td>) : (<td> </td>)}
                     <td className={styles.tableCell}>
                       {protocolo.data_protocolo
                         ? format(new Date(protocolo.data_protocolo), 'dd/MM/yyyy')
@@ -345,26 +351,26 @@ function Consultar() {
                   </tr>
                 ))}
               </tbody>
-              </table>
-    ) : (
-      <div className={styles.emptyState}>
-        <FiInbox className={styles.emptyIcon} />
-        <p className={styles.emptyText}>
-          {error ? 'Erro ao carregar protocolos' : 'Nenhum protocolo encontrado'}
-        </p>
-      </div>
-    )}
-  </div>
-)}
+            </table>
+          ) : (
+            <div className={styles.emptyState}>
+              <FiInbox className={styles.emptyIcon} />
+              <p className={styles.emptyText}>
+                {error ? 'Erro ao carregar protocolos' : 'Nenhum protocolo encontrado'}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Modal de upload */}
       {showUploadModal && (
-        <div className={styles.modalOverlay}>
+        <div ref={modalRef} className={styles.modalOverlay}>
           <div className={styles.modalContent}>
             <h2>Anexar Comprovante</h2>
             <p>Protocolo: {currentProtocolo.numero_protocolo}</p>
             <p>Valor: R$ {parseFloat(currentProtocolo.valor).toFixed(2)}</p>
-            
+
             <div className={styles.uploadArea}>
               <input
                 type="file"

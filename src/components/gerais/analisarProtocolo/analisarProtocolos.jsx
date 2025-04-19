@@ -33,6 +33,7 @@ function AnalisarProtocolos() {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [enviandoDevolutiva, setEnviandoDevolutiva] = useState(false);
   const [mensagemAtiva, setMensagemAtiva] = useState(false);
+  const [isCancelado, setIsCancelado] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarModalDoc, setMostrarModalDoc] = useState(false);
@@ -43,9 +44,6 @@ function AnalisarProtocolos() {
   const [arquivos, setArquivos] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [enviandoImagens, setEnviandoImagens] = useState(false);
-
-
-
 
   const { id } = useParams();
   const role = localStorage.getItem('role')
@@ -62,6 +60,11 @@ function AnalisarProtocolos() {
           setSecretarias(response1.data);
         }
         const response2 = await axiosInstance.get(`/protoon/protocolo/pesquisar-id/${id}`);
+        
+        if (response2.data.status === 'CANCELADO') {
+          setIsCancelado(true)
+        }
+
         setProtocolo(response2.data);
         setStatusSelecionado(response2.data.status);
         setOldValor(response2.data.valor);
@@ -104,6 +107,7 @@ function AnalisarProtocolos() {
 
     try {
       setEnviandoDevolutiva(true);
+      console.log('Erro', devolutiva)
       const response = await axiosInstance.post(`/protoon/devolutiva/criar-devolutiva/${id}`, { devolutiva });
       salvarAlteracoes()
       setTimeout(() => {
@@ -399,11 +403,6 @@ function AnalisarProtocolos() {
     }
   };
 
-
-
-
-
-
   const motivosRecusa = [
     "Documentação incompleta",
     "Dados inconsistentes",
@@ -412,12 +411,16 @@ function AnalisarProtocolos() {
     "Outro"
   ];
 
-
   return (
     <>
       {message ? <div className={styles.messageContainer}><Message type={type} msg={message} /></div> :
         <div className={styles.container}>
           <h1>Detalhes do Protocolo</h1>
+          {isCancelado && (
+            <div className={styles.avisoCancelado}>
+              <Message type="error" msg="Este protocolo está CANCELADO e não pode ser alterado" />
+            </div>
+          )}
 
           {(role === "COORDENADOR" || role === "FUNCIONARIO") && (
             <div className={styles.secretariaContainer}>
@@ -426,6 +429,7 @@ function AnalisarProtocolos() {
                 className={styles.secretariaSelect}
                 value={idSecretariaSelecionada}
                 onChange={handleSecretariaChange}
+                disabled={isCancelado}
               >
                 <option value="">Selecione a secretaria</option>
                 {secretarias
@@ -440,7 +444,10 @@ function AnalisarProtocolos() {
               {role === "FUNCIONARIO" ? (
                 <button className={styles.btnLog} onClick={solicitarRedirecionar}>Solicitar Redirecionamento Protocolo</button>
               ) : (
-                <button className={styles.btnLog} onClick={redirectProtocolo}>Redirecionar Protocolo</button>
+                <button className={styles.btnLog}
+                  onClick={redirectProtocolo}
+                  disabled={isCancelado}>
+                  Redirecionar Protocolo</button>
               )}
 
               {!removeLoading && <Loading />}
@@ -475,6 +482,7 @@ function AnalisarProtocolos() {
                       <select
                         value={protocolo.valor.toFixed(2)}
                         onChange={handleValorChange}
+                        disabled={isCancelado}
                       >
                         <option value="30.00">R$ 30,00</option>
                         <option value="130.00">R$ 130,00</option>
@@ -490,8 +498,10 @@ function AnalisarProtocolos() {
                     <select
                       value={statusSelecionado}
                       onChange={handleStatusChange}
+                      disabled={isCancelado}
                     >
                       <option value="PAGAMENTO_PENDENTE">PAGAMENTO PENDENTE</option>
+                      <option value="EM_ANDAMENTO">EM ANDAMENTO</option>
                       <option value="CIENCIA">CIÊNCIA</option>
                       <option value="CIENCIA_ENTREGA">CIÊNCIA ENTREGA</option>
                       <option value="CONCLUIDO">CONCLUÍDO</option>
@@ -641,6 +651,7 @@ function AnalisarProtocolos() {
                   setPreviews(files.map(file => window.URL.createObjectURL(file)));
                 }}
                 className={styles.uploadInput}
+                disabled={isCancelado}
               />
             </label>
 
@@ -668,6 +679,7 @@ function AnalisarProtocolos() {
                 value={devolutiva}
                 onChange={enviarDevolutiva}
                 placeholder="Digite sua devolutiva para poder enviar as alterações..."
+                disabled={isCancelado}
               />
             </div>
             {!devolutiva || devolutiva.trim() !== '' && removeLoading && (<button
@@ -676,8 +688,8 @@ function AnalisarProtocolos() {
                 if (arquivos.length > 0) {
                   enviarImagens();
                 }
-              }} disabled={enviandoDevolutiva || mensagemAtiva || enviandoImagens}>
-              {enviandoDevolutiva || enviandoImagens? 'Enviando...' : 'Enviar Devolutiva'}
+              }} disabled={enviandoDevolutiva || mensagemAtiva || enviandoImagens || isCancelado}>
+              {enviandoDevolutiva || enviandoImagens ? 'Enviando...' : 'Enviar Devolutiva'}
             </button>)}
             {!removeLoading && <Loading />}
           </fieldset>

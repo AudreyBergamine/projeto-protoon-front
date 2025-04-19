@@ -18,6 +18,24 @@ h1 {
   border-bottom: 2px solid #3498db;
 }
 
+.avisoCancelado {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #ffecec;
+  border-left: 4px solid #ff5252;
+}
+
+/* Estilo para inputs desabilitados */
+input:disabled,
+select:disabled,
+textarea:disabled,
+button:disabled {
+  background-color: #f5f5f5;
+  color: #a0a0a0;
+  cursor: not-allowed;
+  border-color: #e0e0e0;
+}
+
 /* Mensagens */
 .messageContainer {
   margin: 1.5rem 0;

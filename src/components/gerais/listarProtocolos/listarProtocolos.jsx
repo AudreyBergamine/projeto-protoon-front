@@ -34,7 +34,8 @@ function ListarProtocolosBySecretaria() {
           protocolo.secretaria === null ||
           (protocolo.secretaria.id_secretaria === id_secretaria)
         );
-        setProtocolos(protocolosFiltrados);
+        const protocolosAtualizados = protocolosFiltrados.map(verificarEAtualizarStatus);
+        setProtocolos(protocolosAtualizados);
       } catch (error) {
         console.error('Erro ao buscar as secretarias:', error);
       }
@@ -71,6 +72,20 @@ function ListarProtocolosBySecretaria() {
     return () => clearInterval(intervalId);
   }, []);
 
+  const verificarEAtualizarStatus = (protocolo) => {
+    if (!protocolo.prazoConclusao) return protocolo; // Se não houver prazo, retorna sem alteração
+
+    const dataAtual = new Date();
+    const prazo = new Date(protocolo.prazoConclusao);
+
+    // Se o prazo já passou e o status não for "CONCLUIDO", atualiza
+    if (prazo < dataAtual && protocolo.status !== "CONCLUIDO") {
+      return { ...protocolo, status: "CONCLUIDO" };
+    }
+
+    return protocolo;
+  };
+
   useEffect(() => {
     if (protocolos.length > 0 && !isBoletoVencidoRunning.current) {
       isBoletoVencidoRunning.current = true;
@@ -100,7 +115,9 @@ function ListarProtocolosBySecretaria() {
   };
 
   const prazoCor = (prazoConclusao, dataProtocolo) => {
+    const agora = new Date();
     if (!prazoConclusao || !dataProtocolo) return {};
+    if (!prazoConclusao < agora) return {};
 
     const prazo = parseISO(prazoConclusao);
     const dataInicio = parseISO(dataProtocolo);
@@ -130,10 +147,7 @@ function ListarProtocolosBySecretaria() {
     return data.toLocaleString("pt-BR", {
       day: "2-digit",
       month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZone: "America/Sao_Paulo"
+      year: "numeric"
     });
   };
 
@@ -216,10 +230,13 @@ function ListarProtocolosBySecretaria() {
                   ? styles.rowTableYellow
                   : styles.rowTableNormal;
 
+              const isCancelado = protocolo.status === 'CANCELADO';
+              const clickHandler = isCancelado ? undefined : () => handleClick(protocolo.id_protocolo);
+
               return (
                 <tr
                   key={protocolo.id_protocolo}
-                  onClick={() => handleClick(protocolo.id_protocolo)}
+                  onClick={clickHandler}
                   className={`${styles.rowTable} ${rowClass}`}
                 >
                   <td>{protocolo.assunto || 'Não informado'}</td>
