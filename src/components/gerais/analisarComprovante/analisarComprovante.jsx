@@ -32,22 +32,22 @@ function AnalisarComprovantes() {
       setIsLoading(true);
       setError(null);
       setMessage(null);
-  
+
       try {
         const response = await axiosInstance.get(`/protoon/protocolo/todos-protocolos`);
         console.log('Resposta completa:', response);
-        
+
         let protocolosData = Array.isArray(response.data) ? response.data : [];
-        
+
         console.log('Protocolos com comprovantes:', protocolosData);
-        
+
         if (protocolosData.length === 0) {
           setMessage('Nenhum protocolo com comprovante encontrado');
           setType('info');
         }
-        
+
         setProtocolos(protocolosData);
-        
+
       } catch (error) {
         console.error('Erro ao buscar os protocolos:', error);
         setError('Erro ao buscar os protocolos. Por favor, tente novamente.');
@@ -57,7 +57,7 @@ function AnalisarComprovantes() {
         setIsLoading(false);
       }
     };
-  
+
     fetchProtocolosComComprovantes();
   }, []);
 
@@ -67,49 +67,58 @@ function AnalisarComprovantes() {
 
   const handleAtualizarStatus = async (id_comprovante, novoStatus) => {  // Mude o parâmetro para id_comprovante
     try {
-        const statusFormatado = novoStatus.toUpperCase();
-        const statusValidos = ['APROVADO', 'REPROVADO', 'PENDENTE'];
-    
-        if (!statusValidos.includes(statusFormatado)) {
-            throw new Error(`Status inválido. Use: ${statusValidos.join(', ')}`);
+      const statusFormatado = novoStatus.toUpperCase();
+      const statusValidos = ['APROVADO', 'REPROVADO'];
+
+      if (!statusValidos.includes(statusFormatado)) {
+        throw new Error(`Status inválido. Use: ${statusValidos.join(', ')}`);
+      }
+
+      const response = await axiosInstance.put(
+        `/protoon/comprovantes/${id_comprovante}/status?status=${statusFormatado}`,
+        null,
+        {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
         }
-    
-        const response = await axiosInstance.put(
-            `/protoon/comprovantes/${id_comprovante}/status?status=${statusFormatado}`,
-            null,
-            {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            }
-        );
-    
-        setProtocolos(prev =>
-            prev.map(p =>
-                p.comprovante?.id_comprovante === id_comprovante 
-                    ? { ...p, comprovante: response.data } 
-                    : p
-            )
-        );
-        setMessage(`Status atualizado para ${statusFormatado}`);
-        setType('success');
+      );
+
+      setProtocolos(prevProtocolos =>
+        prevProtocolos.map(protocolo => {
+          if (protocolo.comprovante?.id === id_comprovante) {
+            return {
+              ...protocolo,
+              comprovante: {
+                ...protocolo.comprovante,
+                status: statusFormatado,  // Atualiza o status
+              },
+            };
+          }
+          return protocolo;
+        })
+      );
+      
+      setMessage(`Status atualizado para ${statusFormatado}`);
+      setType('success');
     } catch (error) {
-        console.error('Erro detalhado:', error);
-        let errorMsg = 'Erro ao atualizar status';
-        if (error.response) {
-            errorMsg = error.response.data?.error ||
-                       error.response.data?.message ||
-                       error.response.statusText ||
-                       'Erro no servidor';
-        } else if (error.request) {
-            errorMsg = 'Sem resposta do servidor';
-        } else {
-            errorMsg = error.message;
-        }
-        setMessage(errorMsg);
-        setType('error');
+      console.error('Erro detalhado:', error);
+      let errorMsg = 'Erro ao atualizar status';
+      if (error.response) {
+        errorMsg = error.response.data?.error ||
+          error.response.data?.message ||
+          error.response.statusText ||
+          'Erro no servidor';
+      } else if (error.request) {
+        errorMsg = 'Sem resposta do servidor';
+      } else {
+        errorMsg = error.message;
+      }
+      setMessage(errorMsg);
+      setType('error');
     }
-};
+  };
+
   const formatDateSafely = (dateString) => {
     try {
       if (!dateString) return 'Data não disponível';
@@ -121,11 +130,22 @@ function AnalisarComprovantes() {
   };
 
   const protocolosFiltrados = protocolos.filter(protocolo => {
-    // Filtro por status
-    if (filtroStatus !== 'TODOS' && protocolo.comprovante?.status !== filtroStatus) {
-      return false;
+    // Filtro por status (só aplica se não for "TODOS")
+    if (filtroStatus !== 'TODOS') {
+      // Se não houver comprovante, descarta o protocolo
+      if (!protocolo.comprovante) {
+        return false;
+      }
+      // Filtra pelo status do comprovante
+      if (protocolo.comprovante.status !== filtroStatus) {
+        return false;
+      }
+    } else {
+      if (!protocolo.comprovante) {
+        return false;
+      }
     }
-    
+
     // Filtro por termo de busca (assunto, número do protocolo ou nome do munícipe)
     if (termoBusca) {
       const busca = termoBusca.toLowerCase();
@@ -135,29 +155,29 @@ function AnalisarComprovantes() {
         (protocolo.municipe?.nome?.toLowerCase().includes(busca))
       );
     }
-    
+
     return true;
   });
 
   const renderComprovanteStatus = (protocolo) => {
     if (!protocolo.comprovante) return null;
-    
+
     const isImage = protocolo.comprovante.tipoArquivo?.startsWith('image/');
     const fileUrl = protocolo.comprovante.urlDownload || protocolo.comprovante.url;
-    
+
     return (
       <div className={styles.comprovanteContainer}>
         {isImage && (
           <div className={styles.comprovanteThumbnail}>
-            <img 
-              src={fileUrl} 
+            <img
+              src={fileUrl}
               alt={`Comprovante ${protocolo.comprovante.nomeArquivo}`}
               className={styles.thumbnailImage}
               onClick={() => window.open(fileUrl, '_blank')}
             />
           </div>
         )}
-        
+
         <div className={styles.comprovanteInfo}>
           <div className={styles.comprovanteMeta}>
             <span className={styles.fileName}>
@@ -167,7 +187,7 @@ function AnalisarComprovantes() {
               {formatDateSafely(protocolo.comprovante.dataUpload)}
             </span>
           </div>
-          
+
           <div className={styles.comprovanteActions}>
             <a
               href={fileUrl}
@@ -186,32 +206,32 @@ function AnalisarComprovantes() {
 
   const renderStatusActions = (protocolo) => {
     if (!protocolo.comprovante) return null;
-    
+
     return (
-        <div className={styles.statusActions}>
-            <button
-                className={`${styles.statusButton} ${styles.aprovarButton}`}
-                onClick={() => handleAtualizarStatus(protocolo.comprovante.id, 'APROVADO')}
-                disabled={protocolo.comprovante?.status === 'APROVADO'}
-            >
-                <FiCheck /> Aprovar
-            </button>
-            <button
-                className={`${styles.statusButton} ${styles.reprovarButton}`}
-                onClick={() => handleAtualizarStatus(protocolo.comprovante.id, 'REPROVADO')}
-                disabled={protocolo.comprovante?.status === 'REPROVADO'}
-            >
-                <FiX /> Reprovar
-            </button>
-        </div>
+      <div className={styles.statusActions}>
+        <button
+          className={`${styles.statusButton} ${styles.aprovarButton}`}
+          onClick={() => handleAtualizarStatus(protocolo.comprovante.id, 'APROVADO')}
+          disabled={protocolo.comprovante?.status === 'APROVADO'}
+        >
+          <FiCheck /> Aprovar
+        </button>
+        <button
+          className={`${styles.statusButton} ${styles.reprovarButton}`}
+          onClick={() => handleAtualizarStatus(protocolo.comprovante.id, 'REPROVADO')}
+          disabled={protocolo.comprovante?.status === 'REPROVADO'}
+        >
+          <FiX /> Reprovar
+        </button>
+      </div>
     );
-};
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>Análise de Comprovantes</h1>
-        
+
         <div className={styles.filtrosContainer}>
           <div className={styles.searchBox}>
             <FiSearch className={styles.searchIcon} />
@@ -223,7 +243,7 @@ function AnalisarComprovantes() {
               className={styles.searchInput}
             />
           </div>
-          
+
           <div className={styles.filtroStatus}>
             <FiFilter className={styles.filterIcon} />
             <select
@@ -276,13 +296,13 @@ function AnalisarComprovantes() {
                       {renderComprovanteStatus(protocolo)}
                     </td>
                     <td className={styles.tableCell}>
-                      <span className={`${styles.statusBadge} ${
+                      <span className={`${styles.statusBadge} ${protocolo.comprovante?.status === 'REPROVADO' ? styles.statusRejected :
                         protocolo.comprovante?.status === 'APROVADO' ? styles.statusApproved :
-                        protocolo.comprovante?.status === 'REPROVADO' ? styles.statusRejected :
-                        styles.statusPending
-                      }`}>
+                          styles.statusPending
+                        }`}>
                         {protocolo.comprovante?.status === 'PENDENTE' ? 'Pendente' :
-                         protocolo.comprovante?.status === 'APROVADO' ? 'Aprovado' : 'Reprovado'}
+                          protocolo.comprovante?.status === 'APROVADO' ? 'Aprovado' :
+                            protocolo.comprovante?.status === 'REPROVADO' ? 'Reprovado' : 'Sem comprovante'}
                       </span>
                     </td>
                     <td className={styles.tableCell}>

@@ -59,8 +59,8 @@ function SolicitarServico() {
       const selectedAssunto = assuntos.find(assunto => assunto.assunto === value);
       setFormData(prevState => ({
         ...prevState,
-        idSecretaria: selectedAssunto ? selectedAssunto.secretaria.id_secretaria : null,
-        valor: selectedAssunto ? selectedAssunto.valor_protocolo : 0
+        idSecretaria: (value === "Outros" || !selectedAssunto) ? null : selectedAssunto.secretaria.id_secretaria,
+        valor: (value === "Outros" || !selectedAssunto) ? 0 : selectedAssunto.valor_protocolo
       }));
     }
   };
@@ -90,7 +90,7 @@ function SolicitarServico() {
       let response;
 
       if (formData.assunto === "Outros") {
-        response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos-reclamar-sem-secretaria`, {
+        response = await axiosInstance.post(`/protoon/protocolo/abrir-protocolos-sem-secretaria`, {
           assunto: formData.assunto,
           descricao: formData.descricao,
           status: formData.status,
