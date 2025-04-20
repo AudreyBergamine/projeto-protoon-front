@@ -5,7 +5,7 @@ import Loading from '../../layouts/Loading';
 import Message from '../../layouts/Message';
 import URL from '../../services/url';
 import styles from './solicitarServico.module.css';
-import { FiAlertCircle, FiEdit2, FiArrowLeft, FiCheck, FiPaperclip,FiDollarSign } from 'react-icons/fi';
+import { FiAlertCircle, FiEdit2, FiArrowLeft, FiCheck, FiPaperclip, FiDollarSign } from 'react-icons/fi';
 
 
 function SolicitarServico() {
@@ -230,39 +230,40 @@ function SolicitarServico() {
             onChange={handleFileChange}
           />
         </div>
-
-        <div className={styles.notice}>
-          <p>O Protocolo será cancelado automaticamente se não for pago em 4 dias corridos.</p>
-        </div>
-
-
-        {message && <Message type={type} msg={message} />}
-
-        <div className={styles.buttonGroup}>
-          {removeLoading ? (
-            <>
-
-              <button
-                type="button"
-                className={styles.secondaryButton}
-                onClick={voltarIndex}>
-                <FiArrowLeft /> Voltar
-              </button>
-
-              <button type="submit" className={styles.primaryButton}>
-                <FiCheck /> Solicitar Serviço
-              </button>
-
-
-            </>
-          ) : (
-            <div className={styles.loadingContainer}>
-              <Loading />
-            </div>
-          )}
-        </div>
-      </form>
+        {formData.valor != 0 &&
+          < div className={styles.notice}>
+        <p>O Protocolo será cancelado automaticamente se não for pago em 4 dias corridos.</p>
     </div>
+}
+
+
+{ message && <Message type={type} msg={message} /> }
+
+<div className={styles.buttonGroup}>
+  {removeLoading ? (
+    <>
+
+      <button
+        type="button"
+        className={styles.secondaryButton}
+        onClick={voltarIndex}>
+        <FiArrowLeft /> Voltar
+      </button>
+
+      <button type="submit" className={styles.primaryButton}>
+        <FiCheck /> Solicitar Serviço
+      </button>
+
+
+    </>
+  ) : (
+    <div className={styles.loadingContainer}>
+      <Loading />
+    </div>
+  )}
+</div>
+      </form >
+    </div >
   );
 }
 

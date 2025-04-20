@@ -221,7 +221,8 @@ function ListarProtocolosBySecretaria() {
 
       <div className={styles.filtersContainer}>
         <div className={styles.filtersWrapper}>
-          {["CONCLUIDO", "CANCELADO", "RECUSADO", "PAGAMENTO_PENDENTE", "EM_ANDAMENTO"].map(
+          {["CONCLUIDO", "CANCELADO", "RECUSADO", "PAGAMENTO_PENDENTE",
+           "EM_ANDAMENTO", "EM_ANALISE", "CIENCIA", "CIENCIA_ENTREGA"].map(
             (status) => (
               <button
                 key={status}
