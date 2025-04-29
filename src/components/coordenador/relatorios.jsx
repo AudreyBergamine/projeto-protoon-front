@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { FiArrowLeft } from 'react-icons/fi';
 import axios from "axios";
 import {
   LineChart,
@@ -13,6 +14,7 @@ import {
   ResponsiveContainer
 } from "recharts";
 import URL from "../services/url";
+import styles from './relatorio.module.css';
 
 // Componentes estilizados
 const SecretariaSelect = styled.select`
@@ -273,6 +275,10 @@ const Relatorios = () => {
       analysis: "",
       error: null
     }));
+  };
+
+  const voltarIndex = () => {
+    navigate("/");
   };
 
   // Filtrar protocolos
@@ -615,6 +621,17 @@ const Relatorios = () => {
           <div>{state.analysis}</div>
         </ModalContent>
       </ModalOverlay>
+
+      <div className={styles.buttonContainer}>
+        <button
+          className={styles.secondaryButton}
+          onClick={voltarIndex}>
+          <FiArrowLeft />
+          Voltar
+        </button>
+      </div>
+
+
 
     </div>
   );

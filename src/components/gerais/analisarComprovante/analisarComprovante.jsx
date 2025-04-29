@@ -61,9 +61,9 @@ function AnalisarComprovantes() {
     fetchProtocolosComComprovantes();
   }, []);
 
-  const voltarDashboard = () => {
-    navigate("/dashboard-funcionario");
-  };
+  const voltarIndex = () => {
+    navigate("/");
+};
 
   const handleAtualizarStatus = async (id_comprovante, novoStatus) => {  // Mude o parâmetro para id_comprovante
     try {
@@ -324,11 +324,11 @@ function AnalisarComprovantes() {
 
       <div className={styles.buttonContainer}>
         <button
-          className={styles.button}
-          onClick={voltarDashboard}
+          className={styles.secondaryButton}
+          onClick={voltarIndex}
         >
           <FiArrowLeft />
-          Voltar ao Dashboard
+          Voltar
         </button>
       </div>
     </div>

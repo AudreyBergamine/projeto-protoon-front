@@ -304,7 +304,7 @@ function ListarProtocolosBySecretaria() {
 
       <div className={styles.buttonContainer}>
         <button
-          className={styles.button}
+          className={styles.secondaryButton}
           onClick={voltarIndex}
         >
           <FiArrowLeft />

@@ -26,6 +26,7 @@ const CadastroAssunto = () => {
         withCredentials: true,
     });
 
+
     useEffect(() => {
         async function fetchSecretarias() {
             setLoading(true);
@@ -174,7 +175,7 @@ const CadastroAssunto = () => {
                     </button>
                     <div className={styles.buttonContainer}>
                         <button
-                            className={styles.buttonBack}
+                            className={styles.secondaryButton}
                             onClick={voltarIndex}
                         >
                             <FiArrowLeft />

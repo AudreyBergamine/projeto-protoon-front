@@ -195,6 +195,27 @@
     font-size: 1rem;
 }
 
+.popupError {
+    position: fixed;
+    top: -100px;
+    right: 30px;
+    background: linear-gradient(135deg, #d11919 0%, #d22207 100%);
+    color: white;
+    padding: 1.25rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    font-weight: 600;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1rem;
+
+    visibility: hidden;
+}
+
 .popup.showPopup {
     top: 30px;
     opacity: 1;

@@ -429,13 +429,7 @@ function GerenciarSecretaria() {
 
           {removeLoading ? (
             <>
-              <button
-                type="submit"
-                className={styles.primaryButton}
-                disabled={isSubmitting}
-              >
-                <FaSignInAlt /> Cadastrar Secretaria
-              </button>
+
               <button
                 type="button"
                 className={styles.secondaryButton}
@@ -443,6 +437,16 @@ function GerenciarSecretaria() {
               >
                 <FaArrowLeft /> Voltar
               </button>
+
+              <button
+                type="submit"
+                className={styles.primaryButton}
+                disabled={isSubmitting}
+              >
+                <FaSignInAlt /> Cadastrar Secretaria
+              </button>
+
+              
             </>
           ) : (
             <div className={styles.loadingContainer}>

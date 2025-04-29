@@ -8,6 +8,7 @@ import Message from '../../layouts/Message';
 import Loading from '../../layouts/Loading';
 import styles from './consultar.module.css';
 
+
 function Consultar() {
   const [protocolos, setProtocolos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -100,6 +101,7 @@ function Consultar() {
       default: return styles.statusCell;
     }
   };
+
 
   const getStatusText = (status) => {
     switch (status) {

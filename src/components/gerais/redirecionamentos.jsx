@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import URL from '../services/url';
 import styled from 'styled-components';
+import { FiArrowLeft, FiInbox, FiPaperclip, FiCheck, FiX, FiRefreshCw, FiDownload } from 'react-icons/fi';
+import styles from './redirecionamento.module.css';
+
 
 const Container = styled.div`
   padding: 20px;
@@ -90,8 +93,11 @@ const SecretariaSelect = styled.select`
   border-radius: 5px;
 `;
 
+
+
 const RedirecionamentosCoordenador = () => {
   const [redirecionamentos, setRedirecionamentos] = useState({});
+  const navigate = useNavigate();
   const [expandedDates, setExpandedDates] = useState({});
   const [selectedStatus, setSelectedStatus] = useState('ANDAMENTO');
   const [selectedRedirecionamentos, setSelectedRedirecionamentos] = useState({});
@@ -102,6 +108,10 @@ const RedirecionamentosCoordenador = () => {
     baseURL: URL,
     withCredentials: true,
   });
+
+  const voltarIndex = () => {
+    navigate("/");
+  };
 
   const token = localStorage.getItem('token');
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -210,53 +220,64 @@ const RedirecionamentosCoordenador = () => {
       </Header>
 
       {redirecionamentos[selectedStatus] && Object.keys(redirecionamentos[selectedStatus]).map((date) => (
-  <div key={date}>
-    <DateHeader onClick={() => toggleExpand(date)}>
-      <strong>{date}</strong>
-    </DateHeader>
-    {expandedDates[date] && (
-      <RedirectionList>
-        {redirecionamentos[selectedStatus][date].map((redirecionamento) => (
-          <RedirectionItem key={redirecionamento.id}>
-            {redirecionamento.statusRedirecionamento === "ANDAMENTO" && (
-              <div>
-                <Checkbox
-                  type="checkbox"
-                  onChange={(e) => handleCheckboxChange(redirecionamento.id, e.target.checked)}
-                />
-                <Select
-                  value={selectedRedirecionamentos[redirecionamento.id] || ""}
-                  onChange={(e) => handleStatusChange(redirecionamento.id, e.target.value)}
-                >
-                  <option value="">Selecione</option>
-                  <option value="APROVADO">APROVADO</option>
-                  <option value="RECUSADO">RECUSADO</option>
-                </Select>
-                <Button onClick={() => handleUpdateStatus(redirecionamento.id)}>Atualizar Status</Button>
-                <SecretariaSelect
-                  value={idSecretariaSelecionada}
-                  onChange={handleSecretariaChange}
-                >
-                  <option value="">Selecione a secretaria</option>
-                  {secretarias.map(secretaria => (
-                    <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
-                      {secretaria.nome_secretaria}
-                    </option>
-                  ))}
-                </SecretariaSelect>
-              </div>
-            )}
-            <p><strong>Status:</strong> {redirecionamento.statusRedirecionamento}</p>
-            <p><strong>Descrição:</strong> {redirecionamento.descricao}</p>
-            <p><strong>Nova Secretaria:</strong> {redirecionamento.novaSecretaria || 'N/A'}</p>
-            <p><strong>Data de Solicitação:</strong> {new Date(redirecionamento.dtSolicitacao).toLocaleString()}</p>
-            {redirecionamento.dtConfirmacao && <p><strong>Data de Confirmação:</strong> {new Date(redirecionamento.dtConfirmacao).toLocaleString()}</p>}
-          </RedirectionItem>
-        ))}
-      </RedirectionList>
-    )}
-  </div>
+        <div key={date}>
+          <DateHeader onClick={() => toggleExpand(date)}>
+            <strong>{date}</strong>
+          </DateHeader>
+          {expandedDates[date] && (
+            <RedirectionList>
+              {redirecionamentos[selectedStatus][date].map((redirecionamento) => (
+                <RedirectionItem key={redirecionamento.id}>
+                  {redirecionamento.statusRedirecionamento === "ANDAMENTO" && (
+                    <div>
+                      <Checkbox
+                        type="checkbox"
+                        onChange={(e) => handleCheckboxChange(redirecionamento.id, e.target.checked)}
+                      />
+                      <Select
+                        value={selectedRedirecionamentos[redirecionamento.id] || ""}
+                        onChange={(e) => handleStatusChange(redirecionamento.id, e.target.value)}
+                      >
+                        <option value="">Selecione</option>
+                        <option value="APROVADO">APROVADO</option>
+                        <option value="RECUSADO">RECUSADO</option>
+                      </Select>
+                      <Button onClick={() => handleUpdateStatus(redirecionamento.id)}>Atualizar Status</Button>
+                      <SecretariaSelect
+                        value={idSecretariaSelecionada}
+                        onChange={handleSecretariaChange}
+                      >
+                        <option value="">Selecione a secretaria</option>
+                        {secretarias.map(secretaria => (
+                          <option key={secretaria.id_secretaria} value={secretaria.id_secretaria}>
+                            {secretaria.nome_secretaria}
+                          </option>
+                        ))}
+                      </SecretariaSelect>
+                    </div>
+                  )}
+                  <p><strong>Status:</strong> {redirecionamento.statusRedirecionamento}</p>
+                  <p><strong>Descrição:</strong> {redirecionamento.descricao}</p>
+                  <p><strong>Nova Secretaria:</strong> {redirecionamento.novaSecretaria || 'N/A'}</p>
+                  <p><strong>Data de Solicitação:</strong> {new Date(redirecionamento.dtSolicitacao).toLocaleString()}</p>
+                  {redirecionamento.dtConfirmacao && <p><strong>Data de Confirmação:</strong> {new Date(redirecionamento.dtConfirmacao).toLocaleString()}</p>}
+                </RedirectionItem>
+              ))}
+            </RedirectionList>
+          )}
+        </div>
       ))}
+
+      <div className={styles.buttonContainer}>
+        <button
+          className={styles.secondaryButton}
+          onClick={voltarIndex}>
+          <FiArrowLeft />
+          Voltar
+        </button>
+      </div>
+
+
     </Container>
   );
 };

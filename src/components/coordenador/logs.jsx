@@ -3,6 +3,8 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import URL from '../services/url';
+import styles from './logs.module.css';
+import { FiArrowLeft, FiInbox } from 'react-icons/fi';
 
 function Logs() {
   const navigate = useNavigate();
@@ -11,6 +13,10 @@ function Logs() {
     baseURL: URL,
     withCredentials: true,
   });
+
+  const voltarIndex = () => {
+    navigate("/");
+  };
 
   const [logs, setLogs] = useState([]);
   const [pesquisarFun, setPesquisarFun] = useState('');
@@ -55,7 +61,15 @@ function Logs() {
             ))}
           </ul>
         </div >
-        <button className="btn-log" onClick={() => (navigate('/'))}>Voltar</button>
+        <div className={styles.buttonContainer}>
+          <button
+            className={styles.secondaryButton}
+            onClick={voltarIndex}
+          >
+            <FiArrowLeft />
+            Voltar
+          </button>
+        </div>
       </div>
     </>
   );
