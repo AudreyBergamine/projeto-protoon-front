@@ -163,23 +163,12 @@ function PaginaInicialCoordenador() {
           </div>
 
 
-
-
-
-
-
-
-
-          
-
-
-
           {/* Card de Cadastro de Assunto */}
           <div className={styles.actionCard} onClick={sendToCadastrarAssunto}>
             <div className={styles.cardIcon} style={{ backgroundColor: '#4ecdc4' }}>
               <FaTools size={24} />
             </div>
-            <h3 className={styles.cardTitle}>Cadastro de Assunto</h3>
+            <h3 className={styles.cardTitle}>Gerenciar Assuntos</h3>
             <p className={styles.cardText}>Cadastre novos assuntos para protocolos</p>
             <button className={styles.cardButton}>Acessar</button>
           </div>
@@ -192,17 +181,8 @@ function PaginaInicialCoordenador() {
             <div className={styles.cardIcon} style={{ backgroundColor: '#34b7f1' }}>
               <FaTools size={24} />
             </div>
-            <h3 className={styles.cardTitle}>Cadastrar Secretarias</h3>
+            <h3 className={styles.cardTitle}>Gerenciar Secretarias</h3>
             <p className={styles.cardText}>Cadastre novas secretarias no sistema</p>
-            <button className={styles.cardButton}>Acessar</button>
-          </div>
-
-          <div className={styles.actionCard} onClick={sendToAnalisarComprovantes}>
-            <div className={styles.cardIcon} style={{ backgroundColor: '#34b7f1' }}>
-              <FaTools size={24} />
-            </div>
-            <h3 className={styles.cardTitle}>Analisar Comprovantes</h3>
-            <p className={styles.cardText}>Análise os comprovantes de pagamento</p>
             <button className={styles.cardButton}>Acessar</button>
           </div>
 
