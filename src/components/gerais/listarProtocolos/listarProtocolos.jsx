@@ -209,7 +209,7 @@ function ListarProtocolosBySecretaria() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Lista de Protocolos</h1>
+      <h1 className={styles.title}>Protocolos</h1>
 
       <input
         type="text"

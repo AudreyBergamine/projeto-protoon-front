@@ -125,7 +125,7 @@ function PaginaInicialCoordenador() {
             <div className={styles.cardIcon} style={{ backgroundColor: '#ff6b6b' }}>
               <FaExclamationTriangle size={24} />
             </div>
-            <h3 className={styles.cardTitle}>Listar Protocolos</h3>
+            <h3 className={styles.cardTitle}>Analisar Protocolos</h3>
             <p className={styles.cardText}>Veja todos os protocolos registrados</p>
             <button className={styles.cardButton}>Acessar</button>
           </div>
