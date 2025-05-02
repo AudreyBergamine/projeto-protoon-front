@@ -444,19 +444,20 @@ function CadastrarMunicipe() {
 
           {removeLoading ? (
             <>
-              <button
-                type="submit"
-                className={styles.primaryButton}
-                disabled={isSubmitting}
-              >
-                <FaSignInAlt /> {isSubmitting ? 'Cadastrando...' : 'Cadastrar-se'}
-              </button>
+
               <button
                 type="button"
                 className={styles.secondaryButton}
                 onClick={() => navigate("/login")}
               >
                 <FaArrowLeft /> Voltar para Login
+              </button>
+              <button
+                type="submit"
+                className={styles.primaryButton}
+                disabled={isSubmitting}
+              >
+                <FaSignInAlt /> {isSubmitting ? 'Cadastrando...' : 'Cadastrar-se'}
               </button>
             </>
           ) : (

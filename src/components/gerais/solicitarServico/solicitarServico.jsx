@@ -172,7 +172,7 @@ function SolicitarServico() {
               value={formData.assunto}
               onChange={handleChange}
             >
-              <option value="">Selecione seu pedido</option>
+              <option value="" hidden>Selecione seu pedido</option>
               {assuntos.map(assunto => (
                 <option key={assunto.id_assunto} value={assunto.assunto}>
                   {assunto.assunto}
