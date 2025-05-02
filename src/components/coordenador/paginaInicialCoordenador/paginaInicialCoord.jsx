@@ -115,7 +115,7 @@ function PaginaInicialCoordenador() {
       {/* Conteúdo Principal */}
       <main className={styles.mainContent}>
         <div className={styles.welcomeSection}>
-          <h2 className={styles.welcomeTitle}>Bem-vindo ao PROTO-ON - Sistema de Protocolos</h2>
+          <h2 className={styles.welcomeTitle}>Bem-vindo ao PROTO-ON - Protocolos Municipais</h2>
           <p className={styles.welcomeText}>Selecione a opção desejada para continuar</p>
         </div>
 
@@ -130,16 +130,6 @@ function PaginaInicialCoordenador() {
             <button className={styles.cardButton}>Acessar</button>
           </div>
 
-          {/* Card de Cadastro de Assunto */}
-          <div className={styles.actionCard} onClick={sendToCadastrarAssunto}>
-            <div className={styles.cardIcon} style={{ backgroundColor: '#4ecdc4' }}>
-              <FaTools size={24} />
-            </div>
-            <h3 className={styles.cardTitle}>Cadastro de Assunto</h3>
-            <p className={styles.cardText}>Cadastre novos assuntos para protocolos</p>
-            <button className={styles.cardButton}>Acessar</button>
-          </div>
-
           {/* Card de Aprovar Redirecionamentos */}
           <div className={styles.actionCard} onClick={sendToRedirecionamentos}>
             <div className={styles.cardIcon} style={{ backgroundColor: '#45aaf2' }}>
@@ -150,6 +140,18 @@ function PaginaInicialCoordenador() {
             <button className={styles.cardButton}>Acessar</button>
           </div>
 
+
+          {/* Card de Analisar Comprovantes */}
+          <div className={styles.actionCard} onClick={sendToAnalisarComprovantes}>
+            <div className={styles.cardIcon} style={{ backgroundColor: '#34b7f1' }}>
+              <FaTools size={24} />
+            </div>
+            <h3 className={styles.cardTitle}>Analisar Comprovantes</h3>
+            <p className={styles.cardText}>Análise os comprovantes de pagamento</p>
+            <button className={styles.cardButton}>Acessar</button>
+          </div>
+
+
           {/* Card de Relatórios */}
           <div className={styles.actionCard} onClick={sendToRelatorios}>
             <div className={styles.cardIcon} style={{ backgroundColor: '#ffbb33' }}>
@@ -159,6 +161,31 @@ function PaginaInicialCoordenador() {
             <p className={styles.cardText}>Consulte relatórios gerenciais</p>
             <button className={styles.cardButton}>Acessar</button>
           </div>
+
+
+
+
+
+
+
+
+
+          
+
+
+
+          {/* Card de Cadastro de Assunto */}
+          <div className={styles.actionCard} onClick={sendToCadastrarAssunto}>
+            <div className={styles.cardIcon} style={{ backgroundColor: '#4ecdc4' }}>
+              <FaTools size={24} />
+            </div>
+            <h3 className={styles.cardTitle}>Cadastro de Assunto</h3>
+            <p className={styles.cardText}>Cadastre novos assuntos para protocolos</p>
+            <button className={styles.cardButton}>Acessar</button>
+          </div>
+
+
+
 
           {/* Card de Gerenciar Secretarias */}
           <div className={styles.actionCard} onClick={sendToCadastrarSecretarias}>

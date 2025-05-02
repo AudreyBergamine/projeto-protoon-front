@@ -431,7 +431,7 @@ function AnalisarProtocolos() {
                 onChange={handleSecretariaChange}
                 disabled={isCancelado}
               >
-                <option value="">Selecione a secretaria</option>
+                <option value="" hidden>Selecione a secretaria</option>
                 {secretarias
                   .filter(secretaria =>
                     !protocolo.secretaria || secretaria.nome_secretaria !== protocolo.secretaria.nome_secretaria)
