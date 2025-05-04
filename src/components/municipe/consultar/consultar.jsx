@@ -1,36 +1,41 @@
-import React, { useState, useEffect, useRef } from "react";
-import axios from 'axios';
-import { format } from 'date-fns';
-import { FiArrowLeft, FiInbox, FiPaperclip, FiCheck, FiX, FiRefreshCw, FiDownload } from 'react-icons/fi';
-import { useNavigate } from "react-router-dom";
-import URL from '../../services/url';
-import Message from '../../layouts/Message';
-import Loading from '../../layouts/Loading';
-import styles from './consultar.module.css';
+// Importações de bibliotecas e componentes necessários
+import React, { useState, useEffect, useRef } from "react"; // Hooks do React
+import axios from 'axios'; // Cliente HTTP
+import { format } from 'date-fns'; // Biblioteca para formatar datas
+import { FiArrowLeft, FiInbox, FiPaperclip, FiCheck, FiX, FiRefreshCw, FiDownload } from 'react-icons/fi'; // Ícones do pacote react-icons
+import { useNavigate } from "react-router-dom"; // Hook para navegação
+import URL from '../../services/url'; // URL base da API
+import Message from '../../layouts/Message'; // Componente de mensagens
+import Loading from '../../layouts/Loading'; // Componente de loading
+import styles from './consultar.module.css'; // Estilos CSS em módulo
 
-
+// Componente principal da página
 function Consultar() {
-  const [protocolos, setProtocolos] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
-  const [message, setMessage] = useState();
-  const [type, setType] = useState();
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  const [currentProtocolo, setCurrentProtocolo] = useState(null);
-  const [showUploadModal, setShowUploadModal] = useState(false);
-  const modalRef = useRef(null);
+   // Estados da aplicação
+  const [protocolos, setProtocolos] = useState([]); // Lista de protocolos
+  const [isLoading, setIsLoading] = useState(true); // Indica se está carregando
+  const [error, setError] = useState(null); // Armazena erro (se houver)
+  const navigate = useNavigate();  // Para navegação entre páginas
+  const [message, setMessage] = useState();  // Mensagem informativa
+  const [type, setType] = useState();  // Tipo da mensagem ('success', 'error', etc)
+  const [selectedFile, setSelectedFile] = useState(null); // Arquivo selecionado
+  const [uploading, setUploading] = useState(false); // Flag de envio de arquivo
+  const [currentProtocolo, setCurrentProtocolo] = useState(null); // Protocolo atual em foco
+  const [showUploadModal, setShowUploadModal] = useState(false); // Controle do modal
+  const modalRef = useRef(null); // Referência para scroll até o modal
 
+   // Instância do axios com configurações padrão
   const axiosInstance = axios.create({
     baseURL: URL,
     withCredentials: true,
   });
 
+  // Recupera o token do localStorage e define nos headers da instância axios
   // Configurar token de autenticação
   const token = localStorage.getItem('token');
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
+  // Hook useEffect executado ao montar o componente
   useEffect(() => {
     const fetchProtocolos = async () => {
       setIsLoading(true);
@@ -38,9 +43,11 @@ function Consultar() {
       setMessage(null);
 
       try {
+        // Requisição para buscar os protocolos do usuário
         const response = await axiosInstance.get(`/protoon/protocolo/meus-protocolos/bytoken`);
         console.log('Resposta completa:', response);
 
+        // Normaliza o formato dos dados recebidos (independente do formato da API)
         // Extrai os protocolos da resposta (considerando diferentes estruturas possíveis)
         let protocolosData = [];
 
@@ -60,6 +67,7 @@ function Consultar() {
 
         console.log('Protocolos extraídos:', protocolosData);
 
+         // Exibe mensagem se nenhum protocolo for encontrado
         if (protocolosData.length === 0) {
           setMessage('Você ainda não possui protocolos cadastrados');
           setType('info');
@@ -67,32 +75,37 @@ function Consultar() {
           setMessage(null); // Remove mensagem anterior se houver dados
         }
 
+         // Atualiza o estado
         setProtocolos(protocolosData);
 
       } catch (error) {
+        // Trata erros de requisição
         console.error('Erro ao buscar os protocolos:', error);
         setError('Erro ao buscar os protocolos. Por favor, tente novamente.');
         setMessage('Erro ao carregar protocolos');
         setType('error');
         setProtocolos([]);
       } finally {
-        setIsLoading(false);
+        setIsLoading(false);  // Encerra loading
       }
     };
 
-    fetchProtocolos();
+    fetchProtocolos();  // Chama função ao montar
 
 
   }, []);
 
+  // Abre nova aba com as devolutivas do protocolo
   const handleClick = (id) => {
     window.open(`/todas-devolutivas/${id}`, '_blank');
   };
 
+  // Navega de volta para a página inicial
   const voltarIndex = () => {
     navigate("/");
   };
 
+  // Define classes de estilo com base no status do protocolo
   const getStatusStyle = (status) => {
     switch (status) {
       case 1: return `${styles.statusCell} ${styles.statusActive}`;
@@ -102,7 +115,7 @@ function Consultar() {
     }
   };
 
-
+  // Retorna texto de status do protocolo
   const getStatusText = (status) => {
     switch (status) {
       case 1: return 'Ativo';
@@ -112,10 +125,12 @@ function Consultar() {
     }
   };
 
+  // Atualiza o arquivo selecionado
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
   };
 
+  // Formata datas de forma segura (evita erros se a data for inválida)
   const formatDateSafely = (dateString) => {
     try {
       if (!dateString) return 'Data não disponível';
@@ -125,29 +140,34 @@ function Consultar() {
       return 'Data inválida';
     }
   };
+
+  // Abre modal de envio de comprovante
   const openUploadModal = (protocolo) => {
     setCurrentProtocolo(protocolo);
     setShowUploadModal(true);
 
+    // Faz scroll automático até o modal
     // Adicione um pequeno timeout para garantir que o modal esteja renderizado
     setTimeout(() => {
       modalRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 100);
   };
 
+  // Fecha modal e limpa estados relacionados
   const closeUploadModal = () => {
     setShowUploadModal(false);
     setSelectedFile(null);
     setCurrentProtocolo(null);
   };
 
+  // Envia o arquivo para a API
   const handleUpload = async () => {
     if (!selectedFile || !currentProtocolo) return;
 
     setUploading(true);
 
     const formData = new FormData();
-    formData.append('file', selectedFile);
+    formData.append('file', selectedFile);  // Adiciona o arquivo
 
     try {
       const response = await axiosInstance.post( // Mude para PUT para indicar atualização
@@ -160,9 +180,11 @@ function Consultar() {
         }
       );
 
+      // Mensagem de sucesso e atualização da lista
       setMessage('Comprovante atualizado com sucesso!');
       setType('success');
 
+      // Atualiza o comprovante do protocolo alterado
       // Atualiza o protocolo específico
       setProtocolos(prev => prev.map(proto => {
         if (proto.id_protocolo === currentProtocolo.id_protocolo) {
@@ -194,6 +216,7 @@ function Consultar() {
     }
   };
 
+  // Renderiza visualmente o status do comprovante
   const renderComprovanteStatus = (protocolo) => {
     if (!protocolo.comprovante) {
       return (
@@ -288,6 +311,7 @@ function Consultar() {
     );
   };
 
+  // JSX que define o layout visual do componente
   return (
     <div className={styles.container}>
       <div className={styles.header}>
