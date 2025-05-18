@@ -259,15 +259,15 @@ function Consultar() {
             <span className={styles.zoomHint}>Clique para ampliar</span> 
           </div> 
         )} 
- 
-        {/* Informações do comprovante */} 
+           
+        {/* Informações do de acordo com o Status do comprovante */} 
         <div className={styles.comprovanteInfo}> 
           <div className={styles.comprovanteStatus}> 
             {protocolo.comprovante.status === 'PENDENTE' && ( 
               <span className={styles.comprovantePending}> 
                 Em análise 
               </span> 
-            )} 
+            )}  
             {protocolo.comprovante.status === 'APROVADO' && ( 
               <span className={styles.comprovanteApproved}> 
                 <FiCheck /> Aprovado 
@@ -279,7 +279,7 @@ function Consultar() {
               </span> 
             )} 
           </div> 
- 
+          {/* Dados do comprovante (atributos) */} 
           <div className={styles.comprovanteMeta}> 
             <span className={styles.fileName}> 
               {protocolo.comprovante.nomeArquivo} 
@@ -291,7 +291,8 @@ function Consultar() {
               {formatDateSafely(protocolo.comprovante.dataUpload)} 
             </span> 
           </div> 
- 
+
+          {/* Ações do comprovante (download e substituir) */}
           <div className={styles.comprovanteActions}> 
             <a 
               href={fileUrl} 
@@ -303,6 +304,8 @@ function Consultar() {
             > 
               <FiDownload /> Baixar 
             </a> 
+
+            {/* Botão para substituir o comprovante */}
             <button 
               className={styles.replaceButton} 
               onClick={(e) => { 
@@ -324,9 +327,12 @@ function Consultar() {
       <div className={styles.header}> 
         <h1 className={styles.title}>Meus Protocolos</h1> 
       </div> 
- 
+
+      {/* Mensagem de feedback */}
       {message && <Message type={type} msg={message} />} 
- 
+    
+      {/* Se estiver carregando, mostra loading */}
+      {/* Se houver erro, mostra mensagem de erro */}
       {isLoading ? ( 
         <div className={styles.loadingContainer}> 
           <Loading /> 
@@ -334,6 +340,7 @@ function Consultar() {
       ) : ( 
         <div className={styles.tableContainer}> 
           {Array.isArray(protocolos) && protocolos.length > 0 ? ( 
+            // Criando a tabela de protocolos com seus atributos
             <table className={styles.table}> 
               <thead className={styles.tableHead}> 
                 <tr> 
@@ -347,12 +354,14 @@ function Consultar() {
                 </tr> 
               </thead> 
               <tbody> 
-                {protocolos.map((protocolo) => ( 
+                {protocolos.map((protocolo) => (  // Mapeia os protocolos para criar linhas na tabela
+                  // Cada linha representa um protocolo com seus atributos
                   <tr 
                     key={protocolo.id_protocolo} 
-                    onClick={() => handleClick(protocolo.id_protocolo)} 
+                    onClick={() => handleClick(protocolo.id_protocolo)} // Abre devolutivas do protocolo
                     className={styles.tableRow} 
                   > 
+                    {/* Informações do protocolo */}
                     <td className={styles.tableCell}> 
                       {protocolo.assunto || 'Não informado'} 
                     </td> 
@@ -385,6 +394,8 @@ function Consultar() {
               </tbody> 
             </table> 
           ) : ( 
+            // Se não houver protocolos, mostra mensagem de vazio
+            // ou erro
             <div className={styles.emptyState}> 
               <FiInbox className={styles.emptyIcon} /> 
               <p className={styles.emptyText}> 
@@ -397,35 +408,57 @@ function Consultar() {
  
       {/* Modal de upload */} 
       {showUploadModal && ( 
+        // Modal para anexar comprovante
+        // O modal é exibido quando showUploadModal é true
         <div ref={modalRef} className={styles.modalOverlay}> 
           <div className={styles.modalContent}> 
             <h2>Anexar Comprovante</h2> 
             <p>Protocolo: {currentProtocolo.numero_protocolo}</p> 
             <p>Valor: R$ {parseFloat(currentProtocolo.valor).toFixed(2)}</p> 
- 
-            <div className={styles.uploadArea}> 
+
+            {/* Área de upload */}
+            <div className={styles.inputGroup} style={{ marginBottom: '50px' }}> 
               <input 
                 type="file" 
                 id="comprovante-upload" 
                 onChange={handleFileChange} 
                 accept=".pdf,.jpg,.jpeg,.png" 
-                className={styles.fileInput} 
+                className={styles.fileInput}
+           
               /> 
-              <label htmlFor="comprovante-upload    " className={styles.fileLabel}> 
-                {selectedFile ? selectedFile.name : '     Selecione o comprovante'} 
-              </label> 
+              <div> 
+                {selectedFile && (
+                  <div style={{ marginBottom: '50px', color: '#333'}}>
+                    <strong>Arquivo selecionado:</strong> {selectedFile.name}
+                  </div>
+                )}
+              </div>
+              {/*         
+              <div className={styles.inputGroup}>
+                <label className={styles.label}>
+                  <FiPaperclip /> Anexar documentos:
+                </label>
+                  <input
+                    type="file"
+                    multiple
+                    className={styles.fileInput}
+                    name="documentos"
+                    onChange={handleFileChange}
+                  />
+        </div> */}
             </div> 
- 
-            <div className={styles.modalButtons}> 
+
+            {/* Botões do modal */}
+            <div className={styles.modalButtons} style={{ display: 'flex', justifyContent: 'space-evenly' }}> 
               <button 
                 onClick={closeUploadModal} 
                 className={styles.button} 
                 disabled={uploading}> Cancelar 
               </button> 
- 
+
               <button 
                 onClick={handleUpload} 
-                className={styles.uploadButton} 
+                className={styles.button} 
                 disabled={!selectedFile || uploading} 
               > 
                 {uploading ? 'Enviando...' : 'Enviar Comprovante'} 

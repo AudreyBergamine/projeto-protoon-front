@@ -318,3 +318,22 @@
   .replaceButton:hover {
     background-color: #ffe0b2;
   }
+
+  .inputGroup {
+    margin-bottom: 2.5rem;
+}
+
+.fileInput {
+    padding: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    width: 45%;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #f1ecec;
+    transition: border 0.3s ease;
+}
+
+.fileInput:hover {
+    border-color: #888;
+}
