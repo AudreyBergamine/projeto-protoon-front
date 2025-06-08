@@ -11,15 +11,14 @@ import styles from './consultar.module.css'; // Estilos CSS em módulo
 
 // Componente principal da página 
 function Consultar() { 
-   // Estados da aplicação 
-  const [protocolos, setProtocolos] = useState([]); // Lista de protocolos 
-  const [isLoading, setIsLoading] = useState(true); // Indica se está carregando 
-  const [error, setError] = useState(null); // Armazena erro (se houver) 
-  const navigate = useNavigate();  // Para navegação entre páginas 
-  const [message, setMessage] = useState();  // Mensagem informativa 
-  const [type, setType] = useState();  // Tipo da mensagem ('success', 'error', etc) 
-  const [selectedFile, setSelectedFile] = useState(null); // Arquivo selecionado 
-  const [uploading, setUploading] = useState(false); // Flag de envio de arquivo 
+  const [protocolos, setProtocolos] = useState([]);               // Lista de protocolos 
+  const [isLoading, setIsLoading] = useState(true);               // Indica se está carregando 
+  const [error, setError] = useState(null);                       // Armazena erro (se houver) 
+  const navigate = useNavigate();                                 // Para navegação entre páginas 
+  const [message, setMessage] = useState();                       // Mensagem informativa 
+  const [type, setType] = useState();                             // Tipo da mensagem ('success' etc) 
+  const [selectedFile, setSelectedFile] = useState(null);         // Arquivo selecionado 
+  const [uploading, setUploading] = useState(false);              // Flag de envio de arquivo 
   const [currentProtocolo, setCurrentProtocolo] = useState(null); // Protocolo atual em foco 
   const [showUploadModal, setShowUploadModal] = useState(false); // Controle do modal 
   const modalRef = useRef(null); // Referência para scroll até o modal 
@@ -63,8 +62,7 @@ function Consultar() {
         } else if (response.data && typeof response.data === 'object') { 
           // Caso 4: Transforma objeto único em array com 1 único objeto 
           protocolosData = [response.data]; 
-        } 
- 
+        }  
         console.log('Protocolos extraídos:', protocolosData); 
  
         // Se não houver protocolos, exibe mensagem 
@@ -162,8 +160,7 @@ function Consultar() {
   // Função que realiza o upload do arquivo selecionado e envia o arquivo para a API 
   const handleUpload = async () => {  
     // Garante que há um arquivo e protocolo selecionado 
-    if (!selectedFile || !currentProtocolo) return;  
-  
+    if (!selectedFile || !currentProtocolo) return;    
     setUploading(true); // Inicia processo de envio 
   
     const formData = new FormData(); 
