@@ -65,6 +65,8 @@ function AnalisarComprovantes() {
     navigate("/dashboard-funcionario");
   };
 
+
+  //TODO ALDO ATUALIZAR STATUS COMPROVANTE
   const handleAtualizarStatus = async (id_comprovante, novoStatus) => {  // Mude o parâmetro para id_comprovante
     try {
       const statusFormatado = novoStatus.toUpperCase();
