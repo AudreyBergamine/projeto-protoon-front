@@ -217,7 +217,7 @@ function GerenciarSecretaria() {
         {/* Seção Dados da Secretaria */}
         <div className={styles.formSection}>
           <h3 className={styles.sectionTitle}>
-            <FaBuilding /> Dados da Secretaria
+            <FaBuilding /> Cadastrar Secretaria
           </h3>
 
           <div className={styles.inputGroup}>
@@ -272,6 +272,11 @@ function GerenciarSecretaria() {
         </div>
 
         <div className={styles.divider} />
+        
+
+        
+        {/* TODO: Tiraria o endereço, pra ter apenas os nomes das Secretarias */}
+        
 
         {/* Seção Endereço */}
         <div className={styles.formSection}>
@@ -429,6 +434,9 @@ function GerenciarSecretaria() {
 
           {removeLoading ? (
             <>
+
+
+
               <button
                 type="submit"
                 className={styles.primaryButton}
@@ -436,13 +444,29 @@ function GerenciarSecretaria() {
               >
                 <FaSignInAlt /> Cadastrar Secretaria
               </button>
-              <button
-                type="button"
-                className={styles.secondaryButton}
-                onClick={sendToLogin}
-              >
-                <FaArrowLeft /> Voltar
-              </button>
+
+          <div className={styles.formSection}>
+          <h3 className={styles.sectionTitle}>
+            <FaBuilding /> Editar Secretaria
+          </h3>
+
+          {/* TODO: Listar todas as Secretarias com possibilidade de Editar */}
+          <h6 className={styles.setMessage}>
+            <text /> Em implementação
+          </h6>
+          
+          </div>
+
+
+          <button
+            type="button"
+            className={styles.secondaryButton}
+            onClick={sendToLogin}
+          >
+            <FaArrowLeft /> Voltar
+          </button>
+
+              
             </>
           ) : (
             <div className={styles.loadingContainer}>

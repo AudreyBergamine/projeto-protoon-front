@@ -26,6 +26,7 @@ const CadastroAssunto = () => {
         withCredentials: true,
     });
 
+
     useEffect(() => {
         async function fetchSecretarias() {
             setLoading(true);
@@ -172,9 +173,13 @@ const CadastroAssunto = () => {
                     >
                         {loading ? '' : 'Cadastrar'}
                     </button>
+
+                    {/* TODO: Inserir Lista de Assuntos com possibilidade de edição */}
+
+
                     <div className={styles.buttonContainer}>
                         <button
-                            className={styles.buttonBack}
+                            className={styles.secondaryButton}
                             onClick={voltarIndex}
                         >
                             <FiArrowLeft />

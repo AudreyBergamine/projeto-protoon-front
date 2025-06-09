@@ -147,30 +147,30 @@
   color: #1976d2;
 }
 
+
 .buttonContainer {
   display: flex;
   justify-content: flex-end;
   margin-top: 2rem;
+  flex-direction: row-reverse;
 }
 
-.button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.8rem 1.5rem;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
+
+.secondaryButton {
+background: white;
+color: #4361ee;
+border: 2px solid #4361ee;
+padding: 1.125rem 2rem;
+border-radius: 12px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s ease;
+display: flex;
+align-items: center;
+gap: 0.75rem;
 }
 
-.button:hover {
-  background-color: #2980b9;
-  transform: translateY(-2px);
-}
+
 
 .emptyState {
   display: flex;

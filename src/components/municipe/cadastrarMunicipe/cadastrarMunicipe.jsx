@@ -17,7 +17,7 @@ import {
 } from 'react-icons/fa';
 
 function CadastrarMunicipe() {
-  const [message, setMessage] = useState();
+  // const [message, setPopupMessage] = useState();
   const [type, setType] = useState();
   const [removeLoading, setRemoveLoading] = useState(true);
   const [cpfValid, setCpfValid] = useState(false);
@@ -26,6 +26,7 @@ function CadastrarMunicipe() {
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const navigate = useNavigate();
+  
 
   const axiosInstance = axios.create({
     baseURL: URL,
@@ -140,19 +141,23 @@ function CadastrarMunicipe() {
 
     e.preventDefault();
     if (!cpfValid) {
-      setMessage('CPF Inválido');
+      setPopupMessage('CPF Inválido');
+      setShowPopup(true);
       setType('error');
       return;
     }
 
-    setMessage('');
+    setPopupMessage('');
+    setShowPopup(true);
 
     const birthDate = moment(formData.data_nascimento);
     const currentDate = moment();
     const diffYears = currentDate.diff(birthDate, 'years');
     if (diffYears < 5) {
-      setMessage('Idade mínima requerida é de 5 anos');
+      setPopupMessage('Idade mínima requerida é de 5 anos');
+      setShowPopup(true);
       setType('error');
+      setTimeout(() => setShowPopup(false), 3000);
       return;
     }
 
@@ -169,7 +174,8 @@ function CadastrarMunicipe() {
 
       setTimeout(() => {
         setRemoveLoading(true);
-        setMessage('Redirecionando para login...');
+        setPopupMessage('Redirecionando para login...');
+        setShowPopup(true);
         setType('success');
         setTimeout(() => navigate('/login'), 2000);
       }, 2000);
@@ -179,9 +185,11 @@ function CadastrarMunicipe() {
         setRemoveLoading(true);
         console.error('Erro ao enviar os dados:', error);
         if (error.response?.data?.message) {
-          setMessage(error.response.data.message);
+          setPopupMessage(error.response.data.message);
+          setShowPopup(true);
         } else {
-          setMessage('Falha ao tentar fazer o cadastro!');
+          setPopupMessage('Falha ao tentar fazer o cadastro!');
+          setShowPopup(true);
         }
         setType('error');
       }, 2000);
@@ -432,23 +440,24 @@ function CadastrarMunicipe() {
 
         {/* Ações do Formulário */}
         <div className={styles.formActions}>
-          {message && <Message type={type} msg={message} />}
+          {/* {message && <Message type={type} msg={message} />} */}
 
           {removeLoading ? (
             <>
-              <button
-                type="submit"
-                className={styles.primaryButton}
-                disabled={isSubmitting}
-              >
-                <FaSignInAlt /> {isSubmitting ? 'Cadastrando...' : 'Cadastrar-se'}
-              </button>
+
               <button
                 type="button"
                 className={styles.secondaryButton}
                 onClick={() => navigate("/login")}
               >
                 <FaArrowLeft /> Voltar para Login
+              </button>
+              <button
+                type="submit"
+                className={styles.primaryButton}
+                disabled={isSubmitting}
+              >
+                <FaSignInAlt /> {isSubmitting ? 'Cadastrando...' : 'Cadastrar-se'}
               </button>
             </>
           ) : (
@@ -459,6 +468,13 @@ function CadastrarMunicipe() {
 
       {/* Popup de sucesso */}
       <div className={`${styles.popup} ${showPopup ? styles.showPopup : ''}`}>
+        <div className={styles.popupContent}>
+          <FaCheckCircle /> <span>{popupMessage}</span>
+        </div>
+      </div>
+
+      {/* Mensagem de erro */}
+      <div className={`${styles.popupError} ${showPopup ? styles.showPopup : ''}`}>
         <div className={styles.popupContent}>
           <FaCheckCircle /> <span>{popupMessage}</span>
         </div>

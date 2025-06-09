@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { FiArrowLeft, FiLoader, FiActivity, } from 'react-icons/fi';
 import axios from "axios";
+
 import {
   LineChart,
   Line,
@@ -13,6 +15,7 @@ import {
   ResponsiveContainer
 } from "recharts";
 import URL from "../services/url";
+import styles from './relatorio.module.css';
 
 // Componentes estilizados
 const SecretariaSelect = styled.select`
@@ -275,6 +278,10 @@ const Relatorios = () => {
     }));
   };
 
+  const voltarIndex = () => {
+    navigate("/");
+  };
+
   // Filtrar protocolos
   const protocolosFiltrados = state.idSecretariaSelecionada
     ? state.protocolos.filter(
@@ -317,58 +324,116 @@ const Relatorios = () => {
 
   const dadosParaGrafico = prepareChartData();
 
-  const generateAnalysis = async () => {
-    if (protocolosFiltrados.length === 0) return;
-
-    setState(prev => ({ ...prev, loadingAnalysis: true, analysis: "", analysisType: "ia", error: null }));
-
-    const chunkSize = 10;
-    const chunks = [];
-
-    for (let i = 0; i < protocolosFiltrados.length; i += chunkSize) {
-      chunks.push(protocolosFiltrados.slice(i, i + chunkSize));
-    }
+  const generateIAReport = async () => {
+    setState(prev => ({ ...prev, loadingAnalysis: true, error: null }));
 
     try {
-      let fullAnalysis = "";
+      // Seleciona os últimos 10 protocolos de todas as secretarias
+      const recentProtocols = [...state.protocolos]
+        .sort((a, b) => new Date(b.data_protocolo) - new Date(a.data_protocolo))
+        .slice(0, 10);
 
-      for (const chunk of chunks) {
-        const response = await axiosInstance.post(
-          "/api/analise/protocolos",
-          chunk,
-          {
-            headers: { "Content-Type": "application/json" }
-          }
-        );
-
-        if (response.data?.analysis) {
-          fullAnalysis += response.data.analysis + "\n\n";
-        }
+      if (recentProtocols.length === 0) {
+        setState(prev => ({ ...prev, error: "Nenhum protocolo encontrado para análise" }));
+        return;
       }
+
+      // Prepara o prompt para a IA
+      const protocolosText = recentProtocols.map((p, index) => (
+        `Protocolo ${index + 1}:
+        - Secretaria: ${p.secretaria?.nome_secretaria || 'Não informada'}
+        - Assunto: ${p.assunto || 'Não especificado'}
+        - Descrição: ${p.descricao || 'Sem descrição'}
+        - Data: ${new Date(p.data_protocolo).toLocaleDateString()}
+        - Status: ${p.status || 'Não definido'}`
+      )).join('\n\n');
+
+      const prompt = `Analise os seguintes protocolos municipais e gere um relatório conciso com:
+      1. Principais tendências e padrões identificados
+      2. Áreas/setores com maior demanda
+      3. Sugestões para melhoria no atendimento
+      4. Análise de tempo médio de resolução (se houver dados)
+      
+      Dados dos protocolos:
+      ${protocolosText}`;
+
+      // Chama o endpoint da IA
+      const response = await axiosInstance.post(
+        '/api/gemini/generate',
+        prompt,
+        { headers: { 'Content-Type': 'text/plain' } }
+      );
 
       setState(prev => ({
         ...prev,
-        analysis: fullAnalysis.trim() || "Análise gerada com sucesso",
-        error: null
+        analysis: response.data,
+        analysisType: 'ia',
+        showModal: true
       }));
+
     } catch (error) {
-      let errorMessage = "Erro ao gerar análise";
-
-      if (error.response) {
-        errorMessage = error.response.data?.message ||
-          `Erro ${error.response.status}: ${error.response.statusText}`;
-      } else if (error.code === "ECONNABORTED") {
-        errorMessage = "Tempo de resposta excedido. Tente novamente.";
-      }
-
+      console.error("Erro ao gerar relatório:", error);
       setState(prev => ({
         ...prev,
-        error: errorMessage
+        error: error.response?.data?.message || "Erro ao gerar relatório por IA"
       }));
     } finally {
       setState(prev => ({ ...prev, loadingAnalysis: false }));
     }
   };
+
+  // const generateAnalysis = async () => {
+  //   if (protocolosFiltrados.length === 0) return;
+
+  //   setState(prev => ({ ...prev, loadingAnalysis: true, analysis: "", analysisType: "ia", error: null }));
+
+  //   const chunkSize = 10;
+  //   const chunks = [];
+
+  //   for (let i = 0; i < protocolosFiltrados.length; i += chunkSize) {
+  //     chunks.push(protocolosFiltrados.slice(i, i + chunkSize));
+  //   }
+
+  //   try {
+  //     let fullAnalysis = "";
+
+  //     for (const chunk of chunks) {
+  //       const response = await axiosInstance.post(
+  //         "/api/analise/protocolos",
+  //         chunk,
+  //         {
+  //           headers: { "Content-Type": "application/json" }
+  //         }
+  //       );
+
+  //       if (response.data?.analysis) {
+  //         fullAnalysis += response.data.analysis + "\n\n";
+  //       }
+  //     }
+
+  //     setState(prev => ({
+  //       ...prev,
+  //       analysis: fullAnalysis.trim() || "Análise gerada com sucesso",
+  //       error: null
+  //     }));
+  //   } catch (error) {
+  //     let errorMessage = "Erro ao gerar análise";
+
+  //     if (error.response) {
+  //       errorMessage = error.response.data?.message ||
+  //         `Erro ${error.response.status}: ${error.response.statusText}`;
+  //     } else if (error.code === "ECONNABORTED") {
+  //       errorMessage = "Tempo de resposta excedido. Tente novamente.";
+  //     }
+
+  //     setState(prev => ({
+  //       ...prev,
+  //       error: errorMessage
+  //     }));
+  //   } finally {
+  //     setState(prev => ({ ...prev, loadingAnalysis: false }));
+  //   }
+  // };
 
   const generateAnalysisManual = () => {
     if (protocolosFiltrados.length === 0) return;
@@ -539,13 +604,22 @@ const Relatorios = () => {
             ))}
           </AssuntoSelect>
         </FilterGroup>
-      </PeriodoContainer>      
+      </PeriodoContainer>
 
       <GenerateButton
-        onClick={generateAnalysis}
-        disabled={state.loadingAnalysis || protocolosFiltrados.length === 0}
+        onClick={generateIAReport}
+        disabled={state.loadingAnalysis || state.protocolos.length === 0}
+        style={{ backgroundColor: '#4CAF50', marginLeft: '10px' }}
       >
-        {state.loadingAnalysis ? "Gerando Análise..." : "Gerar Análise com IA"}
+        {state.loadingAnalysis ? (
+          <>
+            <FiLoader className="spin" /> Gerando Relatório...
+          </>
+        ) : (
+          <>
+            <FiActivity /> Relatório por IA
+          </>
+        )}
       </GenerateButton>
 
       <GenerateButton
@@ -601,7 +675,7 @@ const Relatorios = () => {
         )}
       </ChartContainer>
 
-      {state.analysis && state.analysis == "ia" && (
+      {state.analysis && state.analysisType === "ia" && (
         <AnalysisContainer>
           <h3>Análise de IA</h3>
           <div>{state.analysis}</div>
@@ -615,6 +689,17 @@ const Relatorios = () => {
           <div>{state.analysis}</div>
         </ModalContent>
       </ModalOverlay>
+
+      <div className={styles.buttonContainer}>
+        <button
+          className={styles.secondaryButton}
+          onClick={voltarIndex}>
+          <FiArrowLeft />
+          Voltar
+        </button>
+      </div>
+
+
 
     </div>
   );

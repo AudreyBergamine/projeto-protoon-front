@@ -1,0 +1,21 @@
+.buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    flex-direction: row-reverse;
+}
+
+
+.secondaryButton {
+  background: white;
+  color: #4361ee;
+  border: 2px solid #4361ee;
+  padding: 1.125rem 2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
