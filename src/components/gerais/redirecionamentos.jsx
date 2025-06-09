@@ -177,7 +177,7 @@ const RedirecionamentosCoordenador = () => {
     }));
   };
 
-  const handleUpdateStatus = async (id) => {
+  const handleUpdateStatus = async (id) => { //id da entidade REDIRECIONAMENTO
     try {
       const status = selectedRedirecionamentos[id];
       if (status) {

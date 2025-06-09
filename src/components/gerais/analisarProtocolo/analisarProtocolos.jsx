@@ -163,7 +163,7 @@ function AnalisarProtocolos() {
     setShowConfirmationDialog(true);
   }
 
-
+  //TODO VAGNER SOLICITAR REDIRECIONAMENTO FUNCIONARIO
   const solicitarRedirecionar = async () => {
     try { //Método do Funcionário, precisa que o coordenador aprove
       if (idSecretariaSelecionada === null || idSecretariaSelecionada === undefined) {
@@ -210,7 +210,7 @@ function AnalisarProtocolos() {
   };
 
 
-  //TODO ALDO SOLICITAR REDIRECIONAMENTO DO PROTOCOLO
+  //TODO VAGNER REDIRECIONAMENTO COORDENADOR
   const redirecionar = async () => { //Método do coordenador, já é aprovado automáticamente
     if (ConfirmationDialog) {
       setShowConfirmationDialog(false)
@@ -218,12 +218,9 @@ function AnalisarProtocolos() {
         const response1 = await axiosInstance.get(`/protoon/secretaria/${idSecretariaSelecionada}`)
         const secretariaData = response1.data;
 
-        const response2 = await axiosInstance.post(`/protoon/redirecionamento/${id}`,
-          { novaSecretaria: secretariaData.nome_secretaria }
-        )
 // Pelo controller do PROTOCOLO ele faz a aprovação do REDIRECIONAMENTO, ele altera o protocolo de secretaria
         console.log("secretarias: " + oldSecretaria + " - " + idSecretariaSelecionada)
-        if (oldSecretaria != idSecretariaSelecionada) {
+        if (oldSecretaria != idSecretariaSelecionada) { //OLD SECRETARIA É O A SECRETARIA VINCULADA AO PROTOCOLO ATUAL
           const response3 = await axiosInstance.put(`/protoon/protocolo/alterar-protocolos/departamento/${protocolo.numero_protocolo}`, {
             ...protocolo,
             secretaria: secretariaData
