@@ -29,7 +29,7 @@ function PaginaInicialMunicipe() {
             <button className={styles.cardButton}>Acessar</button>
           </div> */}
 
-          {/* Card de Serviço */}
+          {/* Card de Solicitar Serviço */}
           <div className={styles.actionCard} onClick={sendToSolicitarServico}>
             <div className={styles.cardIcon} style={{ backgroundColor: '#4ecdc4' }}>
               <FaTools size={24} />
@@ -39,7 +39,7 @@ function PaginaInicialMunicipe() {
             <button className={styles.cardButton}>Acessar</button>
           </div>
 
-          {/* Card de Consulta */}
+          {/* Card de Consultar Protocolos */}
           <div className={styles.actionCard} onClick={sendToConsultar}>
             <div className={styles.cardIcon} style={{ backgroundColor: '#45aaf2' }}>
               <FaSearch size={24} />
